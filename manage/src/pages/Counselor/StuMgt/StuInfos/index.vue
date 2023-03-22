@@ -1,5 +1,5 @@
 <template>
-  <div>我是学生信息管理</div>
+  <div>我是基本学生信息</div>
 </template>
 
 <script>
