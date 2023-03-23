@@ -1,10 +1,12 @@
 <template>
-  <div>我是班主任端</div>
+  <h1>
+    hello
+  </h1>
 </template>
 
 <script>
 export default {
-    name:'Teacher'
+
 }
 </script>
 

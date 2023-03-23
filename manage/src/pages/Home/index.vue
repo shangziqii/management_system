@@ -1,12 +1,9 @@
 <template>
   <h1>我是主页</h1>
-  <Login v-if="loginShow"/>
-  <Register v-if="registerShow"/>
+  <router-view></router-view>
 </template>
 
 <script>
-import {ref} from 'vue'
-
 import Login from './Login'
 import Register from './Register'
 export default {
@@ -16,17 +13,7 @@ export default {
       Register
     },
     setup(){
-/*       const getData=(val)=>{
-        console.log(val)
-        console.log('yes')
-      } */
-      let loginShow=ref(true)
-      let registerShow=ref(false)
-      // const changeShow=changeShow
-      // console.log(changeShow)
       return {
-        loginShow,
-        registerShow
       }
     }
 }
