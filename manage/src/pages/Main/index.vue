@@ -50,16 +50,15 @@
             </el-menu>
         </el-aside>
         <el-container>
-          <el-header>
+          <!-- <el-header>
             <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
             <el-breadcrumb-item>活动列表</el-breadcrumb-item>
             <el-breadcrumb-item>活动详情</el-breadcrumb-item>
           </el-breadcrumb>
-          </el-header>
+          </el-header> -->
           <el-main>
-             // 在这写显示区域,记得把这条注释删掉
             <router-view>
             </router-view>
           </el-main>
@@ -106,7 +105,7 @@ export default {
   }
   
   .el-main {
-    background-color: skyblue;
+    background-color: #fff;
     color: #333;
     text-align: center;
     line-height: 160px;
