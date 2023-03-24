@@ -9,7 +9,8 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="submitForm('LoginForm')">登录</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
+            <el-button @click="resetForm('LoginForm')">重置</el-button>
+
         </el-form-item>
         </el-form>
     </div>
@@ -61,6 +62,9 @@ import { Login } from './api';
                     });
                     const { token } = record.headers;//获取token
                   localStorage.setItem('token',token);//将token存储在localStorage
+                  this.$router.replace({
+                    path:'/Main'
+                  })
               }
               else{
                   this.$message({
@@ -72,8 +76,8 @@ import { Login } from './api';
               console.log(err);
           })
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
+      resetForm(LoginForm) {
+        this.$refs[LoginForm].resetFields();
       }
     }
   }

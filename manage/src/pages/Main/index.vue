@@ -2,43 +2,52 @@
     <div class="main">
       <el-container style="width:100%; height:100%">
         <el-aside width="200px">
-            <el-menu
+             <el-menu
               default-active="2"
               class="el-menu-vertical-demo"
               @open="handleOpen"
-              @close="handleClose">
-              <el-submenu index="1">
+              @close="handleClose"
+              router
+              >
+              <!-- 个人信息管理 -->
+              <el-menu-item index="/Main/Pim">
+                <i class="el-icon-setting"></i>
+                <span slot="title">个人信息管理</span>
+              </el-menu-item>
+              <!-- 账号管理 -->
+              <el-menu-item index="/Main/Am">
+                <i class="el-icon-setting"></i>
+                <span slot="title">账号管理</span>
+              </el-menu-item>
+              <!-- 班级信息管理 -->
+              <el-menu-item index="/Main/Cim">
+                <i class="el-icon-setting"></i>
+                <span slot="title">班级信息管理</span>
+              </el-menu-item>
+              <!-- 学生信息管理 -->
+              <el-submenu index="/Main/Sim">
                 <template slot="title">
                   <i class="el-icon-location"></i>
-                  <span>导航一</span>
+                  <span>学生信息管理</span>
                 </template>
                 <el-menu-item-group>
-                  <template slot="title">分组一</template>
-                  <el-menu-item index="1-1">选项1</el-menu-item>
-                  <el-menu-item index="1-2">选项2</el-menu-item>
+                  <el-menu-item index="/Main/Sim/Bsi">基本学生信息</el-menu-item>
+                  <el-menu-item index="/Main/Sim/Dsi">困难生信息</el-menu-item>
+                  <el-menu-item index="/Main/Sim/Sa">学生获奖情况</el-menu-item>
+                  <el-menu-item index="/Main/Sim/Svrad">学生违规乱纪情况</el-menu-item>
                 </el-menu-item-group>
-                <el-menu-item-group title="分组2">
-                  <el-menu-item index="1-3">选项3</el-menu-item>
-                </el-menu-item-group>
-                <el-submenu index="1-4">
-                  <template slot="title">选项4</template>
-                  <el-menu-item index="1-4-1">选项1</el-menu-item>
-                </el-submenu>
               </el-submenu>
-              <el-menu-item index="2">
+              <!-- 助学金评定记录 -->
+              <el-menu-item index="/Main/Gar">
                 <i class="el-icon-menu"></i>
-                <span slot="title">导航二</span>
+                <span slot="title">助学金评定记录</span>
               </el-menu-item>
-              <el-menu-item index="3" disabled>
+              <!-- 奖学金评定记录 -->
+              <el-menu-item index="/Main/Ser">
                 <i class="el-icon-document"></i>
-                <span slot="title">导航三</span>
+                <span slot="title">奖学金评定记录</span>
               </el-menu-item>
-              <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">导航四</span>
-              </el-menu-item>
-           </el-menu>
-
+            </el-menu>
         </el-aside>
         <el-container>
           <el-header>
@@ -67,12 +76,14 @@ export default {
     },
     data() {
        return {
-
+      
        }
     },
     methods: {
         
-    }
+    },
+    computed: {
+  }
 }
 </script>
 
