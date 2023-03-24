@@ -1,18 +1,25 @@
 <template>
-    <div class="LoginForm">
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="账号" prop="account">
-            <el-input  v-model="ruleForm.account"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="password">
-            <el-input type="password" v-model="ruleForm.password"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('LoginForm')">登录</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-        </el-form>
+    <div>
+        <div class="top">
+          <img width="398" height="94" src="http://www.xiyou.edu.cn/newWeb/images/xy_logo.png">
+        </div>
+        <div class="LoginForm">
+          <el-form :model="ruleForm" status-icon :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="账号" prop="account">
+              <el-input  v-model="ruleForm.account"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="password">
+              <el-input type="password" v-model="ruleForm.password"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" @click="submitForm('LoginForm')">登录</el-button>
+              <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </el-form-item>
+          </el-form>
+        </div>
+        <div class="bottom"></div>
     </div>
+    
 </template>
 <script>
 import { Login } from './api';
@@ -21,12 +28,16 @@ import { Login } from './api';
     data() {
       const checkAccount = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('账号不能为空'));
+          return callback(new Error('账号不能为空'))
+        } else {
+          callback()
         }
       };
       const checkPass = (rule, value, callback) => {
         if(!value){
             return callback(new Error('密码不能为空'))
+        } else {
+          callback()
         }
     }
       return {
@@ -36,16 +47,22 @@ import { Login } from './api';
         },
         rules: {
           account: [
-            { validator: checkAccount, trigger: 'blur', required: true }
+            { validator: checkAccount, trigger: 'blur', max:30, required: true }
           ],
           password: [
-            { validator: checkPass, trigger: 'blur', required: true }
+            { validator: checkPass, trigger: 'blur', max:30, required: true }
           ],
         }
       };
     },
     methods: {
       submitForm(formName) {
+          this.$refs[formName].validate((valid) => {
+            // console.log('验证', valid);
+            if(!valid) {
+              return false
+            }
+          })
           const { account, password} = this.ruleForm;
           const params = {
               phone: account,
@@ -61,6 +78,7 @@ import { Login } from './api';
                     });
                     const { token } = record.headers;//获取token
                   localStorage.setItem('token',token);//将token存储在localStorage
+                  this.$router.replace({path:'/Main'})
               }
               else{
                   this.$message({
@@ -71,15 +89,33 @@ import { Login } from './api';
           }).catch((err) => {
               console.log(err);
           })
+          
       },
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        // this.$refs[formName].resetFields();
+        this.$nextTick(() => {
+          this.$refs.LoginForm.resetFields();
+        })
+
       }
     }
   }
 </script>
 
 <style scoped>
+.top {
+  width: 100%;
+  height: 130px;
+  padding-top: 40px;
+  background: url(	http://www.xiyou.edu.cn/newWeb/images/xy_topBG.png);
+}
+.bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 130px;
+  background: url(	http://www.xiyou.edu.cn/newWeb/images/xy_topBG.png);
+}
 .LoginForm{
     position: absolute;
     width: 40%;

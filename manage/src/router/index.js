@@ -28,5 +28,20 @@ const router = new VueRouter({
     routes
 });
 
+// 全局前置路由守卫---初始化和每次路由切换之前调用
+router.beforeEach((to ,from, next) => {
+    if(to.path === '/Main') {
+        if(localStorage.getItem('token')) {
+            next();
+        } else {
+            alert('未登录，请先登录！')
+            next({
+                path: '/Login'
+            })
+        }
+    } else {
+        next()
+    }
+})
 export default router
 
