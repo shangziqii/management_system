@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>基本学生信息</h1>
+    <div>
+    <h1>学生基本信息</h1>
   </div>
 </template>
 
