@@ -18,14 +18,15 @@
         </el-form-item>
         <el-form-item label="身份" prop="role">
           <el-select placeholder="请选择身份" v-model="form.role">
-            <el-option label="管理员" value="管理员"></el-option>
-            <el-option label="辅导员" value="辅导员"></el-option>
-            <el-option label="班主任" value="班主任"></el-option>
+            <el-option label="管理员" value=0></el-option>
+            <el-option label="辅导员" value=1></el-option>
+            <el-option label="班主任" value=2></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="管理班级" prop="className">
+        <!-- 无管理班级选项 -->
+<!--         <el-form-item label="管理班级" prop="className">
           <el-input placeholder="请输入管理的班级" v-model="form.className"></el-input>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
@@ -95,8 +96,9 @@ export default {
           name: '',
           password: '',
           phone: '',
-          role: '',
-          className: ''
+          role: 1,
+          //无管理班级
+          // className: ''
         },
         rules: {
           name: [
@@ -121,7 +123,13 @@ export default {
         this.$refs.form.validate((valid) => {
           if(valid) {
             // 后续对表单数据的处理
-            addUser(this.form).then((res) => {
+            const form={
+              name:this.form.name,
+              password:this.form.password,
+              role:this.form.role,
+              phone:this.form.phone
+            }
+            addUser(form).then((res) => {
               console.log(res);
             //   // 重新获取列表的接口
               this.userList()
@@ -139,7 +147,6 @@ export default {
       handleClose() {
         this.$refs.form.resetFields()
         this.dialogVisible = false
-
       },
       cancel() {
         this.handleClose()
