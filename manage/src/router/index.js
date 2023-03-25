@@ -35,6 +35,7 @@ const routes = [
     {
         path: '/Main',
         component: Main,
+        redirect: '/Main/Pim',
         meta: { isAuth: true },
         children: [
             {
@@ -97,9 +98,9 @@ const router = new VueRouter({
 });
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
-router.beforeEach((to ,from, next) => {
-    if(to.path === '/Main') {
-        if(localStorage.getItem('token')) {
+router.beforeEach((to, from, next) => {
+    if (to.path === '/Main') {
+        if (localStorage.getItem('token')) {
             next();
         } else {
             alert('未登录，请先登录！')
