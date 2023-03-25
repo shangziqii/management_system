@@ -6,13 +6,22 @@ export const getInfo = (params) => {
     })
 }
 export const changePass = (params) => {
-    return axios.post('/api/user/update_password', params)
+    return axios.post('/api/user/update_password', {
+        headers: {
+            'token': localStorage.getItem('token'),
+        },
+        params
+    }
+    )
 }
 
 // 新增用户(注册)
 export const addUser = (data) => {
     return axios.post('/api/uer/register', {
-        headers: { 'token': localStorage.getItem('token') }
+        headers: {
+            'token': localStorage.getItem('token'),
+        },
+        data
     })
 }
 

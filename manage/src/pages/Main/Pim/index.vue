@@ -1,14 +1,19 @@
 <template>
   <div>
-
     <el-dialog
   title="修改密码"
   :visible.sync="dialogVisible"
-  width="30%"
-  :before-close="handleClose">
+  width="30%">
+  <!-- :before-close="handleClose" -->
   <!-- <span>这是一段信息</span> -->
   <el-form :model="ruleForm"  ref="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-    <el-form-item label="密码" prop="pass">
+<!--     <el-form-item label="请输入旧密码" prop="oldPass">
+      <el-input type="passward" v-model="ruleForm.old_password"></el-input>
+    </el-form-item> -->
+    <el-form-item label="请输入旧密码" prop="oldPass">
+    <el-input v-model="ruleForm.old_password"></el-input>
+  </el-form-item>
+    <el-form-item label="请输入新密码" prop="pass">
       <el-input type="password"  v-model="ruleForm.pass"></el-input>
     </el-form-item>
     <el-form-item label="确认密码" prop="checkPass">
@@ -34,11 +39,19 @@
 </template>
 
 <script>
-import { getInfo,changePass } from './../api';
+import { getInfo } from './../api';
+import { changePass } from './../api';
 export default {
     name:'Pim',
     components:{},
     data() {
+      var validatePass3 = (rule, value, callback) => {
+        if (value=='') {
+          callback(new Error('旧密码不能为空'));
+        }else{
+          callback();
+        }
+      };
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -57,16 +70,18 @@ export default {
         } else {
           callback();
         }
-      }
+      };
         return {
             info:{
                 name:'',
                 phone:'',
-                role:''
+                role:'',
+                userId:''
             },
             ruleForm: {
-          pass: '',
-          checkPass: ''
+              pass: '',
+              checkPass: '',
+              old_password:''
         },
             dialogVisible:false,
           rules: {
@@ -76,6 +91,9 @@ export default {
           checkPass: [
             { validator: validatePass2, trigger: 'blur' }
           ],
+          oldPass: [
+            { validator: validatePass3, trigger: 'blur' }
+          ]
             }
         }
     },
@@ -83,12 +101,15 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            let pass=this.ruleForm.pass
-            //发送post请求，加处理res
-            const changePass=changePass(pass)
-            console.log(changePass);
-
-            alert('submit!');
+            let changePassward={
+              userId:this.info.userId,
+              old_password:this.ruleForm.old_password,
+              passward:this.ruleForm.pass
+            }
+            changePass(changePassward).then((res)=>{
+            alert('修改成功!');
+            console.log(res);
+            })
             this.dialogVisible = false
             this.ruleForm.pass=''
             this.ruleForm.checkPass=''
@@ -106,7 +127,6 @@ export default {
     },
     mounted(){
         const params=localStorage.getItem('token')
-        console.log(getInfo(params));
         const infos=getInfo(params)
         infos.then(res=> { 
             console.log (res)
@@ -127,6 +147,7 @@ export default {
             }
             this.info.name=res.data.data.name
             this.info.phone=res.data.data.phone
+            this.info.userId=res.data.data.userId
         }
         ) 
     }

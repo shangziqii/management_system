@@ -121,11 +121,11 @@ export default {
         this.$refs.form.validate((valid) => {
           if(valid) {
             // 后续对表单数据的处理
-            // addUser(this.form).then((res) => {
-            //   console.log(res);
+            addUser(this.form).then((res) => {
+              console.log(res);
             //   // 重新获取列表的接口
-            //   this.userList()
-            // })
+              this.userList()
+            })
             console.log(this.form, 'form');
             // 重置表单
             this.$refs.form.resetFields()
@@ -187,9 +187,9 @@ export default {
   display: flex;
   justify-content:center;
 }
-.el-input {
+/* .el-input {
   width: 387px;
-}
+} */
 .addButton {
   position: absolute;
   left: 210px;
