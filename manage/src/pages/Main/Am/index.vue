@@ -189,7 +189,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .demo-form-inline {
   display: flex;
   justify-content:center;

@@ -70,7 +70,7 @@ import { Login } from './api';
           }
           const instance =  Login(params); // axios返回promise实例
           instance.then((record) => {
-              const { data, msg } = record.data;
+              const { data, msg, status } = record.data;
               if(data === 0){
                     this.$message({
                     message:msg,
@@ -78,6 +78,8 @@ import { Login } from './api';
                     });
                     const { token } = record.headers;//获取token
                   localStorage.setItem('token',token);//将token存储在localStorage
+                  // 还将role的数值存放在localstorage中，便于后面增删班级操作
+                  localStorage.setItem('role', status)
                   this.$router.replace({path:'/Main'})
               }
               else{
