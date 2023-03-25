@@ -11,19 +11,18 @@ import Login from '../pages/Login';
 //引入Main 页面 --- 其他页面都是Main页面下的二级路由
 import Main from '../pages/Main'
 
-//引入Main 页面下的所有二级路由
-import Pim from '@/pages/Main/Pim'
-import Am from '@/pages/Main/Am'
-import Cim from '@/pages/Main/Cim'
-import Sim from '@/pages/Main/Sim'
-import Gar from '@/pages/Main/Gar'
-import Ser from '@/pages/Main/Ser'
+import Pim from '@/pages/Pim'
+import Am from '@/pages/Am'
+import Cim from '@/pages/Cim'
+import Sim from '@/pages/Sim'
+import Gar from '@/pages/Gar'
+import Ser from '@/pages/Ser'
 
 //引入Sim（学生信息管理下的路由）
-import Bsi from '@/pages/Main/Sim/Bsi'
-import Dsi from '@/pages/Main/Sim/Dsi'
-import Sa from '@/pages/Main/Sim/Sa'
-import Svrad from '@/pages/Main/Sim/Svrad'
+import Bsi from '@/pages/Sim/Bsi'
+import Dsi from '@/pages/Sim/Dsi'
+import Sa from '@/pages/Sim/Sa'
+import Svrad from '@/pages/Sim/Svrad'
 
 
 // 创建routes,创建路由
@@ -36,7 +35,6 @@ const routes = [
         path: '/Main',
         component: Main,
         redirect: '/Main/Pim',
-        meta: { isAuth: true },
         children: [
             {
                 path: 'Am',

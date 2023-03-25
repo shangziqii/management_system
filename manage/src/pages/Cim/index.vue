@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { classList, addClass } from './../api'
+import { classList, addClass } from './api'
 export default {
   name: 'Cim',
   data() {
