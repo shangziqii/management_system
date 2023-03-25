@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getInfo,changePass } from './../api';
+import { getInfo,changePass } from './api';
 export default {
   name: 'Pim',
   components: {},

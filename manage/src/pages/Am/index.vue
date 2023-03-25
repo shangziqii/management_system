@@ -18,9 +18,9 @@
         </el-form-item>
         <el-form-item label="身份" prop="role">
           <el-select placeholder="请选择身份" v-model="form.role">
-            <el-option label="管理员" value=0></el-option>
-            <el-option label="辅导员" value=1></el-option>
-            <el-option label="班主任" value=2></el-option>
+            <el-option label="管理员" value='0'></el-option>
+            <el-option label="辅导员" value='1'></el-option>
+            <el-option label="班主任" value='2'></el-option>
           </el-select>
         </el-form-item>
         <!-- 无管理班级选项 -->
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getList,addUser,delUser } from '../api/index'
+import { getList,addUser,delUser } from './api'
 export default {
     data() {
       return {
@@ -96,7 +96,7 @@ export default {
           name: '',
           password: '',
           phone: '',
-          role: 1,
+          role: '请选择身份',
           //无管理班级
           // className: ''
         },
