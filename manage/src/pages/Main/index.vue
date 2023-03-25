@@ -55,7 +55,6 @@
           </el-breadcrumb>
         </el-header>
         <el-main>
-
           <router-view>
           </router-view>
         </el-main>
@@ -218,7 +217,7 @@ export default {
 }
 
 .el-main {
-  background-color: skyblue;
+  background-color: rgb(255, 255, 255);
   color: #333;
   text-align: center;
   line-height: 160px;
