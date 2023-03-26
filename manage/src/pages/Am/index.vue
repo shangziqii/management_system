@@ -33,7 +33,7 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
       </el-dialog>
-      <div class="manege-header">
+      <div class="manage-header">
           <el-button @click="dialogVisible = true" type="primary" class="addButton">
               + 新增
           </el-button>
@@ -74,7 +74,7 @@
             </el-table-column>
             <el-table-column
               prop="classList"
-              label="管理班级"
+              label="操作"
               >
               <!-- 作用域插槽 -->
               <template slot-scope="scope">
@@ -134,7 +134,7 @@ export default {
             //   // 重新获取列表的接口
               this.userList()
             })
-            console.log(this.form, 'form');
+            // console.log(this.form, 'form');
             // 重置表单
             this.$refs.form.resetFields()
             // 关闭弹窗
@@ -177,7 +177,7 @@ export default {
       // 获取列表数据
       userList() {
         getList().then(({ data }) => {
-        // console.log(data.data);
+        console.log(data.data);
         this.tableData = data.data.users
       })
       }
@@ -201,7 +201,7 @@ export default {
   position: absolute;
   left: 210px;
 }
-.el-dialog {
+.manage /deep/ .el-dialog {
   border-radius: 8px;
 }
 .userList {

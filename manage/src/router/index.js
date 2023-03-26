@@ -17,6 +17,7 @@ import Cim from '@/pages/Cim'
 import Sim from '@/pages/Sim'
 import Gar from '@/pages/Gar'
 import Ser from '@/pages/Ser'
+import Details from '@/pages/Details'
 
 //引入Sim（学生信息管理下的路由）
 import Bsi from '@/pages/Sim/Bsi'
@@ -43,6 +44,12 @@ const routes = [
             {
                 path: 'Cim',
                 component: Cim,
+                children: [
+                    {
+                        path: 'Details',
+                        component: Details
+                    }
+                ]
             },
             {
                 path: 'Gar',
