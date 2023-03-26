@@ -12,25 +12,28 @@
         <el-button type="primary" @click="submit2">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 查询后展示班级信息的卡片 -->
-    <el-card class="box-card" ref="infoCard">
-      <div slot="header" class="clearfix">
-        <span>班级信息</span>
-        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
-      </div>
+    <!-- 查询后展示班级信息的对话框 -->
+    <el-dialog
+      title="班级信息"
+      :visible.sync="infoVisible"
+      width="30%"
+      :before-close="handleClose3">
       <ul class="classInfoShow">
-        <li>班级Id: {{getClassData.classId}}</li>
-        <li>班级名称: {{getClassData.className}}</li>
-        <li>所属辅导员ID: {{getClassData.userId}}</li>
-        <li>所属辅导员姓名: {{getClassData.userName}}</li>
-        <li>学院: {{getClassData.department}}</li>
-        <li>专业：{{getClassData.profession}}</li>
-        <li>年级：{{getClassData.grade}}</li>
-        <li>宿舍号信息: {{getClassData.domitory}}</li>
-        <li>班长：{{getClassData.monitor}}</li>
-        <li>学习委员：{{getClassData.studyCommittee}}</li>
+        <li><span>班级ID：</span> {{getClassData.classId}}</li>
+        <li><span>班级名称：</span> {{getClassData.className}}</li>
+        <li><span>所属辅导员ID：</span> {{getClassData.userId}}</li>
+        <li><span>所属辅导员姓名：</span> {{getClassData.userName}}</li>
+        <li><span>学院:</span> {{getClassData.department}}</li>
+        <li><span>专业：</span>{{getClassData.profession}}</li>
+        <li><span>年级：</span>{{getClassData.grade}}</li>
+        <li><span>宿舍号信息：</span> {{getClassData.domitory}}</li>
+        <li><span>班长：</span>{{getClassData.monitor}}</li>
+        <li><span>学习委员：</span>{{getClassData.studyCommittee}}</li>
       </ul>
-    </el-card>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="edit">编辑</el-button>
+      </span>
+    </el-dialog>
     <!-- 添加班级信息弹窗 -->
     <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px">
@@ -96,7 +99,7 @@
 </template>
 
 <script>
-import { classList, addClass, delClass, searchClass } from './api/index'
+import { classList, addClass, delClass, searchClass, editClass } from './api/index'
 export default {
   name: 'Cim',
   data() {
@@ -116,6 +119,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       dialogVisible2: false,
+      infoVisible: false,
       rules: {
         className: [
           { required: true, message: '请输入班级名称' }
@@ -159,6 +163,9 @@ export default {
     handleClose2() {
       this.$refs.searchInfo.resetFields()
       this.dialogVisible2 = false
+    },
+    handleClose3() {
+      this.infoVisible = false
     },
     cancel() {
       this.handleClose()
@@ -206,7 +213,7 @@ export default {
             })
             this.handleClose2()
             // 将原本隐藏的展示卡片显示出来
-            this.$refs.infoCard.style = 'display:block'
+            this.infoVisible = true
           }
       })
     },
@@ -219,6 +226,9 @@ export default {
       classList().then(res => {
         this.tableData = res.data.data.classes
       })
+    },
+    edit() {
+      editClass()
     },
 
     // 删除某条班级信息
@@ -268,7 +278,7 @@ div /deep/ .el-dialog {
 }
 .searchButton {
   position: absolute;
-  right: 0px;
+  right: 10px;
 }
 .classList {
   top: 45px;
@@ -299,5 +309,20 @@ div /deep/ .el-dialog {
 }
 .classInfoShow {
   list-style: none;
+  line-height: 50px;
+}
+.classInfoShow li {
+  text-align: left;
+  font-size: 20px;
+}
+.classInfoShow li span {
+  font-weight: bold;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
 }
 </style>

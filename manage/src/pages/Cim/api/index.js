@@ -36,3 +36,12 @@ export const searchClass = (params) => {
         params
     })
 }
+// 修改班级信息
+export const editClass = (data) => {
+    return axios.post('/api/class/modify', data, {
+        headers: {
+            'token': localStorage.getItem('token'),
+            'Content-Type': 'application/json'
+        }
+    })
+}
