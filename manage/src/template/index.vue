@@ -1,16 +1,19 @@
 <template>
-    <div class="">
+    <div>
 
     </div>
 </template>
 
 <script>
 export default {
-    name: '',
-    data(){
-        return {
+    name: 'template',
+    components: {
+      
+    },
+    data() {
+       return {
 
-        }
+       }
     },
     methods: {
         
@@ -18,7 +21,6 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 
 </style>

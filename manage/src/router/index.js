@@ -1,93 +1,121 @@
-import {
-    createRouter,
-    createWebHashHistory,
-} from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-import Home from '@/pages/Home'
-import Administrator from '@/pages/Administrator'
-import Teacher from '@/pages/Teacher'
-import Counselor from '@/pages/Counselor'
-import AccInfo from '@/pages/Counselor/AccInfo'
-import PerInfo from '@/pages/Counselor/PerInfo'
-import ClassMgt from '@/pages/Counselor/ClassMgt'
-import StuMgt from '@/pages/Counselor/StuMgt'
-import OutInfos from '@/pages/Counselor/StuMgt/OutInfos'
-import WinInfos from '@/pages/Counselor/StuMgt/WinInfos'
-import PoorInfos from '@/pages/Counselor/StuMgt/PoorInfos'
-import StuInfos from '@/pages/Counselor/StuMgt/StuInfos'
-import Scholarship from '@/pages/Counselor/Scholarship'
-import StuSubsidies from '@/pages/Counselor/StuSubsidies'
+Vue.use(VueRouter);
 
+// 引入页面组件
+
+// 登录页面
+import Login from '../pages/Login';
+
+//引入Main 页面 --- 其他页面都是Main页面下的二级路由
+import Main from '../pages/Main'
+
+import Pim from '@/pages/Pim'
+import Am from '@/pages/Am'
+import Cim from '@/pages/Cim'
+import Sim from '@/pages/Sim'
+import Gar from '@/pages/Gar'
+import Ser from '@/pages/Ser'
+import Details from '@/pages/Details'
+
+//引入Sim（学生信息管理下的路由）
+import Bsi from '@/pages/Sim/Bsi'
+import Dsi from '@/pages/Sim/Dsi'
+import Sa from '@/pages/Sim/Sa'
+import Svrad from '@/pages/Sim/Svrad'
+
+
+// 创建routes,创建路由
 const routes = [
     {
-        path: '/home',
-        component: Home
+        path: '/Login',
+        component: Login,
     },
     {
-        path: '/administrator',
-        component: Administrator,
-        meta: { show: false }
-    },
-    {
-        path: '/teacher',
-        component: Teacher
-    },
-    {
-        path: '/counselor',
-        component: Counselor,
+        path: '/Main',
+        component: Main,
+        redirect: '/Main/Pim',
         children: [
             {
-                path: 'perInfo',
-                component: PerInfo
+                path: 'Am',
+                component: Am
             },
             {
-                path: 'accInfo',
-                component: AccInfo
-            },
-            {
-                path: 'classMgt',
-                component: ClassMgt
-            },
-            {
-                path: 'stuMgt',
-                component: StuMgt,
+                path: 'Cim',
+                component: Cim,
                 children: [
                     {
-                        path: 'stuInfos',
-                        component: StuInfos
-                    },
-                    {
-                        path: 'poorInfos',
-                        component: PoorInfos
-                    },
-                    {
-                        path: 'WinInfos',
-                        component: WinInfos
-                    },
-                    {
-                        path: 'outInfos',
-                        component: OutInfos
+                        path: 'Details',
+                        component: Details
                     }
                 ]
             },
             {
-                path: 'scholarship',
-                component: Scholarship
+                path: 'Gar',
+                component: Gar
             },
             {
-                path: 'stuSubsidies',
-                component: StuSubsidies
+                path: 'Pim',
+                component: Pim
+            },
+            {
+                path: 'Ser',
+                component: Ser
+            },
+            {
+                path: 'Sim',
+                component: Sim,
+                children: [
+                    {
+                        path: 'Bsi',
+                        component: Bsi
+                    },
+                    {
+                        path: 'Dsi',
+                        component: Dsi
+                    },
+                    {
+                        path: 'Sa',
+                        component: Sa
+                    },
+                    {
+                        path: 'Svrad',
+                        component: Svrad
+                    }
+
+                ]
             }
         ]
     },
-    //重定向，项目进行运行时，访问/，立马定向到home页面
+
+    //路由重定向
     {
-        path: '/:catchAll(.*)',
-        redirect: '/home'
+        path: '*',
+        redirect: '/Login'
     }
-]
-const router = createRouter({
-    history: createWebHashHistory(),
+];
+
+
+// 实例化路由
+const router = new VueRouter({
     routes
+});
+
+// 全局前置路由守卫---初始化和每次路由切换之前调用
+router.beforeEach((to, from, next) => {
+    if (to.path === '/Main') {
+        if (localStorage.getItem('token')) {
+            next();
+        } else {
+            alert('未登录，请先登录！')
+            next({
+                path: '/Login'
+            })
+        }
+    } else {
+        next()
+    }
 })
-export default router;
+export default router
+
