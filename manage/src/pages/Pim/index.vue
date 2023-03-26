@@ -87,9 +87,10 @@ export default {
         if (valid) {
           const changePassword = {
             userId: this.info.userId,
-            old_password: this.ruleForm.oldPass,
+        oldPassword: this.ruleForm.oldPass,
             password: this.ruleForm.pass
           }
+
           changePass(changePassword).then((res) => {
             alert(res.data.msg);
             // console.log(res);
