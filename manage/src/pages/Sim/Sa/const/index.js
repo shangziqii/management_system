@@ -4,6 +4,10 @@ export const columns = [
         prop: 'studentNum'
     },
     {
+        label: '学生姓名',
+        prop: 'studentName'
+    },
+    {
         label: '奖项名称',
         prop: 'prizeName'
     },

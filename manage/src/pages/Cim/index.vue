@@ -1,5 +1,6 @@
 <template>
-  <div class="classManage">
+  <div>
+  <div class="classManage" v-show="$route.path=='/Main/Cim'">
     <!-- 查询用户信息弹窗 -->
     <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
       <el-form ref="searchInfo" :rules="rules2" :model="searchInfo" label-width="80px">
@@ -94,8 +95,9 @@
             </el-table-column>
         </el-table>
     </div>
-    
   </div>
+  <router-view></router-view>
+</div>
 </template>
 
 <script>

@@ -29,6 +29,12 @@
             <el-form-item label="学号" prop="studentNum">
               <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
             </el-form-item>
+            <el-form-item label="姓名" prop="studentName">
+              <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
+            </el-form-item>
+            <el-form-item label="班级" prop="studentClass">
+              <el-input placeholder="请输入班级" v-model="form.studentClass"></el-input>
+            </el-form-item>
             <el-form-item label="奖项名称" prop="prizeName">
               <el-input placeholder="请输入奖项名称" v-model="form.prizeName"></el-input>
             </el-form-item>
@@ -59,7 +65,13 @@
         <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
           <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
             <el-form-item label="学号" prop="studentNum">
-              <el-input placeholder="请输入学号" v-model="changeInfoForm.studentNum">{{ changeInfoForm.studentNum }}</el-input>
+              <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum">{{ changeInfoForm.studentNum }}</el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="studentName">
+              <el-input placeholder="请输入姓名" :disabled="true" v-model="changeInfoForm.studentName">{{ changeInfoForm.studentName }}</el-input>
+            </el-form-item>
+            <el-form-item label="班级" prop="studentClass">
+              <el-input placeholder="请输入班级" :disabled="true" v-model="changeInfoForm.studentClass">{{ changeInfoForm.studentClass }}</el-input>
             </el-form-item>
             <el-form-item label="奖项名称" prop="prizeName">
               <el-input placeholder="请输入奖项名称" v-model="changeInfoForm.prizeName">{{ changeInfoForm.prizeName }}</el-input>
@@ -82,7 +94,7 @@
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="cancel2">取 消</el-button>
-            <el-button type="primary" @click="submit">提 交</el-button>
+            <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
           </span>
         </el-dialog>
       <Tables
@@ -129,6 +141,12 @@
           studentNum: [
             { required: true, message: '请输入学生学号' }
         ],
+        studentName: [
+            { required: true, message: '请输入获奖学生姓名' }
+          ],
+          studentClass: [
+            { required: true, message: '请输入获奖学生班级' }
+          ],
           prizeName: [
             { required: true, message: '请输入获奖名称' }
           ],
@@ -146,22 +164,28 @@
           ]
         },//新增信息的输入规则
         changRules:{
-          studentNum: [
+        studentNum: [
             { required: true, message: '请输入学生学号' }
         ],
-          prizeName: [
+        studentName: [
+            { required: true, message: '请输入获奖学生姓名' }
+          ],
+          studentClass: [
+            { required: true, message: '请输入获奖学生班级' }
+          ],
+        prizeName: [
             { required: true, message: '请输入获奖名称' }
           ],
-          prizeLevel: [
+        prizeLevel: [
         { required: true, message: '请输入获奖等级' }
           ],
-          prizeTime: [
+        prizeTime: [
             { required: true,message:'请输入获奖时间'}
           ],
-          files: [
+        files: [
             { required: true,message:'请输入电子版证书'}
           ],
-          teacher: [
+        teacher: [
             { required: true,message:'请输入指导老师' }
           ],
         },//修改信息的规则
@@ -247,12 +271,30 @@
       },
       //修改用户
       modify(value){
-        // console.log('点我修改用户');
         console.log(value);
         this.changeInfoShow = true
-        // this.changeInfoForm
-        // changeInfo
-        //这里需要将value的信息交给changeInfo进行显示，并做一定限制
+        this.changeInfoForm=value
+      },
+      //修改信息提交按钮
+      submitChangeInfo(){
+        console.log('修改信息提交了');
+        changeInfo(this.changeInfoForm).then((res)=>{
+          console.log(res);
+          if(res.status===200){
+            this.$message({
+            message: '修改成功',
+            type: 'success'
+          });
+          }
+          else{
+          this.$message.error('修改用户信息失败',error);
+          }
+          this.geWinnerList()
+          // 重置表单
+          this.$refs.changeInfoForm.resetFields()
+          // 关闭弹窗
+          this.changeInfoShow = false
+        })
       },
       // 弹窗关闭时重置表单
       handleClose() {
