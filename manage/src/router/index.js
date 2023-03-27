@@ -18,6 +18,10 @@ import Sim from '@/pages/Sim'
 import Gar from '@/pages/Gar'
 import Ser from '@/pages/Ser'
 import Details from '@/pages/Details'
+import ClassLesson from '@/pages/ClassLesson'
+import ClassMeet from '@/pages/ClassMeet'
+import ClassTalk from '@/pages/ClassTalk'
+import Domitory from '@/pages/Domitory'
 
 //引入Sim（学生信息管理下的路由）
 import Bsi from '@/pages/Sim/Bsi'
@@ -47,7 +51,26 @@ const routes = [
                 children: [
                     {
                         path: 'Details',
-                        component: Details
+                        component: Details,
+                        children: [
+                            {
+                                path: 'ClassLesson',
+                                component: ClassLesson
+                            },
+                            {
+                                path: 'ClassMeet',
+                                component: ClassMeet
+                            },
+                            {
+                                path: 'ClassTalk',
+                                component: ClassTalk
+                            },
+                            {
+                                path: 'Domitory',
+                                component: Domitory
+                            }
+                        ]
+                            
                     }
                 ]
             },

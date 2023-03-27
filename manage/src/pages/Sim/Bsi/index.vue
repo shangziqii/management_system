@@ -11,6 +11,7 @@
          @click_1="deleteStu"
          @click_2="modify"
          @changeLimit="changeLimit"
+         @changePage="changePage"
         />
        <AddStudentInfo :isShow="addFormShow" @change="changeShow" @submit="submitForm"/>
        <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet"/>
@@ -19,8 +20,8 @@
 
 <script>
 import Tables from '../../../components/Tabels';
-import AddStudentInfo from './components/addStuentInfo'
-import ModifyFormInfo from './components/modifyStudentInfo'
+import AddStudentInfo from './components/addStudentInfo';
+import ModifyFormInfo from './components/modifyStudentInfo';
 import { getList, addStudent, deleteStudent, modifyStu } from './api';
 import { columns, operaColums } from './const';
 export default {
@@ -58,7 +59,6 @@ export default {
          if(status === 0) { 
            this.total = sum;
            this.tableList = students;
-           console.log(this.tableList)
          } else {
            this.$message({
              type: 'error',
@@ -127,6 +127,9 @@ export default {
              type: 'success',
              message: msg
            })
+           this.currentPage = 1;
+           this.pageLimit = 5;
+           this.getTableList();
          } else {
            this.message({
              type: 'error',
@@ -139,13 +142,14 @@ export default {
        })
     },
     deleteStu(values) {
-      const {userId, studentName} = values;
+      console.log(values)
+      const {studentId, studentName} = values;
       this.$confirm(`您确定要删除${studentName}信息吗?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          const instance = deleteStudent({studentId:userId})
+          const instance = deleteStudent({studentId})
           instance
            .then(( res ) => {
              const { status } = res.data;
