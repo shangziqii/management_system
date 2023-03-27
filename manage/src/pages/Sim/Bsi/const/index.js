@@ -41,5 +41,5 @@ export const operaColums = [
     {
         label: '详情',
         type: 'primary'
-    },
+    }
 ]

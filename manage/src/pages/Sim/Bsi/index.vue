@@ -51,8 +51,7 @@ export default {
        }
        console.log(params)
        const instance = getList(params);
-       instance
-       .then(( res ) => {
+       instance.then(( res ) => {
          console.log(res);
          const { status, data } = res.data;
          const { students, sum } = data;
