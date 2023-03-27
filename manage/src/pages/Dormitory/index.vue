@@ -1,10 +1,10 @@
 <template>
-  
+  <div>这是Dormitory</div>
 </template>
 
 <script>
 export default {
-    name: 'Domitory'
+    name: 'Dormitory'
 }
 </script>
 

@@ -1,5 +1,6 @@
 <template>
-  <div class="classManage">
+<div>
+  <div class="classManage" v-show="$route.path=='/Main/Cim'">
     <!-- 查询用户信息弹窗 -->
     <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
       <el-form ref="searchInfo" :rules="rules2" :model="searchInfo" label-width="80px">
@@ -26,7 +27,7 @@
         <li><span>学院:</span> {{getClassData.department}}</li>
         <li><span>专业：</span>{{getClassData.profession}}</li>
         <li><span>年级：</span>{{getClassData.grade}}</li>
-        <li><span>宿舍号信息：</span> {{getClassData.domitory}}</li>
+        <li><span>宿舍号信息：</span> {{getClassData.dormitory}}</li>
         <li><span>班长：</span>{{getClassData.monitor}}</li>
         <li><span>学习委员：</span>{{getClassData.studyCommittee}}</li>
       </ul>
@@ -37,14 +38,26 @@
     <!-- 添加班级信息弹窗 -->
     <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px">
-        <el-form-item label="班级名" placeholder="请输入班级名" prop="className">
-          <el-input v-model="classInfo.className"></el-input>
+        <el-form-item label="班级名" prop="className">
+          <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>
         </el-form-item>
-        <el-form-item label="学院" placeholder="请输入班级所属学院" prop="department">
-          <el-input v-model="classInfo.department"></el-input>
+        <el-form-item label="学院" prop="department">
+          <el-input v-model="classInfo.department" placeholder="请输入班级所属学院"></el-input>
         </el-form-item>
-        <el-form-item label="专业" placeholder="请输入班级所属专业" prop="profession">
-          <el-input v-model="classInfo.profession"></el-input>
+        <el-form-item label="专业" prop="profession">
+          <el-input v-model="classInfo.profession" placeholder="请输入班级所属专业"></el-input>
+        </el-form-item>
+        <el-form-item label="年级" prop="grade">
+          <el-input v-model="classInfo.grade" placeholder="请输入班级所属年级"></el-input>
+        </el-form-item>
+        <el-form-item label="宿舍信息" prop="dormitory">
+          <el-input v-model="classInfo.dormitory" placeholder="请输入班级的宿舍信息"></el-input>
+        </el-form-item>
+        <el-form-item label="班长" prop="monitor">
+          <el-input v-model="classInfo.monitor" placeholder="请输入班级的班长"></el-input>
+        </el-form-item>
+        <el-form-item label="学习委员" prop="study_committee">
+          <el-input v-model="classInfo.study_committee" placeholder="请输入班级的学习委员"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -96,6 +109,8 @@
     </div>
     
   </div>
+  <router-view></router-view>
+</div>
 </template>
 
 <script>
@@ -108,7 +123,11 @@ export default {
       classInfo: {
         className: '',//班级名
         department: '',//学院
-        profession: ''//专业
+        profession: '',//专业
+        grade: '',//年级
+        dormitory: '',//宿舍
+        monitor: '',//班长
+        study_committee: '',//学习委员
       },
       // 查询班级信息
       searchInfo: {
@@ -125,7 +144,7 @@ export default {
           { required: true, message: '请输入班级名称' }
         ],
         profession: [
-          { required: true, message: '请输入所属专业' }
+          { required: true, message: '请输入所属专业' } 
         ],
         department: [
           { required: true, message: '请输入所属学院' }
@@ -144,7 +163,7 @@ export default {
         department: '',
         profession: '',
         grade: '',
-        domitory: '',
+        dormitory: '',
         monitor: '',
         studyCommittee: ''
       }
@@ -152,9 +171,15 @@ export default {
   },
   methods: {
     showDetails(row) {
-      console.log(row);
-      // 这块路由跳转有问题
-      this.$router.push('/Main/Cim/Details')
+      // console.log(row);
+      this.$router.push(
+      {
+        //添加需要传值到那个页面的路径
+        path:'/Main/Cim/Details/Dormitory', 
+        //携带需要传递的参数
+        query:{baseData: row}
+      })
+      // this.$router.push('/Main/Cim/Details')
     },
     handleClose() {
       this.$refs.classInfo.resetFields()
@@ -175,12 +200,16 @@ export default {
     },
     submit() {
       this.$refs.classInfo.validate((valid) => {
-        if (valid && localStorage.getItem('role') === '1') {
+        if (valid ) {
           // 后续对表单数据的处理
           const classInfo = {
             className: this.classInfo.className,
             profession: this.classInfo.profession,
-            department: this.classInfo.department
+            department: this.classInfo.department,
+            grade: this.classInfo.grade,
+            dormitory: this.classInfo.dormitory,
+            monitor: this.classInfo.monitor,
+            study_committee: this.classInfo.study_committee 
           }
           addClass(classInfo).then((res) => {
             // alert(res.data.msg);
@@ -192,8 +221,6 @@ export default {
             this.getClassList()
           })
           this.handleClose()
-        } else {
-          alert('只有辅导员可以增删班级')
         }
       })
     },
@@ -206,14 +233,24 @@ export default {
             }
             searchClass(searchInfo).then((res) => {
               const { data } = res.data
+              console.log(data);
+              if(data === null) {
+                this.$message({
+                    message:'不存在该班级信息',
+                    type: 'error'
+                    });
+                return
+              }
               // 获取到班级信息后，对应填入展示卡片中
               this.getClassData = data
-              console.log(this.getClassData);
+              // console.log(this.getClassData);
 
             })
             this.handleClose2()
             // 将原本隐藏的展示卡片显示出来
-            this.infoVisible = true
+            if(this.getClassData !== null) {
+              this.infoVisible = true
+            }
           }
       })
     },

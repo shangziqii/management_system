@@ -1,6 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+
+const originalPush = VueRouter.prototype.push
+
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 Vue.use(VueRouter);
 
 // 引入页面组件
@@ -21,7 +28,7 @@ import Details from '@/pages/Details'
 import ClassLesson from '@/pages/ClassLesson'
 import ClassMeet from '@/pages/ClassMeet'
 import ClassTalk from '@/pages/ClassTalk'
-import Domitory from '@/pages/Domitory'
+import Dormitory from '@/pages/Dormitory'
 
 //引入Sim（学生信息管理下的路由）
 import Bsi from '@/pages/Sim/Bsi'
@@ -66,8 +73,8 @@ const routes = [
                                 component: ClassTalk
                             },
                             {
-                                path: 'Domitory',
-                                component: Domitory
+                                path: 'Dormitory',
+                                component: Dormitory
                             }
                         ]
                             

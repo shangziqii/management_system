@@ -4,25 +4,22 @@
     <!-- 几个不同的记录 -->
     <div class="list-group">
       <!-- Vue中借助router-link实现页面切换 -->
-      <el-tabs type="border-card">
-        <el-tab-pane label="宿舍探访信息">
-          <router-link class="list-group-item" active-class="active" to="/Main/Cim/Details/Domitory">宿舍探访信息</router-link>
+      <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+        <el-tab-pane label="宿舍探访信息" name="first">
         </el-tab-pane>
-        <el-tab-pane label="班会记录信息">
-          <router-link class="list-group-item" active-class="active" to="/Main/Cim/Details/ClassMeet">班会记录信息</router-link>
+        <el-tab-pane label="班会记录信息" name="second">
         </el-tab-pane>
-        <el-tab-pane label="班级听课记录">
-          <router-link class="list-group-item" active-class="active" to="/Main/Cim/Details/ClassLesson">班级听课记录</router-link>
+        <el-tab-pane label="班级听课记录" name="third">
         </el-tab-pane>
-        <el-tab-pane label="班级谈话记录">
-          <router-link class="list-group-item" active-class="active" to="/Main/Cim/Details/ClassTalk">班级谈话记录</router-link>
+        <el-tab-pane label="班级谈话记录" name="fourth">
         </el-tab-pane>
+        <!-- 指定组件的呈现位置 -->
+        <router-view></router-view>
       </el-tabs>
     </div>
     <div class="panel">
       <div class="panel-body">
-        <!-- 指定组件的呈现位置 -->
-        <router-view></router-view>
+        
       </div>
     </div>
   </div>
@@ -32,12 +29,43 @@
 import Banner from './components/Banner.vue'
 export default {
     name: 'Details',
+    data() {
+      return {
+        activeName: 'first',
+      }
+    },
     components: {
-      Banner
-    }
+      Banner,
+    },
+    methods: {
+      handleClick() {
+        if(this.activeName === 'first') {
+          this.$router.push('/Main/Cim/Details/Dormitory')
+        } else if(this.activeName === 'second') {
+          this.$router.push('/Main/Cim/Details/ClassMeet')
+        } else if(this.activeName === 'third') {
+          this.$router.push('/Main/Cim/Details/ClassLesson')
+        } else if(this.activeName === 'fourth') {
+          this.$router.push('/Main/Cim/Details/ClassTalk')
+        }
+
+      },
+    },
 }
 </script>
 
-<style>
-
+<style scoped>
+.list-group /deep/ .el-tabs--card>.el-tabs__header .el-tabs__nav{
+  border: 0;
+}
+.list-group {
+  position: absolute;
+  top: 200px;
+}
+.list-group /deep/ .el-tabs__nav {
+  display: flex;
+  justify-content: space-between;
+  width: 1663px;
+  /* font-size: 20px; */
+}
 </style>
