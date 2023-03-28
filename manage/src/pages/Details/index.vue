@@ -17,11 +17,6 @@
         <router-view></router-view>
       </el-tabs>
     </div>
-    <div class="panel">
-      <div class="panel-body">
-        
-      </div>
-    </div>
   </div>
 </template>
 
