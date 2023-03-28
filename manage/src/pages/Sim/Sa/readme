@@ -1,0 +1,71 @@
+      <div>
+        <!-- 搜索学生 -->
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
+            <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <div v-show="showNum">
+          <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号">
+          </el-input>
+          <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+        </div>
+        <div v-show="showPizeid">
+          <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
+          </el-input>
+          <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+        </div>
+        <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
+        <!-- 点击按钮弹出表单添加信息 -->
+        <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+          <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+            <el-form-item label="学号" prop="studentNum">
+              <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
+            </el-form-item>
+            <el-form-item label="奖项名称" prop="prizeName">
+              <el-input placeholder="请输入奖项名称" v-model="form.prizeName"></el-input>
+            </el-form-item>
+            <el-form-item label="奖项等级" prop="prizeLevel">
+              <el-input placeholder="请输入奖项等级" v-model="form.prizeLevel"></el-input>
+            </el-form-item>
+            <el-form-item label="获奖时间" prop="prizeTime">
+              <!-- <el-input placeholder="请输入获奖时间" v-model="form.prizeTime"></el-input> -->
+              <el-date-picker v-model="form.prizeTime" type="date" placeholder="请选择获奖时间" format="yyyy 年 MM 月 dd 日"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="指导老师" prop="teacher">
+              <el-input placeholder="请输入指导老师" v-model="form.teacher"></el-input>
+            </el-form-item>
+            <el-form-item label="奖状电子版" prop="files">
+              <el-input placeholder="请输入奖状电子版" v-model="form.files"></el-input>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="cancel">取 消</el-button>
+            <el-button type="primary" @click="submit">提 交</el-button>
+          </span>
+        </el-dialog>
+        <el-table :data="tableData" style="height: 300px">
+          <!-- style="width: 100%" -->
+          <el-table-column fixed prop="studentNum" label="学号" width="150">
+          </el-table-column>
+          <el-table-column prop="prizeName" label="奖项名称" width="120">
+          </el-table-column>
+          <el-table-column prop="prizeLevel" label="奖项等级" width="120">
+          </el-table-column>
+          <el-table-column prop="prizeTime" label="获奖时间" width="120">
+          </el-table-column>
+          <el-table-column prop="teacher" label="指导老师" width="300">
+          </el-table-column>
+          <el-table-column prop="files" label="奖状电子版" width="120">
+            <template slot-scope="scope">
+              <img :src="scope.row.files" min-width="70" height="70">
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>

@@ -107,7 +107,6 @@
             </el-table-column>
         </el-table>
     </div>
-    
   </div>
   <router-view></router-view>
 </div>

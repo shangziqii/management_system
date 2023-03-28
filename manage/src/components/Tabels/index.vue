@@ -3,7 +3,7 @@
           <el-table :data="tableData"  style="margin:0;">
             <!--数据列表展示部分-->
               <el-table-column
-                              v-for="item in tableColumns"
+                            v-for="item in tableColumns"
                             :key="item.prop"
                             :prop="item.prop"
                             :label="item.label"

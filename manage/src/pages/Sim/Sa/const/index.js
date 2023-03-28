@@ -1,0 +1,40 @@
+export const columns = [
+    {
+        label: '学号',
+        prop: 'studentNum'
+    },
+    {
+        label: '学生姓名',
+        prop: 'studentName'
+    },
+    {
+        label: '奖项名称',
+        prop: 'prizeName'
+    },
+    {
+        label: '奖项等级',
+        prop: 'prizeLevel'
+    },
+    {
+        label: '获奖时间',
+        prop: 'prizeTime'
+    },
+    {
+        label: '指导老师',
+        prop: 'teacher'
+    },
+    {
+        label: '奖状电子版',
+        prop: 'files'
+    }
+]
+export const operaColums = [
+    {
+        label: '删除',
+        type: 'danger'
+    },
+    {
+        label: '修改',
+        type: 'warning'
+    }
+]
