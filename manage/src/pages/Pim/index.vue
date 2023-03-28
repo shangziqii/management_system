@@ -21,7 +21,8 @@
 
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <el-button style="float: right; padding: 3px 0" type="primary" @click="dialogVisible = true">修改密码</el-button>
+        <div class="title">个人信息</div>
+        <el-button style="float: right" type="primary" @click="dialogVisible = true">修改密码</el-button>
       </div>
       <div class="text item"><span>姓名：</span>{{ info.name }}</div>
       <div class="text item"><span>身份：</span>{{ info.role }}</div>
@@ -144,6 +145,13 @@ export default {
 </script>
 
 <style scoped>
+.title{
+  position: absolute;
+    font-size: 28px;
+    font-weight: 600;
+    top: 42px;
+    left: 399px;
+}
 .text {
   font-size: 18px;
   line-height: 37px;

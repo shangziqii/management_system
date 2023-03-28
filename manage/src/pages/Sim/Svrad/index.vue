@@ -29,12 +29,15 @@
           <el-form-item label="学号" prop="studentNum">
             <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
           </el-form-item>
-<!--           <el-form-item label="姓名" prop="studentName">
+          <transition>
+          
+          </transition>
+          <el-form-item label="姓名" prop="studentName">
             <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
-          </el-form-item> -->
-<!--           <el-form-item label="班级" prop="studentClass">
+          </el-form-item>
+          <el-form-item label="班级" prop="studentClass">
             <el-input placeholder="请输入班级" v-model="form.studentClass"></el-input>
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item label="处分等级" prop="punishLevel">
             <el-input placeholder="请输入处分等级" v-model="form.punishLevel"></el-input>
           </el-form-item>
@@ -164,26 +167,26 @@ export default {
           { required: true, message: '请输入学生学号' }
       ],
       studentName: [
-          { required: true, message: '请输入获奖学生姓名' }
+          { required: true, message: '请输入学生姓名' }
         ],
         studentClass: [
-          { required: true, message: '请输入获奖学生班级' }
+          { required: true, message: '请输入学生班级' }
         ],
-      prizeName: [
-          { required: true, message: '请输入获奖名称' }
+        punishName: [
+          { required: true, message: '请输入处分名称' }
         ],
-      prizeLevel: [
-      { required: true, message: '请输入获奖等级' }
+        punishLevel: [
+      { required: true, message: '请输入处分等级' }
         ],
-      punishTime: [
-          { required: true,message:'请输入获奖时间'}
+        punishTime: [
+          { required: true,message:'请选择处分时间'}
+        ],
+        remarks: [
+          { required: true,message:'请输入处分备注'}
         ],
       files: [
           { required: true,message:'请输入电子版证书'}
-        ],
-      teacher: [
-          { required: true,message:'请输入指导老师' }
-        ],
+        ]
       },//修改信息的规则
       changeInfoShow:false,
       changeInfoForm:{}

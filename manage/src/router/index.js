@@ -28,7 +28,7 @@ import Bsi from '@/pages/Sim/Bsi'
 import Dsi from '@/pages/Sim/Dsi'
 import Sa from '@/pages/Sim/Sa'
 import Svrad from '@/pages/Sim/Svrad'
-
+import Pm from '@/pages/Sim/Pm'
 
 // 创建routes,创建路由
 const routes = [
@@ -70,7 +70,7 @@ const routes = [
                                 component: Domitory
                             }
                         ]
-                            
+
                     }
                 ]
             },
@@ -105,6 +105,10 @@ const routes = [
                     {
                         path: 'Svrad',
                         component: Svrad
+                    },
+                    {
+                        path: 'Pm',
+                        component: Pm
                     }
 
                 ]
