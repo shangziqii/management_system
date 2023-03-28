@@ -2,7 +2,7 @@
   <div class="main">
     <el-container style="width:100%; height:100%">
       <el-aside width="200px">
-        <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+        <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
            background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
           <h3>管理系统</h3>
           <el-menu-item v-for="item in noChildren" :key="item.name" :index="item.name" @click="clickMenu(item)">
@@ -77,7 +77,7 @@ export default {
           name: "Pim",
           label: "个人信息管理",
           icon: "user-solid",
-          url: "/Main/Pim",
+          index: "/Main/Pim",
         },
         {
           path: "/Main/Am",
@@ -128,6 +128,13 @@ export default {
               icon: "tickets",
               url: "/Main/Sim/Svrad",
             },
+            {
+              path:'/Main/Sim/Pm',
+              name:'Pm',
+              label:'学生党员信息',
+              icon:'tickets',
+              url:'/Main/Sim/Pm'
+            }
           ]
         }/* ,
         {

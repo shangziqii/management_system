@@ -126,7 +126,7 @@ export default {
             const form={
               name:this.form.name,
               password:this.form.password,
-              role:this.form.role,
+              role:Number(this.form.role),
               phone:this.form.phone
             }
             addUser(form).then((res) => {
@@ -201,7 +201,7 @@ export default {
   position: absolute;
   left: 210px;
 }
-.manage /deep/ .el-dialog {
+.manage  .el-dialog {
   border-radius: 8px;
 }
 .userList {
