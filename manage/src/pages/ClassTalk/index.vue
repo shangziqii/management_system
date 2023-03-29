@@ -1,5 +1,5 @@
 <template>
-  
+  <div>这是ClassTalk</div>
 </template>
 
 <script>

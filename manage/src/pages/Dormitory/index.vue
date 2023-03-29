@@ -2,49 +2,38 @@
   <div>
     <!-- 搜索框的显示 -->
     <div>
-      <el-input v-model="search.listeningId" class="searchInput" placeholder="请输入寝室号">
+      <el-input v-model="search.dormitoryVisitId" class="searchInput" placeholder="请输入寝室号">
       </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchListening"></el-button>
+      <el-button icon="el-icon-search" circle class="search" @click="searchDormitory"></el-button>
     </div>
     <!-- 添加信息按钮 -->
     <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-        <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="班级ID" prop="classId">
-            <el-input placeholder="请输入听课班级的ID" v-model="form.classId"></el-input>
-          </el-form-item>
-          <el-form-item label="开始时间" prop="startTime">
-            <el-date-picker v-model="form.startTime" type="datetime" placeholder="请选择开始时间" format="yyyy-MM-dd-HH-mm-ss"
-              value-format="yyyy-MM-dd-HH-mm-ss">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="结束时间" prop="endTime">
-            <el-date-picker v-model="form.endTime" type="datetime" placeholder="请选择结束时间" format="yyyy-MM-dd-HH-mm-ss"
-              value-format="yyyy-MM-dd-HH-mm-ss">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="听课教室" prop="location">
-            <el-input placeholder="请输入听课教室" v-model="form.location"></el-input>
-          </el-form-item>
-          <el-form-item label="教师名称" prop="teacherName">
-            <el-input placeholder="请输入教师名称" v-model="form.teacherName"></el-input>
-          </el-form-item>
-          <el-form-item label="课程名称" prop="courseName">
-            <el-input placeholder="请输入课程名称" v-model="form.courseName"></el-input>
-          </el-form-item>
-          <el-form-item label="内容记录" prop="contentRecord">
-            <el-input placeholder="请输入听课关键内容" v-model="form.contentRecord"></el-input>
-          </el-form-item>
-          <el-form-item label="文件URL" prop="files">
-            <el-input placeholder="请输入要上传文件的URL" v-model="form.files"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submit">提 交</el-button>
-        </span>
-      </el-dialog>
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="班级ID" prop="classId">
+          <el-input placeholder="请输入寝室所属班级的ID" v-model="form.classId"></el-input>
+        </el-form-item>
+        <el-form-item label="查寝时间" prop="dorTime">
+          <el-date-picker v-model="form.dorTime" type="datetime" placeholder="请选择查寝时间" format="yyyy-MM-dd-HH-mm-ss"
+            value-format="yyyy-MM-dd-HH-mm-ss" class="pickTime">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="查寝目标" prop="subject">
+          <el-input placeholder="请输入检查的寝室" v-model="form.subject"></el-input>
+        </el-form-item>
+        <el-form-item label="内容记录" prop="contentRecord">
+          <el-input placeholder="请输入需要记录的关键内容" v-model="form.contentRecord"></el-input>
+        </el-form-item>
+        <el-form-item label="文件URL" prop="files">
+          <el-input placeholder="请输入要上传文件的URL" v-model="form.files"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submit">提 交</el-button>
+      </span>
+    </el-dialog>
 
 
 
@@ -66,10 +55,10 @@
 <script>
 import Tables from '../../components/Tabels/index.vue'
 import { columns, operaColums} from './const'
-import { addLesson, getLessonList } from './api/index'
+import { addDor, getDorList } from './api/index'
 
 export default {
-  name: 'ClassLesson',
+  name: 'Dormitory',
   components: {
     Tables
   },
@@ -82,34 +71,31 @@ export default {
       columns:[],//列表配置
       operaColums:[],//操作按钮配置
       search: {
-        listeningId: ''
+        dormitoryVisitId: ''
       },
       form: {},
       dialogVisible: false,
       rules: {
         classId: [
-          { required: true, message: '请输入听课班级的ID'}
+          { required: true, message: '请输入寝室所属班级ID'}
         ],
-        startTime: [
-          { required: true, message: '请选择开始时间' }
-        ],
-        endTime: [
-          { required: true, message: '请选择结束时间' }
+        dorTime: [
+          { required: true, message: '请选择查寝时间' }
         ]
       }
     }
   },
   methods: {
     // 获取查寝信息列表
-    showLessonList() {
+    showDorList() {
         //发送请求参数
         const params = {
          page: this.currentPage,
          pageLimit: this.pageLimit,
        }
        //发送获取查寝信息列表的请求
-      getLessonList(params).then((res) => {
-          // console.log(res.data.data.prizeStudents);
+      getDorList(params).then((res) => {
+          console.log(res.data);
           //将获取到的查寝信息给到tableData
             // this.tableData = res.data.data.prizeStudents
             this.total=res.data.total
@@ -130,14 +116,14 @@ export default {
     submit() {
         this.$refs.form.validate((valid) => {
           if(valid) {
-            addLesson(this.form).then((res) => {
+            addDor(this.form).then((res) => {
               console.log(res);
               this.$message({
                     message:res.data.msg,
                     type: 'success'
                     });
             // 重新获取列表的接口
-            this.showLessonList()
+            this.showDorList()
             })
             this.handleClose()
           }
@@ -145,7 +131,7 @@ export default {
     },
   },
   mounted() {
-    this.showLessonList()
+    this.showDorList()
     this.columns = columns
     this.operaColums = operaColums
   },
