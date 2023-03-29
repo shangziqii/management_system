@@ -33,3 +33,10 @@ export const changeInfo = (data) => {
         }
     })
 }
+
+export const searchUseNum = (params) => {
+    return axios.get('/api/prizeStudent/list', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}

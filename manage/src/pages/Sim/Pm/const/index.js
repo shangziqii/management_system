@@ -7,10 +7,9 @@ export const columns = [
         label: '学生姓名',
         prop: 'studentName'
     },
-    //这里可以加一个学生班级
     {
         label: '学生班级',
-        prop: 'studentClass'
+        prop: 'className'
     },
     {
         label: '政治面貌',
