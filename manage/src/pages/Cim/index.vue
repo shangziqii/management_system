@@ -113,6 +113,7 @@
 </template>
 
 <script>
+
 import { classList, addClass, delClass, searchClass, editClass } from './api/index'
 export default {
   name: 'Cim',
@@ -170,15 +171,16 @@ export default {
   },
   methods: {
     showDetails(row) {
+      this.$store.commit('getBaseData', row)
       // console.log(row);
-      this.$router.push(
-      {
-        //添加需要传值到那个页面的路径
-        path:'/Main/Cim/Details/Dormitory', 
-        //携带需要传递的参数
-        query:{baseData: row}
-      })
-      // this.$router.push('/Main/Cim/Details')
+      // this.$router.push(
+      // {
+      //   //添加需要传值到那个页面的路径
+      //   path:'/Main/Cim/Details/Dormitory', 
+      //   //携带需要传递的参数
+      //   query:{baseData: row}
+      // })
+      this.$router.push('/Main/Cim/Details/Dormitory')
     },
     handleClose() {
       this.$refs.classInfo.resetFields()

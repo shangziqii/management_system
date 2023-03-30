@@ -6,6 +6,8 @@
         <span>年级：{{baseData.grade}}</span>
         <span>专业：{{baseData.profession}}</span>
         <span>辅导员：{{baseData.userName}}</span>
+    <!-- <button @click="show">按钮</button> -->
+
     </div>
 </template>
 
@@ -13,12 +15,24 @@
 export default {
     data() {
         return {
-            baseData: []
+            baseData: {}
+        }
+    },
+    methods: {
+        show() {
+            console.log(this.baseData);
         }
     },
     mounted() {
-        this.baseData = this.$route.query.baseData
+        // this.baseData = this.$route.query.baseData
+        // console.log(this.$store.state.detail.baseData);
+        this.baseData = this.$store.state.detail.baseData
     },
+    // computed: {
+    //     showData() {
+    //     return this.$store.state.detail.baseData
+    //     }
+    // }
 }
 </script>
 

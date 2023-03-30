@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>SEKLFJAWEKLF</h1>
     <!-- 搜索框的显示 -->
       <div>
         <el-input v-model="search.meetingId" class="searchInput" placeholder="请输入寝室号">
@@ -126,7 +127,7 @@ export default {
     submit() {
         this.$refs.form.validate((valid) => {
           if(valid) {
-            addDor(this.form).then((res) => {
+            addMeet(this.form).then((res) => {
               console.log(res);
               this.$message({
                     message:res.data.msg,
