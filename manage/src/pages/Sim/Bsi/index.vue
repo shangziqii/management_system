@@ -1,5 +1,6 @@
 <template>
-    <div class="page">
+  <div>
+    <div class="page" v-show="$route.path=='/Main/Sim/Bsi'">
        <div class="btn"><el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button></div>
        <Tables 
          :tableColumns="Columns" 
@@ -10,11 +11,14 @@
          :currentPage="currentPage"
          @click_1="deleteStu"
          @click_2="modify"
+         @click_3="details"
          @changeLimit="changeLimit"
          @changePage="changePage"
         />
        <AddStudentInfo :isShow="addFormShow" @change="changeShow" @submit="submitForm"/>
        <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet"/>
+    </div>
+    <router-view></router-view>
     </div>
 </template>
 
@@ -183,6 +187,10 @@ export default {
       this.currentPage = val;
       this.getTableList();
     },
+    details(val){
+      console.log(val);
+      this.$router.push('/Main/Sim/Bsi/InfoDetails')
+    }
   },
   mounted() {
     this.Columns = columns;

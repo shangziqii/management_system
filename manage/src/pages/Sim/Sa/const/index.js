@@ -8,6 +8,10 @@ export const columns = [
         prop: 'studentName'
     },
     {
+        label: '学生班级',
+        prop: 'className'
+    },
+    {
         label: '奖项名称',
         prop: 'prizeName'
     },

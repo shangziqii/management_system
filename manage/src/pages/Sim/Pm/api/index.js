@@ -33,3 +33,19 @@ export const changeInfo = (data) => {
         }
     })
 }
+
+//根据学号进行搜索
+export const searchUseNum = (params) => {
+    return axios.get('/api/partyMember/list', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}
+
+//根据政治面貌进行搜索
+export const searchUsePoliticalStatus = (params) => {
+    return axios.get('/api/partyMember/list', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}

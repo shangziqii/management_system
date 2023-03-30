@@ -37,6 +37,9 @@ import Sa from '@/pages/Sim/Sa'
 import Svrad from '@/pages/Sim/Svrad'
 import Pm from '@/pages/Sim/Pm'
 
+//引入Bsi（基本学生信息管理的详情页）
+import InfoDetails from '@/pages/Sim/Bsi/InfoDetails'
+
 // 创建routes,创建路由
 const routes = [
     {
@@ -99,7 +102,13 @@ const routes = [
                 children: [
                     {
                         path: 'Bsi',
-                        component: Bsi
+                        component: Bsi,
+                        children: [
+                            {
+                                path: 'InfoDetails',
+                                component: InfoDetails
+                            }
+                        ]
                     },
                     {
                         path: 'Dsi',

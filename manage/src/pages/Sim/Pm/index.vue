@@ -7,7 +7,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-            <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item>
+            <el-dropdown-item @click.native="selectPizeid">请选择政治面貌</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- 搜索框的显示 -->
@@ -17,9 +17,9 @@
           <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
         </div>
         <div v-show="showPizeid">
-          <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
+          <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="searchInput">
           </el-input>
-          <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+          <el-button icon="el-icon-search" circle class="search" @click="searchPolitical"></el-button>
         </div>
         <!-- 添加信息按钮 -->
         <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
@@ -124,7 +124,7 @@
   <script>
   import Tables from './../../../components/Tabels';
   import {columns,operaColums} from './const'
-  import { punishList, addPunish,removeInfo,changeInfo } from './api'
+  import { punishList, addPunish,removeInfo,changeInfo,searchUseNum,searchUsePoliticalStatus } from './api'
   export default {
     name: 'Svrad',
     components:{
@@ -141,7 +141,8 @@
         operaColums:[],//操作按钮配置
         dialogVisible: false,//弹出窗口是否显示参数
         search:{
-          studentNum:''
+          studentNum:'',
+          searchPoliticalStatus:''
         }, //根据字段进行搜索
         showNum:true,//选择类型对应输入框的显示参数
         showPizeid:false,//选择类型对应输入框的显示参数
@@ -225,7 +226,7 @@
       },
       //删除用户
       deleteStu(value) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -306,14 +307,6 @@
         this.showPizeid=true
         this.showNum=false
       },
-      //使用学生学号进行搜索
-      searchStudentNum(){
-        console.log("使用学生学号进行搜索");
-      },
-      //使用获奖id进行搜索
-      searchPizeId(){
-        console.log("使用获奖id进行搜索");
-      },
       changeLimit(val) {
       this.pageLimit = val;
       this.gepunishList();
@@ -321,7 +314,92 @@
       changePage(val){
         this.currentPage=val
         this.gepunishList();
+      },
+
+      //使用学生学号进行搜索
+      searchStudentNum() {
+      if (!this.search.studentNum) {
+        // console.log('数据为空');
+        this.$message('请输入内容进行搜索');
+        this.geWinnerList()
       }
+      else {
+        this.$message({
+          showClose: true,
+          message: '正在搜索请稍等'
+        });
+        const searchInfo = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+          studentNum: this.search.studentNum
+        }
+        searchUseNum(searchInfo).then((res) => {
+        if(res.data.status===0)
+        {
+          this.tableData=res.data.data.partyMembers
+          this.$message({
+          message: '搜索成功',
+          type: 'success'
+        });
+        }
+        else{
+          this.$message({
+          showClose: true,
+          message: '查询失败',
+          type: 'error'
+        });
+        }
+        }).catch((error)=>{
+          this.$message({
+          showClose: true,
+          message: '连接错误，请稍后',
+          type: 'error'
+        });
+        })
+      }
+    },
+    //根据政治面貌进行搜索
+      searchPolitical(){
+        if (!this.search.searchPoliticalStatus) {
+        // console.log('数据为空');
+        this.$message('请输入内容进行搜索');
+        this.gepunishList()
+      }
+      else {
+        const searchInfo = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+          politicalStatus: this.search.searchPoliticalStatus
+        }
+        this.$message({
+          showClose: true,
+          message: '正在搜索请稍等'
+        });
+        searchUsePoliticalStatus(searchInfo).then((res) => {
+        if(res.data.status===0)
+        {
+          this.tableData=res.data.data.partyMembers
+          this.$message({
+          message: '搜索成功',
+          type: 'success'
+        });
+        }
+        else{
+          this.$message({
+          showClose: true,
+          message: '查询失败',
+          type: 'error'
+        });
+        }
+        }).catch((error)=>{
+          this.$message({
+          showClose: true,
+          message: '连接错误，请稍后',
+          type: 'error'
+        });
+        })
+      }
+      },
     },
   
     mounted() {

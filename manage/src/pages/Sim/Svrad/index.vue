@@ -7,7 +7,7 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-          <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item>
+          <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
         </el-dropdown-menu>
       </el-dropdown>
       <!-- 搜索框的显示 -->
@@ -118,7 +118,7 @@
 <script>
 import Tables from './../../../components/Tabels';
 import {columns,operaColums} from './const'
-import { punishList, addPunish,removeInfo,changeInfo } from './api'
+import { punishList, addPunish,removeInfo,changeInfo,searchUseNum } from './api'
 export default {
   name: 'Svrad',
   components:{
@@ -322,8 +322,46 @@ export default {
       this.showNum=false
     },
     //使用学生学号进行搜索
-    searchStudentNum(){
-      console.log("使用学生学号进行搜索");
+    searchStudentNum() {
+      if (!this.search.studentNum) {
+        // console.log('数据为空');
+        this.$message('请输入内容进行搜索');
+        this.gepunishList()
+      }
+      else {
+        this.$message({
+          showClose: true,
+          message: '正在搜索请稍等'
+        });
+        const searchInfo = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+          studentNum: this.search.studentNum
+        }
+        searchUseNum(searchInfo).then((res) => {
+        if(res.data.status===0)
+        {
+          this.tableData=res.data.data.punishStudents
+          this.$message({
+          message: '搜索成功',
+          type: 'success'
+        });
+        }
+        else{
+          this.$message({
+          showClose: true,
+          message: '查询失败',
+          type: 'error'
+        });
+        }
+        }).catch((error)=>{
+          this.$message({
+          showClose: true,
+          message: '连接错误，请稍后',
+          type: 'error'
+        });
+        })
+      }
     },
     //使用获奖id进行搜索
     searchPizeId(){

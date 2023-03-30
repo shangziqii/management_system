@@ -33,3 +33,11 @@ export const changeInfo = (data) => {
         }
     })
 }
+
+//根据学号进行搜索学生信息
+export const searchUseNum = (params) => {
+    return axios.get('/api/punishStudent/list', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}
