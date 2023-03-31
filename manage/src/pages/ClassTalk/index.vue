@@ -21,8 +21,8 @@
           <el-input placeholder="请输入谈话班级的ID" v-model="form.classId"></el-input>
         </el-form-item>
         <el-form-item label="谈话时间" prop="time">
-          <el-date-picker v-model="form.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd-HH-mm-ss"
-            value-format="yyyy-MM-dd-HH-mm-ss" class="pickTime">
+          <el-date-picker v-model="form.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss" class="pickTime">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="学生姓名" prop="studentName">
@@ -51,21 +51,24 @@
       <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
         <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
           <el-form-item label="谈话ID" prop="interviewId">
-            <el-input placeholder="请输入谈话ID" :disabled="true" v-model="changeInfoForm.interviewId">{{ changeInfoForm.interviewId }}</el-input>
+            <el-input placeholder="请输入谈话ID" v-model="changeInfoForm.interviewId">{{ changeInfoForm.interviewId }}</el-input>
+          </el-form-item>
+          <el-form-item label="班级ID" prop="classId">
+            <el-input placeholder="请输入班级ID" :disabled="true" v-model="changeInfoForm.classId">{{ changeInfoForm.classId }}</el-input>
           </el-form-item>
           <el-form-item label="谈话时间" prop="time">
-            <el-date-picker v-model="changeInfoForm.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd-HH-mm-ss"
-            value-format="yyyy-MM-dd-HH-mm-ss" class="pickTime">
+            <el-date-picker v-model="changeInfoForm.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss" class="pickTime">
           </el-date-picker>
           </el-form-item>
           <el-form-item label="学生姓名" prop="studentName">
-            <el-input placeholder="请输入学生姓名" :disabled="true" v-model="changeInfoForm.studentName">{{ changeInfoForm.studentName }}</el-input>
+            <el-input placeholder="请输入学生姓名" v-model="changeInfoForm.studentName">{{ changeInfoForm.studentName }}</el-input>
           </el-form-item>
           <el-form-item label="谈话地点" prop="location">
-            <el-input placeholder="请输入谈话地点" :disabled="true" v-model="changeInfoForm.location">{{ changeInfoForm.location }}</el-input>
+            <el-input placeholder="请输入谈话地点" v-model="changeInfoForm.location">{{ changeInfoForm.location }}</el-input>
           </el-form-item>
           <el-form-item label="谈话目标" prop="subject">
-            <el-input placeholder="请输入谈话目标" :disabled="true" v-model="changeInfoForm.subject">{{ changeInfoForm.subject }}</el-input>
+            <el-input placeholder="请输入谈话目标" v-model="changeInfoForm.subject">{{ changeInfoForm.subject }}</el-input>
           </el-form-item>
           <el-form-item label="内容记录" prop="contentRecord">
             <el-input placeholder="请输入关键内容记录" v-model="changeInfoForm.contentRecord">{{ changeInfoForm.contentRecord }}</el-input>
@@ -100,7 +103,7 @@
 <script>
 import Tables from '../../components/Tabels/index.vue'
 import { columns, operaColums} from './const'
-import { addTalk, getTalkList, delTalk, editTalk, getTalk } from './api/index'
+import { addTalk, getTalkList, delTalk, editTalk } from './api/index'
 
 export default {
   name: 'ClassTalk',
@@ -166,13 +169,18 @@ export default {
         const params = {
          page: this.currentPage,
          pageLimit: this.pageLimit,
+         classId: this.search2.classId
        }
        //发送获取谈话信息列表的请求
       getTalkList(params).then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           //将获取到的谈话信息给到tableData
-            // this.tableData = res.data.data.prizeStudents
+            this.tableData = res.data.data.interviews
             this.total=res.data.total
+            this.$message({
+            message:res.data.msg,
+            type: 'success'
+            })
         }).catch((error)=>{
           this.$message.error('获取谈话信息列表错误',error);
       })
@@ -190,15 +198,21 @@ export default {
     submit() {
         this.$refs.form.validate((valid) => {
           if(valid) {
-            addTalk(this.form).then((res) => {
-              console.log(res);
+            addDor(this.form).then((res) => {
+              // console.log(res);
+              if (res.status === 200) {
+              console.log('添加成功');
               this.$message({
-                    message:res.data.msg,
-                    type: 'success'
-                    });
-            // 重新获取列表的接口
-            this.showTalkList()
+                message: '添加成功',
+                type: 'success'
+              })
+            }
+            else {
+              alert('添加失败', res.data.msg)
+            }
             })
+            // 重置表单
+            this.$refs.form.resetFields()
             this.handleClose()
           }
         })
@@ -211,13 +225,13 @@ export default {
       }).then(() => {
         //value值对应的是点击删除该查寝信息
       delTalk(value).then((res)=>{
-        console.log(res.status);
+        // console.log(res.status);
         if(res.status===200){
           this.$message({
           message: '删除成功',
           type: 'success'
         });
-        this.geWinnerList()
+        this.showTalkList()
         }
         else{
         this.$message.error('删除谈话信息失败',error);
@@ -248,11 +262,11 @@ export default {
     },
     //修改信息提交按钮
     submitChangeInfo(){
-      this.$refs.form.validate((valid) => {
+      this.$refs.changeInfoForm.validate((valid) => {
         if (valid) {
       console.log('修改信息提交了');
       editTalk(this.changeInfoForm).then((res)=>{
-        console.log(res);
+        // console.log(res);
         if(res.status===200){
           this.$message({
           message: '修改成功',
@@ -262,7 +276,7 @@ export default {
         else{
         this.$message.error('修改谈话信息失败',error);
         }
-        this.showDorList()
+        this.showTalkList()
         // 重置表单
         this.$refs.changeInfoForm.resetFields()
         // 关闭弹窗
@@ -273,7 +287,7 @@ export default {
     },
     changePage(val){
       this.currentPage=val
-      this.showDorList()
+      this.showTalkList()
     }
   },
   mounted() {

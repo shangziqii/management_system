@@ -1,27 +1,34 @@
-// 根据要展示的数据来写，配合Table组件使用
 export const columns = [
+    {
+        label: '会议ID',
+        prop: 'meetingId'
+    },
     {
         label: '班级ID',
         prop: 'classId'
     },
     {
-        label: '开始班会时间',
+        label: '开始时间',
         prop: 'startTime'
     },
     {
-        label: '结束班会时间',
+        label: '结束时间',
         prop: 'endTime'
     },
     {
-        label: '',
+        label: '会议地点',
+        prop: 'location'
+    },
+    {
+        label: '会议目标',
         prop: 'subject'
     },
     {
-        label: '',
+        label: '内容记录',
         prop: 'contentRecord'
     },
     {
-        label: '',
+        label: '相关文件',
         prop: 'files'
     },
 ]
