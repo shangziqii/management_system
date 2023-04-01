@@ -41,3 +41,12 @@ export const searchUseNum = (params) => {
         params
     })
 }
+
+//上传学生违规违纪文件
+export const uploadFiles = (params) => {
+    return axios.post('/api/punishStudent/uploadFile', params, {
+        headers: {
+            'token': localStorage.getItem('token')
+        }
+    })
+}

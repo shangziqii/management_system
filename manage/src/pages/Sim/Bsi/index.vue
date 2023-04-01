@@ -20,7 +20,7 @@
         />
        <AddStudentInfo :isShow="addFormShow" @change="changeShow" @submit="submitForm"/>
        <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet"/>
-       <ExportStudentInfo :isShow="showSelect" @change="exportShow" @submit="submitSelect"/>
+       <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
     </div>
     <router-view></router-view>
     </div>
@@ -30,7 +30,7 @@
 import Tables from '../../../components/Tabels';
 import AddStudentInfo from './components/addStudentInfo';
 import ModifyFormInfo from './components/modifyStudentInfo';
-import ExportStudentInfo from './components/ExportStudentInfo'
+import ExportStudentInfo from './../../../components/ExportStudentInfo'
 
 import { getList, addStudent, deleteStudent, modifyStu, exportStuInfo } from './api';
 import { columns, operaColums } from './const';
@@ -47,7 +47,8 @@ export default {
     total: 0, // 数据条数
     modifyFormShow: false, //修改表单是否展示
     studentInfo:{},//要修改的学生的信息
-    showSelect:false
+    showSelect:false,
+    cityOptions: ['学号', '姓名', '班级', '年龄']
    }
   },
   components: {
@@ -207,7 +208,6 @@ export default {
       this.$router.push('/Main/Sim/Bsi/InfoDetails')
     },
     submitSelect(value){
-      console.log('####',value.toString());
       exportStuInfo(value).then((res)=>{
         window.open(res.data.data)
         this.showSelect=false
@@ -242,6 +242,5 @@ export default {
  }
  .exportInfo{
   display:flex;
-  
  }
 </style>

@@ -40,7 +40,12 @@
           <el-input placeholder="请输入需要记录的关键内容" v-model="form.contentRecord"></el-input>
         </el-form-item>
         <el-form-item label="文件URL" prop="files">
-          <el-input placeholder="请输入要上传文件的URL" v-model="form.files"></el-input>
+          <!-- <el-input placeholder="请输入要上传文件的URL" v-model="form.files"></el-input> -->
+          <el-input placeholder="请输入要上传文件的URL" v-model="form.files" :disabled="true"></el-input>
+          <!-- 上传相关文件 -->
+          <div>
+            <input type="file" ref="fileInput" @change="uploadFile">
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -78,7 +83,12 @@
             <el-input placeholder="请输入关键内容记录" v-model="changeInfoForm.contentRecord">{{ changeInfoForm.contentRecord }}</el-input>
           </el-form-item>
           <el-form-item label="上传文件" prop="files">
-            <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input>
+            <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
+            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+          <div>
+            <input type="file" ref="fileInput" @change="uploadFile2">
+          </div>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -90,7 +100,7 @@
 
 
     <!-- 展示查寝信息的表格 -->
-    <Tables
+    <ImgTabels
       :tableColumns="columns" 
       :operaColums="operaColums"
       :tableData="tableData"
@@ -105,14 +115,14 @@
 </template>
 
 <script>
-import Tables from '../../components/Tabels/index.vue'
+import ImgTabels from '../../components/ImgTabels/index.vue'
 import { columns, operaColums} from './const'
-import { addMeet, getMeetList, delMeet, editMeet } from './api/index'
+import { addMeet, getMeetList, delMeet, editMeet,uploadFiles } from './api/index'
 
 export default {
   name: 'ClassMeet',
   components: {
-    Tables
+    ImgTabels
   },
   data() {
     return {
@@ -125,7 +135,9 @@ export default {
       search: {
         meetingId: ''
       },
-      form: {},
+      form: {
+        files:''
+      },
       dialogVisible: false,
       rules: {
         classId: [
@@ -205,7 +217,7 @@ export default {
      submit() {
         this.$refs.form.validate((valid) => {
           if(valid) {
-            addDor(this.form).then((res) => {
+            addMeet(this.form).then((res) => {
               // console.log(res);
               if (res.status === 200) {
               console.log('添加成功');
@@ -295,7 +307,29 @@ export default {
     changePage(val){
       this.currentPage=val
       this.showMeetList()
-    }
+    },
+    //上传相关文件
+    uploadFile() {
+      const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      uploadFiles(formData).then((res) => {
+        this.form.files = res.data.data
+      }).catch((error) => {
+        console.error(error);
+      })
+    },
+    //修改信息页面的上传相关文件
+    uploadFile2() {
+      const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      uploadFiles(formData).then((res) => {
+        this.changeInfoForm.files = res.data.data
+      }).catch((error) => {
+        console.error(error);
+      })
+    },
   },
   mounted() {
     // this.showMeetList()

@@ -1,5 +1,11 @@
 <template>
     <div>
+    <div class="btn">
+      <!-- 添加信息按钮 -->
+    <el-button type="primary" size="small" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
+      <!-- 导出excel表格 -->
+      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
+    </div>
       <!-- 搜索学生 -->
       <el-dropdown>
           <span class="el-dropdown-link">
@@ -21,8 +27,6 @@
           </el-input>
           <el-button icon="el-icon-search" circle class="search" @click="searchPolitical"></el-button>
         </div>
-        <!-- 添加信息按钮 -->
-        <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
         <!-- 点击按钮弹出表单添加信息 -->
         <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
           <el-form ref="form" :rules="rules" :model="form" label-width="80px">
@@ -421,19 +425,20 @@
       .el-icon-arrow-down {
         font-size: 12px;
       }
-      /* 添加信息按钮样式 */
-      .addInfo {
-        position: absolute;
-        top: 105px;
-        right: 89px;
-        z-index: 23;
-      }
+/* 添加信息按钮和导出信息按钮样式 */
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
+}
       /* 搜索框样式 */
       .searchInput{
         position: absolute;
         font-size: 14px;
         z-index: 11;
-        top: 45px;
+        top: 20px;
         left: 377px;
         width: 500px;
       } 
@@ -445,15 +450,15 @@
         font-size: 14px;
         position: absolute;
         z-index: 23;
-        top: 45px;
+        top: 20px;
         left: 262px;
         height: 90px;
       }
       /* 搜索的按钮 */
       .search {
       position: absolute;
-      top: 105px;
-      left: 879px;
+      top: 80px;
+      left: 887px;
       z-index: 23;
     }
   </style>

@@ -30,7 +30,7 @@ export const columns = [
     {
         label: '奖状电子版',
         prop: 'files',
-        avatar: 'files'
+        avatar: true
     }
 ]
 export const operaColums = [

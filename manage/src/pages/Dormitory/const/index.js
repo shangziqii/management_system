@@ -21,7 +21,8 @@ export const columns = [
     },
     {
         label: '相关文件',
-        prop: 'files'
+        prop: 'files',
+        paper: true
     },
 ]
 export const operaColums = [

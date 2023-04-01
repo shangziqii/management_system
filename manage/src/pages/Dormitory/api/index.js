@@ -43,3 +43,10 @@ export const getDor = (params) => {
     })
 }
 // 文件上传接口？？？
+export const uploadFiles = (params) => {
+    return axios.post('/api/classDormitory/uploadFile', params, {
+        headers: {
+            'token': localStorage.getItem('token')
+        }
+    })
+}

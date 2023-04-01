@@ -1,6 +1,9 @@
 <template>
   <div class="page">
-     <div class="btn"><el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button></div>
+    <div class="btn">
+      <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
+      <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+      </div>
      <Tables 
       :tableColumns="Columns" 
       :tableData="tableList" 
@@ -13,13 +16,15 @@
       @changePage="changePage"
      />
      <AddPoorStudentInfo :isShow="isShow" @changeShow="changeShow" @submit="submit"/>
+     <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
   </div>
 </template>
 
 <script>
 import Tables from '../../../components/Tabels';
+import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import AddPoorStudentInfo from './components/addPoorStudentInfo';
-import { submitForm, getList, deleteStu } from './api';
+import { submitForm, getList, deleteStu ,exportStuInfo} from './api';
 import { columns, operaColumns } from './const';
 export default {
  name: 'Dsi',
@@ -33,11 +38,14 @@ export default {
       OperaColums: [],//操作按钮配置
       total: 0, // 数据条数
       studentInfo:{},//要修改的学生的信息
+      showSelect:false,
+      cityOptions:['学号','困难等级','个人情况','备注']
    }
  },
  components: {
    Tables, // 注册Tables组件
    AddPoorStudentInfo, // 注册新增贫困生表单组件
+   ExportStudentInfo
  },
  methods: {
    changeShow() {
@@ -139,6 +147,36 @@ export default {
       this.currentPage = val;
       this.getTableList();
     },
+
+    //导出信息方法
+    submitSelect(value){
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
+      })
+    },
+    exportShow(){
+      this.showSelect=!this.showSelect;
+    },
+    //导出信息
+    submitSelect(value){
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
+      })
+    }
  },
  mounted() {
   this.Columns = columns;
@@ -153,10 +191,10 @@ export default {
    width: 100%;
    height: 100%;
  }
-  .btn {
+ .btn {
    display: flex;
    flex-direction: row;
-   justify-content: flex-start;
+   justify-content: flex-end;
    align-items: center;
    margin-bottom: 10px;
  }

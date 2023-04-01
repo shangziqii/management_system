@@ -61,7 +61,7 @@
 
         <!-- 上传电子版奖状（文件） -->
         <el-form-item label="奖状电子版" prop="files">
-          <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true">{{ form.files }}</el-input>
+          <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input>
           <div>
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers" :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">

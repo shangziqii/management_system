@@ -1,5 +1,5 @@
 <template>
-        <el-dialog title="选择导出参数" :visible.sync="isShow" width="30%" :before-close="handleClose">
+    <el-dialog title="选择导出参数" :visible.sync="isShow" width="30%" :before-close="handleClose">
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -9,17 +9,17 @@
 </el-dialog>
   </template>
   <script>
-    const cityOptions = ['学号', '姓名', '班级', '年龄'];
     export default {
         name: 'ExportStudentInfo',
-    props: {
-            isShow: { type: Boolean , default: () => false},
+        props: {
+            isShow: { type: Boolean , default: () => false},//这里接收是否展示的参数
+            cityOptions:{ type: Array, default: () => []},//这里接收显示的数据
         },
       data() {
         return {
           checkAll: false,
           checkedCities: [],
-          cities: cityOptions,
+          cities: this.cityOptions,
           isIndeterminate: true
         };
       },
@@ -34,7 +34,7 @@
           .catch(_ => {});
       },
         handleCheckAllChange(val) {
-          this.checkedCities = val ? cityOptions : [];
+          this.checkedCities = val ? this.cities : [];
           this.isIndeterminate = false;
         },
         handleCheckedCitiesChange(value) {

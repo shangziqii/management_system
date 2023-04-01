@@ -9,6 +9,11 @@
             <template v-if="item.avatar">
               <img :src="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;">
             </template>
+            <!-- 自定义显示文件 -->
+            <template v-else-if="item.paper">
+              <a :href="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;"></a>
+              <button v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])">预览文件</button>
+            </template>
             <!-- 默认列 -->
             <template v-else>{{ scope.row[item.prop] }}</template>
           </template>
@@ -63,7 +68,12 @@
       // 操作按钮
       btnClick(e, idx) {
         this.$emit("click_" + (idx + 1), e)
-      }
+      },
+      //点击按钮进行预览文件
+      previewFile(file) {
+        // console.log(file);
+      window.open(file);
+    },
     }
   };
   </script>
