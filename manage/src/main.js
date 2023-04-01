@@ -5,7 +5,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router/index'
 import store from './store'
 
-Vue.use(ImageLightbox)
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
