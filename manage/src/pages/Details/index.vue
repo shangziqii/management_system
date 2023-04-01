@@ -63,4 +63,18 @@ export default {
   width: 1663px;
   /* font-size: 20px; */
 }
+
+
+/* 新增样式 */
+.list-group /deep/ .el-tabs__nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    /* font-size: 20px; */
+}
+.list-group {
+    position: absolute;
+    top: 200px;
+    width:84%;
+}
 </style>

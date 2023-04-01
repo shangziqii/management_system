@@ -374,4 +374,5 @@ export default {
 .pickTime {
   width: 100%;
 }
+
 </style>
