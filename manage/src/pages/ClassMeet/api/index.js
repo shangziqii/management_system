@@ -36,7 +36,7 @@ export const editMeet = (data) => {
     })
 }
 // 查看班会记录
-export const getDor = (params) => {
+export const getMeet = (params) => {
     return axios.get('/api/classMeeting/get', {
         headers: { 'token': localStorage.getItem('token') },
         params

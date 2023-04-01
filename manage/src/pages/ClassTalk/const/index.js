@@ -1,15 +1,23 @@
 export const columns = [
     {
-        label: '寝室号',
-        prop: 'dormitoryVisitId'
+        label: '谈话ID',
+        prop: 'interviewId'
     },
     {
         label: '班级ID',
         prop: 'classId'
     },
     {
-        label: '查寝时间',
+        label: '谈话时间',
         prop: 'time'
+    },
+    {
+        label: '学生姓名',
+        prop: 'studentName'
+    },
+    {
+        label: '谈话地点',
+        prop: 'location'
     },
     {
         label: '查寝目标',
