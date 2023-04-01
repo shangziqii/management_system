@@ -1,29 +1,36 @@
 <template>
   <div>
     <!-- 搜索学生 -->
-    <el-dropdown>
-      <span class="el-dropdown-link">
-        选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-        <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
-      </el-dropdown-menu>
-    </el-dropdown>
-    <!-- 搜索框的显示 -->
-    <div v-show="showNum">
-      <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号" @change="onChange"
-        onkeyup="this.value=this.value.replace(/\s+/g,'')">
-      </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+    <div class="searchInfo">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
+          <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
+        </el-dropdown-menu>
+      </el-dropdown>
+      <!-- 搜索框的显示 -->
+      <div v-show="showNum">
+        <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号"
+          onkeyup="this.value=this.value.replace(/\s+/g,'')">
+          <!-- @change="onChange" -->
+        </el-input>
+        <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+      </div>
+      <div v-show="showPizeid">
+        <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
+        </el-input>
+        <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+      </div>
     </div>
-    <div v-show="showPizeid">
-      <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
-      </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+    <div class="btn">
+      <!-- 添加信息按钮 -->
+      <el-button type="primary" size="small" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
+      <!-- 导出excel表格 -->
+      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
     </div>
-    <!-- 添加信息按钮 -->
-    <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
@@ -54,7 +61,23 @@
 
         <!-- 上传电子版奖状（文件） -->
         <el-form-item label="奖状电子版" prop="files">
-          <el-input placeholder="请输入奖状电子版" v-model="form.files"></el-input>
+          <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true">{{ form.files }}</el-input>
+          <div>
+            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers" :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </div>
+
+          <!-- 覆盖默认的上传行为，可以自定义上传的实现 -->
+          <!-- <div>
+            <el-upload name="uploadFile" class="avatar-uploader" action="#" :http-request="submitPicture" :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </div> -->
         </el-form-item>
 
       </el-form>
@@ -69,22 +92,19 @@
     <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
       <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
         <el-form-item label="学号" prop="studentNum">
-          <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum">{{ changeInfoForm.studentNum
-          }}</el-input>
+          <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="studentName">
-          <el-input placeholder="请输入姓名" :disabled="true" v-model="changeInfoForm.studentName">{{
-            changeInfoForm.studentName }}</el-input>
+          <el-input placeholder="请输入姓名" :disabled="true" v-model="changeInfoForm.studentName"></el-input>
         </el-form-item>
-        <el-form-item label="班级" prop="studentClass">
-          <el-input placeholder="请输入班级" :disabled="true" v-model="changeInfoForm.studentClass">{{
-            changeInfoForm.studentClass }}</el-input>
+        <el-form-item label="班级" prop="className">
+          <el-input placeholder="请输入班级" :disabled="true" v-model="changeInfoForm.className"></el-input>
         </el-form-item>
         <el-form-item label="奖项名称" prop="prizeName">
-          <el-input placeholder="请输入奖项名称" v-model="changeInfoForm.prizeName">{{ changeInfoForm.prizeName }}</el-input>
+          <el-input placeholder="请输入奖项名称" v-model="changeInfoForm.prizeName"></el-input>
         </el-form-item>
         <el-form-item label="奖项等级" prop="prizeLevel">
-          <el-input placeholder="请输入奖项等级" v-model="changeInfoForm.prizeLevel">{{ changeInfoForm.prizeLevel }}</el-input>
+          <el-input placeholder="请输入奖项等级" v-model="changeInfoForm.prizeLevel"></el-input>
         </el-form-item>
         <el-form-item label="获奖时间" prop="prizeTime">
           <!-- <el-input placeholder="请输入获奖时间" v-model="form.prizeTime"></el-input> -->
@@ -96,7 +116,15 @@
           <el-input placeholder="请输入指导老师" v-model="changeInfoForm.teacher"></el-input>
         </el-form-item>
         <el-form-item label="奖状电子版" prop="files">
-          <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input>
+          <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input> -->
+          <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input>
+          <div>
+            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers" :on-success="handleAvatarSuccess2"
+              :before-upload="beforeAvatarUpload">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -104,24 +132,25 @@
         <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
       </span>
     </el-dialog>
-    <Tables :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
-    <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
-    <!-- @changeLimit="changeLimit" -->
+    <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
+      :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage"
+      @changeLimit="changeLimit" />
   </div>
 </template>
 
 <script>
-import Tables from './../../../components/Tabels';
+import ImgTabels from './../../../components/ImgTabels';
 import { columns, operaColums } from './const'
-import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum } from './api'
+import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum ,submitPictureTo} from './api'
+var token =  localStorage.getItem('token')
 export default {
   name: 'Sa',
   components: {
-    Tables
+    ImgTabels
   },
   data() {
     return {
+      imageUrl: '',
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
@@ -135,6 +164,9 @@ export default {
       }, //根据字段进行搜索
       showNum: true,//选择类型对应输入框的显示参数
       showPizeid: false,//选择类型对应输入框的显示参数
+      headers:{
+        token:token
+      },
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -189,7 +221,7 @@ export default {
       },//修改信息的规则
       changeInfoShow: false,
       changeInfoForm: {}
-    }
+        }
   },
   methods: {
     //拉取获奖学生列表
@@ -274,7 +306,7 @@ export default {
     },
     //修改信息提交按钮
     submitChangeInfo() {
-      this.$refs.form.validate((valid) => {
+      this.$refs.changeInfoForm.validate((valid) => {
         if (valid) {
           console.log('修改信息提交了');
           changeInfo(this.changeInfoForm).then((res) => {
@@ -301,6 +333,7 @@ export default {
     handleClose() {
       this.$refs.form.resetFields()
       this.dialogVisible = false
+      this.geWinnerList()
     },
     //取消函数
     cancel() {
@@ -308,6 +341,7 @@ export default {
     },
     handleCloseChangeInfo() {
       this.$refs.changeInfoForm.resetFields()
+      this.geWinnerList()
       this.changeInfoShow = false
     },
     cancel2() {
@@ -342,27 +376,26 @@ export default {
           studentNum: this.search.studentNum
         }
         searchUseNum(searchInfo).then((res) => {
-        if(res.data.status===0)
-        {
-          this.tableData=res.data.data.prizeStudents
+          if (res.data.status === 0) {
+            this.tableData = res.data.data.prizeStudents
+            this.$message({
+              message: '搜索成功',
+              type: 'success'
+            });
+          }
+          else {
+            this.$message({
+              showClose: true,
+              message: '查询失败',
+              type: 'error'
+            });
+          }
+        }).catch((error) => {
           this.$message({
-          message: '搜索成功',
-          type: 'success'
-        });
-        }
-        else{
-          this.$message({
-          showClose: true,
-          message: '查询失败',
-          type: 'error'
-        });
-        }
-        }).catch((error)=>{
-          this.$message({
-          showClose: true,
-          message: '连接错误，请稍后',
-          type: 'error'
-        });
+            showClose: true,
+            message: '连接错误，请稍后',
+            type: 'error'
+          });
         })
       }
     },
@@ -384,6 +417,40 @@ export default {
           console.log(this.search.studentNum); 
           searchStudentNum()
         } */
+
+    //提交获奖电子证书方法
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.form.files=res.data
+    },
+    //提交修改页面的电子证书方法
+    handleAvatarSuccess2(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
+      this.changeInfoForm.files=res.data
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
+
+    // 覆盖默认的上传行为，可以自定义上传的实现
+    // 提交表单信息具体方法
+   /*  submitPicture(param){
+      let fd=new FormData()
+      fd.append('uploadFile',param.file)
+      submitPictureTo(fd).then((res)=>{
+        console.log(res);
+      }) 
+    } */
+
   },
 
   mounted() {
@@ -397,6 +464,10 @@ export default {
 </script>
 
 <style scoped>
+.searchInfo {
+  position: relative;
+}
+
 /* 下拉框选择的基本样式 */
 .el-dropdown-link {
   cursor: pointer;
@@ -407,12 +478,13 @@ export default {
   font-size: 12px;
 }
 
-/* 添加信息按钮样式 */
-.addInfo {
-  position: absolute;
-  top: 105px;
-  right: 89px;
-  z-index: 23;
+/* 添加信息按钮和导出信息按钮样式 */
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 /* 搜索框样式 */
@@ -420,29 +492,45 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 45px;
-  left: 377px;
+  top: 12px;
+  left: 145px;
   width: 500px;
 }
 
 /* 下拉选择框样式 */
 .el-dropdown {
   display: inline-block;
-  position: relative;
   color: #606266;
   font-size: 14px;
   position: absolute;
   z-index: 23;
-  top: 45px;
-  left: 262px;
+  top: 12px;
+  left: 30px;
   height: 90px;
 }
 
 /* 搜索的按钮 */
 .search {
   position: absolute;
-  top: 105px;
-  left: 879px;
+  top: 71px;
+  left: 650px;
   z-index: 23;
+}
+
+/* 上传图片文件的相关样式 */
+.avatar-uploader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #999;
+}
+
+.avatar {
+  width: 100%;
+  height: auto;
 }
 </style>

@@ -34,9 +34,20 @@ export const changeInfo = (data) => {
     })
 }
 
+//使用学生学号进行搜索
 export const searchUseNum = (params) => {
     return axios.get('/api/prizeStudent/list', {
         headers: { 'token': localStorage.getItem('token') },
         params
+    })
+}
+
+//提交电子版证书
+export const submitPictureTo = (params) => {
+    return axios.post('/api/prizeStudent/uploadFile', params, {
+        headers: {
+            'token': localStorage.getItem('token'),
+            'content-type': 'multipart/form-data'
+        }
     })
 }

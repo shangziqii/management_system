@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="page" v-show="$route.path=='/Main/Sim/Bsi'">
-       <div class="btn"><el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button></div>
+       <div class="btn">
+        <el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button>
+        <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+      </div>
        <Tables 
          :tableColumns="Columns" 
          :tableData="tableList" 
@@ -17,6 +20,7 @@
         />
        <AddStudentInfo :isShow="addFormShow" @change="changeShow" @submit="submitForm"/>
        <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet"/>
+       <ExportStudentInfo :isShow="showSelect" @change="exportShow" @submit="submitSelect"/>
     </div>
     <router-view></router-view>
     </div>
@@ -26,7 +30,9 @@
 import Tables from '../../../components/Tabels';
 import AddStudentInfo from './components/addStudentInfo';
 import ModifyFormInfo from './components/modifyStudentInfo';
-import { getList, addStudent, deleteStudent, modifyStu } from './api';
+import ExportStudentInfo from './components/ExportStudentInfo'
+
+import { getList, addStudent, deleteStudent, modifyStu, exportStuInfo } from './api';
 import { columns, operaColums } from './const';
 export default {
   name: 'Bsi',
@@ -41,13 +47,15 @@ export default {
     total: 0, // 数据条数
     modifyFormShow: false, //修改表单是否展示
     studentInfo:{},//要修改的学生的信息
+    showSelect:false
    }
   },
   components: {
-    Tables, //注册Tables组件
-    AddStudentInfo, //注册新增学生基本信息表单
-    ModifyFormInfo, //注册修改学生信息表单组件
-  },
+    Tables,
+    AddStudentInfo,
+    ModifyFormInfo,
+    ExportStudentInfo
+},
   methods: {
     getTableList() {
        const params = {
@@ -79,11 +87,18 @@ export default {
        })
        
     },
+    modifyStudnet(){
+      console.log('提交选择信息');
+    },
     changeShow() {
       this.addFormShow = !this.addFormShow;
     },
     modifyShow() {
       this.modifyFormShow = !this.modifyFormShow;
+    },
+    exportShow(){
+      console.log('hello--------');
+      this.showSelect=!this.showSelect;
     },
     modifyStudnet(values) {
       const { userId , ...otherdata} = values;
@@ -190,6 +205,19 @@ export default {
     details(val){
       console.log(val);
       this.$router.push('/Main/Sim/Bsi/InfoDetails')
+    },
+    submitSelect(value){
+      console.log('####',value.toString());
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
+      })
     }
   },
   mounted() {
@@ -208,8 +236,12 @@ export default {
  .btn {
    display: flex;
    flex-direction: row;
-   justify-content: flex-start;
+   justify-content: flex-end;
    align-items: center;
    margin-bottom: 10px;
+ }
+ .exportInfo{
+  display:flex;
+  
  }
 </style>

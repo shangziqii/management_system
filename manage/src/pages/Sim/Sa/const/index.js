@@ -29,7 +29,8 @@ export const columns = [
     },
     {
         label: '奖状电子版',
-        prop: 'files'
+        prop: 'files',
+        avatar: 'files'
     }
 ]
 export const operaColums = [
