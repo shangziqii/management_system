@@ -41,6 +41,9 @@
         <el-form-item label="班级名" prop="className">
           <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>
         </el-form-item>
+        <el-form-item label="辅导员ID" prop="userId" v-show="role === '0'">
+          <el-input v-model="classInfo.userId" placeholder="请输入辅导员Id"></el-input>
+        </el-form-item>
         <el-form-item label="学院" prop="department">
           <el-input v-model="classInfo.department" placeholder="请输入班级所属学院"></el-input>
         </el-form-item>
@@ -65,11 +68,60 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 表单修改信息 -->
+    <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
+      <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
+        <el-form-item label="班级ID" prop="classId">
+          <el-input placeholder="请输入班级ID" v-model="changeInfoForm.classId">{{ changeInfoForm.classId }}</el-input>
+        </el-form-item>
+        <el-form-item label="班级名称" prop="className">
+          <el-input placeholder="请输入班级名称" v-model="changeInfoForm.className">{{ changeInfoForm.className }}</el-input>
+        </el-form-item>
+        <el-form-item label="辅导员Id" prop="userId" v-show="role === '0'">
+          <el-input placeholder="请输入辅导员Id" v-model="changeInfoForm.userId">{{ changeInfoForm.userId }}</el-input>
+        </el-form-item>
+        <el-form-item label="学院" prop="department">
+          <el-input placeholder="请输入学院" v-model="changeInfoForm.department">{{ changeInfoForm.department }}</el-input>
+        </el-form-item>
+        <el-form-item label="专业" prop="profession">
+          <el-input placeholder="请输入专业" v-model="changeInfoForm.profession">{{ changeInfoForm.profession }}</el-input>
+        </el-form-item>
+        <el-form-item label="年级" prop="grade">
+          <el-input placeholder="请输入年级" v-model="changeInfoForm.grade">{{ changeInfoForm.grade }}</el-input>
+        </el-form-item>
+        <el-form-item label="宿舍号" prop="dormitory">
+          <el-input placeholder="请输入宿舍号信息" v-model="changeInfoForm.dormitory">{{ changeInfoForm.dormitory }}</el-input>
+        </el-form-item>
+        <el-form-item label="班长" prop="monitor">
+          <el-input placeholder="请输入班长姓名" v-model="changeInfoForm.monitor">{{ changeInfoForm.monitor }}</el-input>
+        </el-form-item>
+        <el-form-item label="学习委员" prop="study_committee">
+          <el-input placeholder="请输入学习委员姓名" v-model="changeInfoForm.study_committee">{{ changeInfoForm.study_committee }}</el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel2">取 消</el-button>
+        <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
+      </span>
+    </el-dialog>
+    <el-button @click="dialogVisible = true" type="primary" class="addButton">添加班级</el-button>
+    <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button>
     <div class="manage-header">
-      <el-button @click="dialogVisible = true" type="primary" class="addButton">添加班级</el-button>
-      <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button>
+
+      <Tabels 
+         :tableColumns="columns" 
+         :tableData="tableData" 
+         :operaColums="operaColums" 
+         :total="total"
+         :limit="pageLimit"
+         :currentPage="currentPage"
+         @click_1="showDetails"
+         @click_2="edit"
+         @click_3="handleDelete"
+         @changePage="changePage"
+        />
       <!-- 班级信息列表 -->
-      <el-table
+      <!-- <el-table
             :data="tableData"
             style="width: 100%"
             class="classList"
@@ -105,7 +157,7 @@
                 <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
     </div>
   </div>
   <router-view></router-view>
@@ -113,12 +165,24 @@
 </template>
 
 <script>
-
+import Tabels from '../../components/Tabels/index.vue'
+import { columns, operaColums} from './const'
 import { classList, addClass, delClass, searchClass, editClass } from './api/index'
 export default {
   name: 'Cim',
+  components: {
+    Tabels
+  },
   data() {
     return {
+      role: localStorage.getItem('role'), //登录用户的身份
+      // 列表配置
+      currentPage: 1, // 当前页
+      pageLimit: 5, // 当前页面分页数
+      tableData: [] , // 数据列表
+      columns: [],// 列表配置
+      operaColums: [],//操作按钮配置
+      total: 0, // 数据条数
       //添加班级信息
       classInfo: {
         className: '',//班级名
@@ -133,9 +197,6 @@ export default {
       searchInfo: {
         classId: '', //班级Id（根据后台文档，目前只能通过Id查询，后续增添查询功能）
       },
-      // tableData:[]
-      //暂时用写好数据进行替代
-      tableData: [],
       dialogVisible: false,
       dialogVisible2: false,
       infoVisible: false,
@@ -143,12 +204,24 @@ export default {
         className: [
           { required: true, message: '请输入班级名称' }
         ],
-        profession: [
-          { required: true, message: '请输入所属专业' } 
-        ],
         department: [
-          { required: true, message: '请输入所属学院' }
-        ]
+          { required: true, message: '请输入学院名称' }
+        ],
+        profession: [
+          { required: true, message: '请输入专业名称' }
+        ],
+        grade: [
+          { required: true, message: '请输入年级' }
+        ],
+        dormitory: [
+          { required: true, message: '请输入宿舍号' }
+        ],
+        monitor: [
+          { required: true, message: '请输入班长姓名' }
+        ],
+        study_committee: [
+          { required: true, message: '请输入学委姓名' }
+        ],
       },
       rules2: {
         classId: [
@@ -166,13 +239,40 @@ export default {
         dormitory: '',
         monitor: '',
         studyCommittee: ''
+      },
+      changeInfoShow:false,
+      changeInfoForm:{},
+      changRules: {
+        classId: [
+          { required: true, message: '请输入班级ID' }
+        ],
+        className: [
+          { required: true, message: '请输入班级名称' }
+        ],
+        department: [
+          { required: true, message: '请输入学院名称' }
+        ],
+        profession: [
+          { required: true, message: '请输入专业名称' }
+        ],
+        grade: [
+          { required: true, message: '请输入年级' }
+        ],
+        dormitory: [
+          { required: true, message: '请输入宿舍号' }
+        ],
+        monitor: [
+          { required: true, message: '请输入班长姓名' }
+        ],
+        study_committee: [
+          { required: true, message: '请输入学委姓名' }
+        ],
       }
     }
   },
   methods: {
     showDetails(row) {
       this.$store.commit('getBaseData', row)
-      // console.log(row);
       // this.$router.push(
       // {
       //   //添加需要传值到那个页面的路径
@@ -205,6 +305,7 @@ export default {
           // 后续对表单数据的处理
           const classInfo = {
             className: this.classInfo.className,
+            userId: this.classInfo.userId,
             profession: this.classInfo.profession,
             department: this.classInfo.department,
             grade: this.classInfo.grade,
@@ -213,11 +314,11 @@ export default {
             study_committee: this.classInfo.study_committee 
           }
           addClass(classInfo).then((res) => {
-            // alert(res.data.msg);
+            // console.log(res);
             this.$message({
                     message:res.data.msg,
                     type: 'success'
-                    });
+                    })
             // 重新获取列表的接口
             this.getClassList()
           })
@@ -257,16 +358,50 @@ export default {
     },
     //获取班级列表
     getClassList() {
-      /*         let data={
-                page:1,
-                pageLimit:20
-              } */
-      classList().then(res => {
+        const params = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+        }
+      classList(params).then(res => {
         this.tableData = res.data.data.classes
       })
     },
-    edit() {
-      editClass()
+    edit(value) {
+      this.changeInfoShow = true
+      this.changeInfoForm=value
+    },
+    // 修改表单关闭逻辑
+    handleCloseChangeInfo(){
+      this.$refs.changeInfoForm.resetFields()
+      this.changeInfoShow = false
+    },
+    cancel2(){
+      this.handleCloseChangeInfo()
+    },
+    //修改信息提交按钮
+    submitChangeInfo(){
+      this.$refs.changeInfoForm.validate((valid) => {
+        if (valid) {
+      // console.log('修改信息提交了');
+      editClass(this.changeInfoForm).then((res)=>{
+        console.log(res);
+        if(res.status===200){
+          this.$message({
+          message: '修改成功',
+          type: 'success'
+        })
+        }
+        else{
+        this.$message.error('修改班级信息失败',error);
+        }
+        this.getClassList()
+        // 重置表单
+        this.$refs.changeInfoForm.resetFields()
+        // 关闭弹窗
+        this.changeInfoShow = false
+      })
+      }
+    })
     },
 
     // 删除某条班级信息
@@ -292,9 +427,15 @@ export default {
             });          
           });
       },
+      changePage(val){
+        this.currentPage=val
+        this.getClassList()
+      },
   },
   mounted() {
     this.getClassList()
+    this.columns = columns
+    this.operaColums = operaColums
   }
 }
 </script>
@@ -313,10 +454,12 @@ div /deep/ .el-dialog {
 .addButton {
   position: absolute;
   left: 210px;
+  top: 75px;
 }
 .searchButton {
   position: absolute;
   right: 10px;
+  top: 75px;
 }
 .classList {
   top: 45px;
@@ -339,12 +482,12 @@ div /deep/ .el-dialog {
   clear: both
 }
 
-.box-card {
+/* .box-card {
   width: 480px;
   display: none;
   position: absolute;
   top: 30px;
-}
+} */
 .classInfoShow {
   list-style: none;
   line-height: 50px;
@@ -362,5 +505,8 @@ div /deep/ .el-dialog {
 }
 .el-dialog__wrapper {
   line-height: 28px;
+}
+.manage-header {
+  margin-top: 52px;
 }
 </style>

@@ -24,81 +24,60 @@
           </el-select>
         </el-form-item>
         <!-- 无管理班级选项 -->
-<!--         <el-form-item label="管理班级" prop="className">
+        <el-form-item label="管理班级" prop="className">
           <el-input placeholder="请输入管理的班级" v-model="form.className"></el-input>
-        </el-form-item> -->
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
       </el-dialog>
+      <el-button @click="dialogVisible = true" type="primary" class="addButton">
+        + 新增
+      </el-button>
       <div class="manage-header">
-          <el-button @click="dialogVisible = true" type="primary" class="addButton">
-              + 新增
-          </el-button>
-          <!-- 用户信息列表 -->
-          <el-table
-            :data="tableData"
-            style="width: 100%"
-            class="userList"
-            >
-            <el-table-column
-              prop="userId"
-              label="用户ID"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="name"
-              label="姓名"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="phone"
-              label="电话号码"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="role"
-              label="身份"
-              >
-              <!-- 作用域插槽 -->
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{scope.row.role}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="classList"
-              label="管理班级"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="classList"
-              label="操作"
-              >
-              <!-- 作用域插槽 -->
-              <template slot-scope="scope">
-                <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <Tabels 
+         :tableColumns="columns" 
+         :tableData="tableData" 
+         :operaColums="operaColums" 
+         :total="total"
+         :limit="pageLimit"
+         :currentPage="currentPage"
+         @click_1="handleDelete"
+         @changeLimit="changeLimit"
+         @changePage="changePage"
+        />
+          
       </div>
     </div>
 </template>
 
 <script>
+import Tabels from '../../components/Tabels/index.vue'
+import { columns, operaColums} from './const'
 import { getList,addUser,delUser } from './api'
 export default {
+    name: 'Am',
+    components: {
+      Tabels
+    },
     data() {
       return {
+        // 列表配置
+        currentPage: 1, // 当前页
+        pageLimit: 5, // 当前页面分页数
+        tableData: [] , // 数据列表
+        columns: [],// 列表配置
+        operaColums: [],//操作按钮配置
+        total: 0, // 数据条数
         dialogVisible: false,
         form: {
           name: '',
           password: '',
           phone: '',
           role: '请选择身份',
-          //无管理班级
-          // className: ''
+          className: ''
         },
         rules: {
           name: [
@@ -131,7 +110,20 @@ export default {
             }
             addUser(form).then((res) => {
               console.log(res);
-            //   // 重新获取列表的接口
+              if (res.status === 200) {
+                console.log('添加成功');
+                this.$message({
+                  message: '添加成功',
+                  type: 'success'
+                })
+              }
+              else {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                })
+                // alert('添加失败', res.data.msg)
+              }
               this.userList()
             })
             // console.log(this.form, 'form');
@@ -153,16 +145,26 @@ export default {
       },
       // 删除某条用户信息
       handleDelete(row) {
+        // console.log(row);
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
           }).then(() => {
-            delUser({ userId: row.userId}).then(() => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
+            delUser({ userId: row.userId}).then(res => {
+              console.log(res);
+              if(res.data.msg === '信息修改成功') {
+                this.$message({
+                  type: 'success',
+                  message: res.data.msg
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.data.msg
+                })
+              }
+
               // 重新获取列表接口
               this.userList()
             })
@@ -176,15 +178,29 @@ export default {
       },
       // 获取列表数据
       userList() {
-        getList().then(({ data }) => {
-        console.log(data.data);
+        const params = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+        }
+        getList(params).then(({ data }) => {
+        // console.log(data.data);
         this.tableData = data.data.users
       })
-      }
+      },
+      changeLimit(val) {
+        this.pageLimit = val;
+        this.userList();
+      },
+      changePage(val){
+        this.currentPage=val
+        this.userList()
+      },
     },
     mounted() {
       // 获取用户列表数据
       this.userList()
+      this.columns = columns
+      this.operaColums = operaColums
     },
 }
 </script>
@@ -200,11 +216,15 @@ export default {
 .addButton {
   position: absolute;
   left: 210px;
+  top: 75px;
 }
 .manage  .el-dialog {
   border-radius: 8px;
 }
 .userList {
   top: 45px;
+}
+.manage-header {
+  margin-top: 52px;
 }
 </style>

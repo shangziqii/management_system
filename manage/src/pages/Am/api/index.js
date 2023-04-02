@@ -30,3 +30,10 @@ export const delUser = (data) => {
 
     })
 }
+
+// 查询用户个人信息
+// export const getUser = (params) => {
+//     return axios.get('/api/user/inform/get', {
+//         headers: { 'token': localStorage.getItem('token') },
+//     })
+// }

@@ -45,8 +45,7 @@
       </span>
     </el-dialog>
 
-      <!-- 修改信息按钮 -->
-      <!-- 点击按钮弹出表单修改信息 -->
+      <!-- 表单修改信息 -->
       <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
         <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
           <el-form-item label="寝室ID" prop="dormitoryVisitId">
