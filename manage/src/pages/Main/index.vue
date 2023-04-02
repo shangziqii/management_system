@@ -35,10 +35,14 @@
       <el-container>
         <el-header>
           <!-- 左侧header -->
-<!--           <div class="l-content">
-            <el-button icon="el-icon-menu" size="mini"></el-button>
-          </div> -->
+          <div class="l-content">
+            <!-- <el-button icon="el-icon-menu" size="mini"></el-button> -->
+            <div>
+            <img src="./../../assets/img/logo_jw_w.png" alt="">
+          </div>
+          </div>
           <!-- 右侧header -->
+          
           <div class="r-content">
             <el-dropdown>
               <span class="el-dropdown-link">
@@ -51,7 +55,7 @@
             </el-dropdown>
           </div>
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <!-- <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item> -->
           </el-breadcrumb>
         </el-header>
         <el-main>
@@ -187,7 +191,12 @@ export default {
   right:10px;
   width: 50px;
 }
-
+.l-content{
+  position:absolute;
+  left:10px;
+  top:5px;
+  /* width: 50px; */
+}
 .el-dropdown-link {
     cursor: pointer;
   }
@@ -212,7 +221,8 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
-  background-color: #c5c5c5;
+  background-color: #888293;
+  /* background-color:#0483d4; */
   padding: 0;
   position: relative;
 }
@@ -243,5 +253,8 @@ export default {
   color: aliceblue;
   text-align: center;
   line-height: 48px;
+}
+.el-aside{
+  overflow: hidden;
 }
 </style>

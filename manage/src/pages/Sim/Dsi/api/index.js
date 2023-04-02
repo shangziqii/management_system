@@ -38,3 +38,14 @@ export const exportStuInfo = (params) => {
         params
     })
 }
+
+
+//根据学生学号进行搜索
+export const searchUseNum = (params) => {
+    return axios.get('/api/difficultStudent/list', {
+        headers: {
+            'token': localStorage.getItem('token')
+        },
+        params
+    })
+}

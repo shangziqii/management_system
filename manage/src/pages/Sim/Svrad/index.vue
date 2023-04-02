@@ -1,12 +1,5 @@
 <template>
   <div>
-     <!-- 添加信息按钮 -->
-     <div class="btn">
-      <!-- 添加信息按钮 -->
-    <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
-      <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
-    </div>
     <!-- 搜索学生 -->
     <el-dropdown>
       <span class="el-dropdown-link">
@@ -27,6 +20,13 @@
       <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
       </el-input>
       <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+    </div>
+    <!-- 添加信息按钮 -->
+    <div class="btn">
+      <!-- 添加信息按钮 -->
+      <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+      <!-- 导出excel表格 -->
+      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
     </div>
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -135,7 +135,7 @@ export default {
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
       form: {
-        files:''
+        files: ''
       },//新增的form表单
       tableData: [],//数据列表
       columns: [],//列表配置
@@ -197,7 +197,7 @@ export default {
       },//修改信息的规则
       changeInfoShow: false,
       changeInfoForm: {
-        files:''
+        files: ''
       }
     }
   },
@@ -436,7 +436,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 20px;
+  top: 84px;
   left: 377px;
   width: 500px;
 }
@@ -449,18 +449,19 @@ export default {
   font-size: 14px;
   position: absolute;
   z-index: 23;
-  top: 20px;
+  top: 84px;
   left: 262px;
   height: 90px;
 }
 
-      /* 搜索的按钮 */
-      .search {
-      position: absolute;
-      top: 80px;
-      left: 887px;
-      z-index: 23;
-    }
+/* 搜索的按钮 */
+.search {
+  position: absolute;
+  top: 144px;
+  left: 887px;
+  z-index: 23;
+}
+
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
   display: flex;

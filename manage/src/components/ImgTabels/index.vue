@@ -7,7 +7,7 @@
           <template slot-scope="scope">
             <!-- 自定义奖状电子版列 -->
             <template v-if="item.avatar">
-              <img :src="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;">
+              <img :src="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;"  @click="previewFile(scope.row[item.prop])">
             </template>
             <!-- 自定义显示文件 -->
             <template v-else-if="item.paper">
