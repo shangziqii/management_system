@@ -17,7 +17,15 @@ export const columns = [
     },
     {
         label: '辅导员',
-        prop: 'instructor',
+        prop: 'userName',
+    },
+    {
+        label: '辅导员ID',
+        prop: 'userId',
+    },
+    {
+        label: '班长',
+        prop: 'monitor',
     },
 ];
 
@@ -27,13 +35,13 @@ export const operaColums = [
         type: 'primary'
     },
     {
+        label: '编辑',
+        type: 'warning',
+    },
+    {
         label: '删除',
         type: 'danger',
     },
-    // 编辑按钮放哪仔细考虑一下
-    {
-        label: '修改',
-        type: 'warning',
-    },
+
 
 ]
