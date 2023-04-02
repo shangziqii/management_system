@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  class="info">
     <el-dialog title="修改密码" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form :model="ruleForm" ref="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="输入旧密码" prop="oldPass">
@@ -149,8 +149,10 @@ export default {
   position: absolute;
     font-size: 28px;
     font-weight: 600;
-    top: 42px;
-    left: 399px;
+/*     top: 42px;
+    left: 399px; */
+    top:-36px;
+    left:184px;
 }
 .text {
   font-size: 18px;
@@ -175,5 +177,10 @@ export default {
 .box-card {
   width: 480px;
   height: 293px;
+}
+.info{
+  position: relative;
+  margin-left:300px;
+  margin-top:100px;
 }
 </style>
