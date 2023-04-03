@@ -216,7 +216,7 @@ export default {
 .addButton {
   position: absolute;
   left: 210px;
-  top: 75px;
+  top: 110px;
 }
 .manage  .el-dialog {
   border-radius: 8px;

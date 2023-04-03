@@ -31,9 +31,6 @@
         <li><span>班长：</span>{{getClassData.monitor}}</li>
         <li><span>学习委员：</span>{{getClassData.studyCommittee}}</li>
       </ul>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="edit">编辑</el-button>
-      </span>
     </el-dialog>
     <!-- 添加班级信息弹窗 -->
     <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -59,8 +56,8 @@
         <el-form-item label="班长" prop="monitor">
           <el-input v-model="classInfo.monitor" placeholder="请输入班级的班长"></el-input>
         </el-form-item>
-        <el-form-item label="学习委员" prop="study_committee">
-          <el-input v-model="classInfo.study_committee" placeholder="请输入班级的学习委员"></el-input>
+        <el-form-item label="学习委员" prop="studyCommittee">
+          <el-input v-model="classInfo.studyCommittee" placeholder="请输入班级的学习委员"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -95,12 +92,12 @@
         <el-form-item label="班长" prop="monitor">
           <el-input placeholder="请输入班长姓名" v-model="changeInfoForm.monitor">{{ changeInfoForm.monitor }}</el-input>
         </el-form-item>
-        <el-form-item label="学习委员" prop="study_committee">
-          <el-input placeholder="请输入学习委员姓名" v-model="changeInfoForm.study_committee">{{ changeInfoForm.study_committee }}</el-input>
+        <el-form-item label="学习委员" prop="studyCommittee">
+          <el-input placeholder="请输入学习委员姓名" v-model="changeInfoForm.studyCommittee">{{ changeInfoForm.studyCommittee }}</el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cancel2">取 消</el-button>
+        <el-button @click="cancel3">取 消</el-button>
         <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
       </span>
     </el-dialog>
@@ -191,7 +188,7 @@ export default {
         grade: '',//年级
         dormitory: '',//宿舍
         monitor: '',//班长
-        study_committee: '',//学习委员
+        studyCommittee: '',//学习委员
       },
       // 查询班级信息
       searchInfo: {
@@ -219,7 +216,7 @@ export default {
         monitor: [
           { required: true, message: '请输入班长姓名' }
         ],
-        study_committee: [
+        studyCommittee: [
           { required: true, message: '请输入学委姓名' }
         ],
       },
@@ -264,7 +261,7 @@ export default {
         monitor: [
           { required: true, message: '请输入班长姓名' }
         ],
-        study_committee: [
+        studyCommittee: [
           { required: true, message: '请输入学委姓名' }
         ],
       }
@@ -293,11 +290,19 @@ export default {
     handleClose3() {
       this.infoVisible = false
     },
+    // 修改表单关闭逻辑
+    handleCloseChangeInfo(){
+      this.$refs.changeInfoForm.resetFields()
+      this.changeInfoShow = false
+    },
     cancel() {
       this.handleClose()
     },
     cancel2() {
       this.handleClose2()
+    },
+    cancel3(){
+      this.handleCloseChangeInfo()
     },
     submit() {
       this.$refs.classInfo.validate((valid) => {
@@ -311,7 +316,7 @@ export default {
             grade: this.classInfo.grade,
             dormitory: this.classInfo.dormitory,
             monitor: this.classInfo.monitor,
-            study_committee: this.classInfo.study_committee 
+            studyCommittee: this.classInfo.studyCommittee 
           }
           addClass(classInfo).then((res) => {
             // console.log(res);
@@ -454,12 +459,12 @@ div /deep/ .el-dialog {
 .addButton {
   position: absolute;
   left: 210px;
-  top: 75px;
+  top: 110px;
 }
 .searchButton {
   position: absolute;
   right: 10px;
-  top: 75px;
+  top: 108px;
 }
 .classList {
   top: 45px;
