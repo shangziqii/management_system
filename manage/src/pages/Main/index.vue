@@ -234,7 +234,7 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
-  background-color: #333;
+  background-color: #22305a;
   padding: 0;
   position: relative;
 }
@@ -274,9 +274,26 @@ export default {
   color: #666;
 }
 .l-content /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner{
-  color: #fff;
+  /* color: #fff; */
+  color:#000;
 }
 .mainContent {
   margin-top: 30px;
 }
+.el-breadcrumb[data-v-c9c526c0] {
+    position: absolute;
+    /* top: 59px; */
+    top: 77px;
+    left: 4px;
+    z-index: 15;
+    width: 1000px;
+}
+.tabs[data-v-7a918e6e] {
+    position: absolute;
+    left: 210px;
+    /* top: 67px; */
+    top: 103px;
+    margin: 10px 0;
+}
+
 </style>

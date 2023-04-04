@@ -212,7 +212,8 @@ export default {
 } */
 .addButton {
   position: absolute;
-  left: 210px;
+  /* left: 210px; */
+  right: 40px;
   top: 110px;
 }
 .manage  .el-dialog {

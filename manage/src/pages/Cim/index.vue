@@ -456,10 +456,15 @@ export default {
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
-.addButton {
+/* .addButton {
   position: absolute;
   left: 210px;
   top: 110px;
+} */
+.addButton{
+    position: absolute;
+    right: 121px;
+    top: 109px;
 }
 .searchButton {
   position: absolute;
@@ -470,6 +475,7 @@ div /deep/ .el-dialog {
   top: 45px;
   left: -130px;
 }
+
 .text {
   font-size: 14px;
 }

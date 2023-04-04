@@ -30,12 +30,12 @@
       </div>
     </div>
     <!-- 添加信息按钮 -->
-    <div class="btn">
+    <!-- <div class="btn"> -->
       <!-- 添加信息按钮 -->
-      <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+      <!-- <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button> -->
       <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
-    </div>
+      <!-- <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button> -->
+    <!-- </div> -->
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
@@ -473,7 +473,8 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 12px;
+  /* top: 12px; */
+  top:-33px;
   left: 145px;
   width: 500px;
 }
@@ -485,7 +486,8 @@ export default {
   font-size: 14px;
   position: absolute;
   z-index: 23;
-  top: 12px;
+  /* top: 12px; */
+  top: -32px;
   left: 30px;
   height: 90px;
 }
@@ -493,7 +495,8 @@ export default {
 /* 搜索的按钮 */
 .search {
   position: absolute;
-  top: 71px;
+  /* top: 71px; */
+  top: 26px;
   left: 650px;
   z-index: 23;
 }

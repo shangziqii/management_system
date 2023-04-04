@@ -593,7 +593,8 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 84px;
+  /* top: 84px; */
+  top: 115px;
   left: 377px;
   width: 500px;
 }
@@ -606,7 +607,8 @@ export default {
   font-size: 14px;
   position: absolute;
   z-index: 23;
-  top: 84px;
+  /* top: 84px; */
+  top: 115px;
   left: 262px;
   height: 90px;
 }
@@ -614,7 +616,8 @@ export default {
 /* 搜索的按钮 */
 .search {
   position: absolute;
-  top: 144px;
+  /* top: 144px; */
+  top: 175px;
   left: 887px;
   z-index: 23;
 }
