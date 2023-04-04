@@ -48,7 +48,6 @@
          @changeLimit="changeLimit"
          @changePage="changePage"
         />
-          
       </div>
     </div>
 </template>
@@ -109,8 +108,7 @@ export default {
               phone:this.form.phone
             }
             addUser(form).then((res) => {
-              console.log(res);
-              if (res.status === 200) {
+              if (res.data.status === 0) {
                 console.log('添加成功');
                 this.$message({
                   message: '添加成功',
@@ -131,7 +129,6 @@ export default {
             this.$refs.form.resetFields()
             // 关闭弹窗
             this.dialogVisible = false
-
           }
         })
       },

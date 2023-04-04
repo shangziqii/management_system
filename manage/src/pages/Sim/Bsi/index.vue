@@ -14,6 +14,14 @@
         <el-dropdown-item @click.native="selectMore">多条件进行搜索</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+    <!-- 上传文件 -->
+    <el-dialog
+        title="选择文件进行导入"
+        :visible.sync="addFileShow"
+        width="30%"
+        :before-close="handleClose">
+        <input type="file" @change="handleFileUpload">
+    </el-dialog>
     <!-- 搜索框的显示 -->
     <!-- 搜索框的显示 -->
     <!-- 学号 -->
@@ -54,6 +62,7 @@
     </div>
        <div class="btn">
         <el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button>
+        <el-button type="primary" size="small" @click="addFileShow=true">导入信息</el-button>
         <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
       </div>
        <Tables 
@@ -99,6 +108,7 @@ export default {
     modifyFormShow: false, //修改表单是否展示
     studentInfo:{},//要修改的学生的信息
     showSelect:false,
+    addFileShow:false,
     cityOptions: ['学号', '姓名', '班级', '年龄'],
     showNum: true,//选择类型对应输入框的显示参数
       showStuName: false,//选择类型对应输入框的显示参数
@@ -160,7 +170,6 @@ export default {
       this.modifyFormShow = !this.modifyFormShow;
     },
     exportShow(){
-      console.log('hello--------');
       this.showSelect=!this.showSelect;
     },
     modifyStudnet(values) {
@@ -522,6 +531,30 @@ export default {
         })
       }
     },
+    handleFileUpload(e) {
+    const file = e.target.files[0];
+    let reader = new FileReader();
+    
+    reader.onload = (e) => {
+      let data = new Uint8Array(e.target.result);
+      let workbook = XLSX.read(data, {type: 'array'});
+      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      let json = XLSX.utils.sheet_to_json(worksheet);
+      console.log(json);
+      // 将数据发送到后台
+      // this.sendDataToServer(json);
+    };
+    
+    reader.readAsArrayBuffer(file);
+  },
+  
+  // 发送数据到后台
+/*   sendDataToServer(data) {
+    // 使用 axios 或其他 HTTP 库发送 POST 请求
+    axios.post('/api/data', data)
+      .then(response => console.log(response))
+      .catch(error => console.error(error));
+  } */
   },
   mounted() {
     this.Columns = columns;

@@ -13,10 +13,7 @@ export const addUser = (data) => {
 export const getList = (params) => {
     return axios.get('/api/user/list', {
         headers: { 'token': localStorage.getItem('token') },
-        params: {
-            page: 1,
-            pageLimit: 20
-        }
+        params
     })
 }
 
