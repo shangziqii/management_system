@@ -1,25 +1,33 @@
 <template>
   <div>
-    <!-- 搜索学生 -->
-    <el-dropdown>
-      <span class="el-dropdown-link">
-        选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-        <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
-      </el-dropdown-menu>
-    </el-dropdown>
-    <!-- 搜索框的显示 -->
-    <div v-show="showNum">
-      <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号">
-      </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+     <!-- 添加信息按钮 -->
+     <div class="btn">
+      <!-- 添加信息按钮 -->
+    <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+      <!-- 导出excel表格 -->
+      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
     </div>
-    <div v-show="showPizeid">
-      <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
-      </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+    <div class="searchInfo">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
+          <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
+        </el-dropdown-menu>
+      </el-dropdown>
+      <!-- 搜索框的显示 -->
+      <div v-show="showNum">
+        <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号">
+        </el-input>
+        <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+      </div>
+      <div v-show="showPizeid">
+        <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
+        </el-input>
+        <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
+      </div>
     </div>
     <!-- 添加信息按钮 -->
     <div class="btn">
@@ -421,6 +429,14 @@ export default {
 </script>
 
 <style scoped>
+.searchInfo {
+  position: relative;
+}
+
+
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 /* 下拉框选择的基本样式 */
 .el-dropdown-link {
   cursor: pointer;
@@ -431,37 +447,19 @@ export default {
   font-size: 12px;
 }
 
-/* 搜索框样式 */
-.searchInput {
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  top: 84px;
-  left: 377px;
-  width: 500px;
-}
-
-/* 下拉选择框样式 */
-.el-dropdown {
-  display: inline-block;
+/* 搜索框样式 */.searchInfo {
   position: relative;
-  color: #606266;
-  font-size: 14px;
-  position: absolute;
-  z-index: 23;
-  top: 84px;
-  left: 262px;
-  height: 90px;
 }
 
-/* 搜索的按钮 */
-.search {
-  position: absolute;
-  top: 144px;
-  left: 887px;
-  z-index: 23;
+/* 下拉框选择的基本样式 */
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
 }
 
+.el-icon-arrow-down {
+  font-size: 12px;
+}
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
   display: flex;
@@ -470,4 +468,34 @@ export default {
   align-items: center;
   margin-bottom: 10px;
 }
+/* 搜索框样式 */
+.searchInput {
+  position: absolute;
+  font-size: 14px;
+  z-index: 11;
+  top: 12px;
+  left: 145px;
+  width: 500px;
+}
+
+/* 下拉选择框样式 */
+.el-dropdown {
+  display: inline-block;
+  color: #606266;
+  font-size: 14px;
+  position: absolute;
+  z-index: 23;
+  top: 12px;
+  left: 30px;
+  height: 90px;
+}
+
+/* 搜索的按钮 */
+.search {
+  position: absolute;
+  top: 71px;
+  left: 650px;
+  z-index: 23;
+}
+
 </style>

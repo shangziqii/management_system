@@ -54,24 +54,33 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-breadcrumb separator="/">
-            <!-- <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item> -->
-          </el-breadcrumb>
+          <div class="l-content">
+            <!-- 面包屑部分 -->
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
         </el-header>
-        <el-main>
-          <router-view>
-          </router-view>
-        </el-main>
+        <CommonTag/>
+        <div class="mainContent">
+          <el-main>
+            <router-view>
+            </router-view>
+          </el-main>
+        </div>
+
       </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import CommonTag from '../../components/Tags/CommonTag.vue';
 export default {
   name: 'Main',
   components: {
-
+    CommonTag
   },
   data() {
     return {
@@ -169,7 +178,8 @@ export default {
       if (this.$route.path !== item.path) {
         this.$router.push(item.path)
       }
-      // this.$store.commit('selectMenu', item)
+      // 调用mutation来操作面包屑
+      this.$store.commit('selectMenu', item)
     }
   },
   computed: {
@@ -180,7 +190,10 @@ export default {
     // 有子菜单
     hasChildren() {
       return this.menuData.filter(item => item.children)
-    }
+    },
+    ...mapState({
+      tags: state => state.detail.tabsList
+    })
   }
 }
 </script>
@@ -221,8 +234,7 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
-  background-color: #888293;
-  /* background-color:#0483d4; */
+  background-color: #333;
   padding: 0;
   position: relative;
 }
@@ -254,7 +266,17 @@ export default {
   text-align: center;
   line-height: 48px;
 }
-.el-aside{
-  overflow: hidden;
+.l-content /deep/ .el-breadcrumb__item .el-breadcrumb__inner {
+  font-weight: normal;
+
+}
+.l-content /deep/ .el-breadcrumb__item .el-breadcrumb__inner.is-link{
+  color: #666;
+}
+.l-content /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner{
+  color: #fff;
+}
+.mainContent {
+  margin-top: 30px;
 }
 </style>

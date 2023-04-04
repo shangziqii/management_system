@@ -48,15 +48,18 @@ const routes = [
     },
     {
         path: '/Main',
+        // name: 'Pim',
         component: Main,
         redirect: '/Main/Pim',
         children: [
             {
                 path: 'Am',
+                name: 'Am',
                 component: Am
             },
             {
                 path: 'Cim',
+                name: 'Cim',
                 component: Cim,
                 children: [
                     {
@@ -86,44 +89,54 @@ const routes = [
             },
             {
                 path: 'Gar',
+                name: 'Gar',
                 component: Gar
             },
             {
                 path: 'Pim',
+                name: 'Pim',
                 component: Pim
             },
             {
                 path: 'Ser',
+                name: 'Ser',
                 component: Ser
             },
             {
                 path: 'Sim',
+                name: 'Sim',
                 component: Sim,
                 children: [
                     {
                         path: 'Bsi',
+                        name: 'Bsi',
                         component: Bsi,
                         children: [
                             {
                                 path: 'InfoDetails',
+                                name: 'InfoDetails',
                                 component: InfoDetails
                             }
                         ]
                     },
                     {
                         path: 'Dsi',
+                        name: 'Dsi',
                         component: Dsi
                     },
                     {
                         path: 'Sa',
+                        name: 'Sa',
                         component: Sa
                     },
                     {
                         path: 'Svrad',
+                        name: 'Svrad',
                         component: Svrad
                     },
                     {
                         path: 'Pm',
+                        name: 'Pm',
                         component: Pm
                     }
 
