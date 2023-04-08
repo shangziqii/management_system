@@ -7,11 +7,11 @@
       <el-button icon="el-icon-search" circle class="search2" @click="showLessonList"></el-button>
     </div>
     <!-- 搜索框的显示 -->
-    <div>
+    <!-- <div>
       <el-input v-model="search.listeningId" class="searchInput" placeholder="请输入听课ID查看听课记录">
       </el-input>
       <el-button icon="el-icon-search" circle class="search" @click="searchListening"></el-button>
-    </div>
+    </div> -->
     <!-- 添加信息按钮 -->
     <el-button type="primary" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
     <!-- 点击按钮弹出表单添加信息 -->

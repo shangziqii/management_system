@@ -39,7 +39,19 @@
           <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>
         </el-form-item>
         <el-form-item label="辅导员ID" prop="userId" v-show="role === '0'">
-          <el-input v-model="classInfo.userId" placeholder="请输入辅导员Id"></el-input>
+          <!-- <el-input v-model="classInfo.userId" placeholder="请输入辅导员Id"></el-input> -->
+          <el-autocomplete
+              clearable
+              class="handle-input-width"
+              v-model="classInfo.userId"
+              value-key="userId"
+              :fetch-suggestions="FilterUserId"
+              :trigger-on-focus="true"
+              placeholder="请选择辅导员ID"
+              @clear="blurForBug()"
+              @select="handleSelect"
+            >
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="学院" prop="department">
           <el-input v-model="classInfo.department" placeholder="请输入班级所属学院"></el-input>
@@ -75,7 +87,19 @@
           <el-input placeholder="请输入班级名称" v-model="changeInfoForm.className">{{ changeInfoForm.className }}</el-input>
         </el-form-item>
         <el-form-item label="辅导员Id" prop="userId" v-show="role === '0'">
-          <el-input placeholder="请输入辅导员Id" v-model="changeInfoForm.userId">{{ changeInfoForm.userId }}</el-input>
+          <!-- <el-input placeholder="请输入辅导员Id" v-model="changeInfoForm.userId">{{ changeInfoForm.userId }}</el-input> -->
+          <el-autocomplete
+              clearable
+              class="handle-input-width"
+              v-model="changeInfoForm.userId"
+              value-key="userId"
+              :fetch-suggestions="FilterUserId"
+              :trigger-on-focus="true"
+              placeholder="请选择辅导员ID"
+              @clear="blurForBug()"
+              @select="handleSelect"
+            >
+          </el-autocomplete>
         </el-form-item>
         <el-form-item label="学院" prop="department">
           <el-input placeholder="请输入学院" v-model="changeInfoForm.department">{{ changeInfoForm.department }}</el-input>
@@ -164,7 +188,7 @@
 <script>
 import Tabels from '../../components/Tabels/index.vue'
 import { columns, operaColums} from './const'
-import { classList, addClass, delClass, searchClass, editClass } from './api/index'
+import { classList, addClass, delClass, searchClass, editClass, simpleList } from './api/index'
 export default {
   name: 'Cim',
   components: {
@@ -173,6 +197,8 @@ export default {
   data() {
     return {
       role: localStorage.getItem('role'), //登录用户的身份
+      // 辅导员信息列表
+      UserIdList: [],
       // 列表配置
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
@@ -189,6 +215,7 @@ export default {
         dormitory: '',//宿舍
         monitor: '',//班长
         studyCommittee: '',//学习委员
+        userId: '',//辅导员Id
       },
       // 查询班级信息
       searchInfo: {
@@ -375,14 +402,6 @@ export default {
       this.changeInfoShow = true
       this.changeInfoForm=value
     },
-    // 修改表单关闭逻辑
-    handleCloseChangeInfo(){
-      this.$refs.changeInfoForm.resetFields()
-      this.changeInfoShow = false
-    },
-    cancel2(){
-      this.handleCloseChangeInfo()
-    },
     //修改信息提交按钮
     submitChangeInfo(){
       this.$refs.changeInfoForm.validate((valid) => {
@@ -436,8 +455,44 @@ export default {
         this.currentPage=val
         this.getClassList()
       },
+      getSimpleList() {
+        simpleList().then(res => {
+          console.log(res.data.data);
+          if(res.status === 200) {
+            this.UserIdList = res.data.data
+          }
+        })
+      },
+      // 辅导员信息列表
+      FilterUserId(queryString, cb) {
+          var UserIdList2 = this.UserIdList;
+          var results = queryString
+              ? UserIdList2.filter(this.createFilter(queryString))
+              : UserIdList2;
+          // 调用 callback 返回建议列表的数据
+          cb(results);
+      },
+      // 只要该输入内容的都匹配
+      createFilter(queryString) {
+          return (res) => {
+            // console.log(Array.from(res.userId).indexOf(queryString));
+              // return (res.userId.indexOf(queryString) !== -1);
+          };
+      },
+      // 最终选择的数据
+      handleSelect(val){
+          // console.log(val, '选择')
+          this.classInfo.userId = val.userId
+      },
+      // 点击clearable清空小图标按钮以后，继续重新在输入框中输入数据，querySearch会触发，但是cb函数不会触发
+      // 这样的话就会出现发请求了，也获取数据了，但是input框的输入建议下拉框不呈现在页面上的问题，所以解决方法就是
+      // 只要用户点击了clearable清空按钮以后，就让当前获取焦点的输入框失去焦点，回到最初状态，一切重新开始
+      blurForBug(){
+          document.activeElement.blur()
+      },
   },
   mounted() {
+    this.getSimpleList()
     this.getClassList()
     this.columns = columns
     this.operaColums = operaColums

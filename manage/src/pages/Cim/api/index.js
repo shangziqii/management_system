@@ -45,3 +45,10 @@ export const editClass = (data) => {
         }
     })
 }
+// 获取辅导员列表
+export const simpleList = (params) => {
+    return axios.get('/api/user/simpleList1', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}

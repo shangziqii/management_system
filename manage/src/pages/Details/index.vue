@@ -53,10 +53,6 @@ export default {
 .list-group /deep/ .el-tabs--card>.el-tabs__header .el-tabs__nav{
   border: 0;
 }
-.list-group {
-  position: absolute;
-  top: 200px;
-}
 .list-group /deep/ .el-tabs__nav {
   display: flex;
   justify-content: space-between;
@@ -74,7 +70,7 @@ export default {
 }
 .list-group {
     position: absolute;
-    top: 200px;
+    top: 210px;
     width:84%;
 }
 </style>
