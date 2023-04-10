@@ -19,10 +19,13 @@
         title="选择文件进行导入"
         :visible.sync="addFileShow"
         width="30%"
-        :before-close="handleClose">
-        <input type="file" @change="handleFileUpload">
-    </el-dialog>
-    <!-- 搜索框的显示 -->
+        :before-close="handleClose"
+        >
+      <form>
+        <input type="file" ref="fileInput" @change="handleFileUpload">
+      </form>
+      <el-button>确认导入</el-button>
+      </el-dialog>
     <!-- 搜索框的显示 -->
     <!-- 学号 -->
     <div v-show="showNum">
@@ -92,7 +95,7 @@ import AddStudentInfo from './components/addStudentInfo';
 import ModifyFormInfo from './components/modifyStudentInfo';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 
-import { getList, addStudent, deleteStudent, modifyStu, exportStuInfo } from './api';
+import { getList, addStudent, deleteStudent, modifyStu, exportStuInfo ,importStuInfo} from './api';
 import { columns, operaColums } from './const';
 export default {
   name: 'Bsi',
@@ -203,6 +206,10 @@ export default {
            })
            throw new Error(err);
         })
+    },
+    handleClose() {
+      this.getTableList()
+      this.addFileShow = false
     },
     modify(values) {
       this.modifyFormShow = true;
@@ -531,30 +538,17 @@ export default {
         })
       }
     },
-    handleFileUpload(e) {
-    const file = e.target.files[0];
-    let reader = new FileReader();
-    
-    reader.onload = (e) => {
-      let data = new Uint8Array(e.target.result);
-      let workbook = XLSX.read(data, {type: 'array'});
-      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      let json = XLSX.utils.sheet_to_json(worksheet);
-      console.log(json);
-      // 将数据发送到后台
-      // this.sendDataToServer(json);
-    };
-    
-    reader.readAsArrayBuffer(file);
-  },
-  
-  // 发送数据到后台
-/*   sendDataToServer(data) {
-    // 使用 axios 或其他 HTTP 库发送 POST 请求
-    axios.post('/api/data', data)
-      .then(response => console.log(response))
-      .catch(error => console.error(error));
-  } */
+    handleFileUpload() {
+      const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      importStuInfo(formData).then((res) => {
+        // this.form.files = res.data.data
+        console.log(res);
+      }).catch((error) => {
+        console.error(error);
+      })
+    }
   },
   mounted() {
     this.Columns = columns;
@@ -593,7 +587,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  /* top: 84px; */
+  /* top: 115px; */
   top: 115px;
   left: 377px;
   width: 500px;
@@ -607,7 +601,7 @@ export default {
   font-size: 14px;
   position: absolute;
   z-index: 23;
-  /* top: 84px; */
+  /* top: 115px; */
   top: 115px;
   left: 262px;
   height: 90px;
@@ -623,7 +617,7 @@ export default {
 }
 .searchMore {
   position: absolute;
-  top: 144px;
+  top: 175px;
   left: 1266px;
   z-index: 23;
 }
@@ -631,7 +625,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 84px;
+  top: 115px;
   left: 377px;
   width: 200px;
 }
@@ -639,7 +633,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 84px;
+  top: 115px;
   left: 600px;
   width: 200px;
 }
@@ -647,7 +641,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 84px;
+  top: 115px;
   left: 823px;
   width: 200px;
 }
@@ -655,7 +649,7 @@ export default {
   position: absolute;
   font-size: 14px;
   z-index: 11;
-  top: 84px;
+  top: 115px;
   left: 1046px;
   width: 200px;
 }

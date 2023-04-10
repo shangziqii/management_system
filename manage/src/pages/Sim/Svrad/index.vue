@@ -125,17 +125,20 @@
       :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
+    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
   </div>
 </template>
 
 <script>
 import ImgTabels from './../../../components/ImgTabels';
+import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { punishList, addPunish, removeInfo, changeInfo, searchUseNum, uploadFiles } from './api'
+import { punishList, addPunish, removeInfo, changeInfo, searchUseNum, uploadFiles,exportStuInfo } from './api'
 export default {
   name: 'Svrad',
   components: {
-    ImgTabels
+    ImgTabels,
+    ExportStudentInfo
   },
   data() {
     return {
@@ -154,6 +157,9 @@ export default {
       }, //根据字段进行搜索
       showNum: true,//选择类型对应输入框的显示参数
       showPizeid: false,//选择类型对应输入框的显示参数
+      //导出信息组件对应的参数
+      showSelect:false,
+      cityOptions:['学生学号','学生姓名','学生班级','处分等级','处分名称','处分时间','备注','相关文件'],
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -392,7 +398,10 @@ export default {
       this.currentPage = val
       this.gepunishList();
     },
-
+    //导出信息页面的是否展示
+    exportShow(){
+      this.showSelect=!this.showSelect;
+    },
     //上传相关文件
     uploadFile() {
       const file = this.$refs.fileInput.files[0];
@@ -414,6 +423,19 @@ export default {
         this.changeInfoForm.files = res.data.data
       }).catch((error) => {
         console.error(error);
+      })
+    },
+    //导出学生信息
+    submitSelect(value){
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
       })
     },
   },

@@ -8,6 +8,9 @@
             <el-form-item label="学生学号" prop="studentNum">
               <el-input type="text" v-model="ruleForm.studentNum" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item label="学生姓名" prop="studentName">
+              <el-input type="text" v-model="ruleForm.studentName" autocomplete="off"></el-input>
+            </el-form-item>
             <el-form-item label="贫困等级" prop="difficultLevel" @change="changeSelectValue($event)">
                <el-select v-model="ruleForm.difficultLevel" >
                 <el-option
@@ -57,6 +60,7 @@ export default {
       return {
         ruleForm: {
             studentNum: '', // 学生学号
+            studentName:'',//学生姓名
             difficultLevel: '普困', // 贫困等级
             situation: '', // 个人情况
             remarks: '', // 备注
@@ -78,9 +82,10 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            const {studentNum ,difficultLevel, situation, remarks } = this.ruleForm;
+            const {studentNum ,studentName,difficultLevel, situation, remarks } = this.ruleForm;
             const params = {
               studentNum,
+              studentName,
               difficultLevel,
               situation,
               remarks

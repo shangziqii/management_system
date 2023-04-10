@@ -199,6 +199,12 @@ export default {
 </script>
 
 <style scoped>
+
+/* 隐藏侧边导航栏下边的滚动条 */
+.el-aside::-webkit-scrollbar {
+     display: none;
+}
+
 .r-content{
   position:absolute;
   right:10px;
@@ -221,7 +227,6 @@ export default {
   top: 15px;
   left: 20px;
 }
-
 .el-breadcrumb {
   position: absolute;
   top: 25px;

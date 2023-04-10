@@ -9,6 +9,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
           <el-dropdown-item @click.native="selectPizeid">请选择政治面貌</el-dropdown-item>
+          <el-dropdown-item @click.native="selectMore">多条件搜索</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <!-- 搜索框的显示 -->
@@ -21,6 +22,13 @@
         <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="searchInput">
         </el-input>
         <el-button icon="el-icon-search" circle class="search" @click="searchPolitical"></el-button>
+      </div>
+      <div v-show="showMore">
+        <el-input v-model="search.studentNum" class="searchInput1" placeholder="请输入学生学号">
+        </el-input>
+        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="searchInput2">
+        </el-input>
+        <el-button icon="el-icon-search" circle class="search1" @click="searchStudentMore"></el-button>
       </div>
     </div>
     <div class="btn">
@@ -118,17 +126,20 @@
       :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
+    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
   </div>
 </template>
   
 <script>
 import Tables from './../../../components/Tabels';
+import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { punishList, addPunish, removeInfo, changeInfo, searchUseNum, searchUsePoliticalStatus } from './api'
+import { punishList, addPunish, removeInfo, changeInfo,search ,exportStuInfo} from './api'
 export default {
   name: 'Svrad',
   components: {
-    Tables
+    Tables,
+    ExportStudentInfo
   },
   data() {
     return {
@@ -144,6 +155,9 @@ export default {
         studentNum: '',
         searchPoliticalStatus: ''
       }, //根据字段进行搜索
+      //导出信息组件的相关参数
+      showSelect:false,
+      cityOptions:['学生学号','学生姓名','学生班级','政治面貌','发展预备导员时间','转正党员时间'],
       showNum: true,//选择类型对应输入框的显示参数
       showPizeid: false,//选择类型对应输入框的显示参数
       showMore:false,
@@ -310,10 +324,26 @@ export default {
       this.showMore=false
     },
     selectMore(){
-      console.log('点击啦啦啦啦啦');
       this.showPizeid = false
       this.showNum = false
       this.showMore=true
+    },
+    //导出信息的页面是否展示
+    exportShow(){
+      this.showSelect=!this.showSelect;
+    },
+    //导出学生信息
+    submitSelect(value){
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
+      })
     },
     changeLimit(val) {
       this.pageLimit = val;
@@ -341,7 +371,7 @@ export default {
           pageLimit: this.pageLimit,
           studentNum: this.search.studentNum
         }
-        searchUseNum(searchInfo).then((res) => {
+        search(searchInfo).then((res) => {
           if (res.data.status === 0) {
             this.tableData = res.data.data.partyMembers
             this.$message({
@@ -382,7 +412,7 @@ export default {
           showClose: true,
           message: '正在搜索请稍等'
         });
-        searchUsePoliticalStatus(searchInfo).then((res) => {
+        search(searchInfo).then((res) => {
           if (res.data.status === 0) {
             this.tableData = res.data.data.partyMembers
             this.$message({
@@ -405,7 +435,48 @@ export default {
           });
         })
       }
-    }},
+    },
+    searchStudentMore(){
+      if (!this.search.searchPoliticalStatus&&!this.search.searchStudentNum) {
+        this.$message('请输入内容进行搜索');
+        this.gepunishList()
+      }
+      else {
+        const searchInfo = {
+          page: this.currentPage,
+          pageLimit: this.pageLimit,
+          politicalStatus: this.search.searchPoliticalStatus,
+          studentNum: this.search.studentNum
+        }
+        this.$message({
+          showClose: true,
+          message: '正在搜索请稍等'
+        });
+        search(searchInfo).then((res) => {
+          if (res.data.status === 0) {
+            this.tableData = res.data.data.partyMembers
+            this.$message({
+              message: '搜索成功',
+              type: 'success'
+            });
+          }
+          else {
+            this.$message({
+              showClose: true,
+              message: '查询失败',
+              type: 'error'
+            });
+          }
+        }).catch((error) => {
+          this.$message({
+            showClose: true,
+            message: '连接错误，请稍后',
+            type: 'error'
+          });
+        })
+      }    
+    }
+  },
   
     mounted() {
       //进来页面直接调用获取学生列表函数
@@ -468,5 +539,26 @@ export default {
   left: 650px;
   z-index: 23;
 }
-
+ .searchInput1{
+  position: absolute;
+  font-size: 14px;
+  z-index: 11;
+  top: 12px;
+  left: 145px;
+  width: 250px;
+}
+.searchInput2{
+  position: absolute;
+  font-size: 14px;
+  z-index: 11;
+  top: 12px;
+  left: 415px;
+  width: 250px;
+}
+.search1{
+  position: absolute;
+  top: 71px;
+  left: 675px;
+  z-index: 23;
+}
   </style>

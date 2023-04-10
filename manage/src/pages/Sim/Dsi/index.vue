@@ -129,18 +129,17 @@ export default {
        })
    },
    deletePoorStudent(val) {
-     const { difficultId } = val;
+     const difficultId  = val.voDifficultId;
      const params = {
-       difficultId
+      difficultId
      };
      const instance = deleteStu(params);
-     instance
-       .then( (res) => {
+     instance.then( (res) => {
         const { status, msg } = res.data;
         if( status === 0 ){
-          this.message({
+          this.$message({
             type: 'success',
-            message: msg,
+            message: msg
           })
           this.currentPage = 1;
           this.pageLimit = 5;

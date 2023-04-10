@@ -34,17 +34,25 @@ export const changeInfo = (data) => {
     })
 }
 
-//根据学号进行搜索
-export const searchUseNum = (params) => {
+//模糊搜索
+export const search = (params) => {
     return axios.get('/api/partyMember/list', {
         headers: { 'token': localStorage.getItem('token') },
         params
     })
 }
 
-//根据政治面貌进行搜索
-export const searchUsePoliticalStatus = (params) => {
-    return axios.get('/api/partyMember/list', {
+//导出学生信息
+export const exportStuInfo = (params) => {
+    return axios.get('/api/prizeStudent/export', {
+        headers: { 'token': localStorage.getItem('token') },
+        params
+    })
+}
+
+//导入学生信息
+export const importStuInfo = (params) => {
+    return axios.get('/api/student/import', {
         headers: { 'token': localStorage.getItem('token') },
         params
     })

@@ -30,7 +30,7 @@ export const deleteStu = (params) => {
 
 //导出学生基本信息
 export const exportStuInfo = (params) => {
-    return axios.get('/api/student/export', {
+    return axios.get('/api/difficultStudent/export', {
         headers: {
             'token': localStorage.getItem('token'),
             'Content-Type': 'application/json'

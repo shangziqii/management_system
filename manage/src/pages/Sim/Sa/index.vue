@@ -40,8 +40,8 @@
         <el-form-item label="姓名" prop="studentName">
           <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
         </el-form-item>
-        <el-form-item label="班级" prop="studentClass">
-          <el-input placeholder="请输入班级" v-model="form.studentClass"></el-input>
+        <el-form-item label="班级" prop="className">
+          <el-input placeholder="请输入班级" v-model="form.className"></el-input>
         </el-form-item>
         <el-form-item label="奖项名称" prop="prizeName">
           <el-input placeholder="请输入奖项名称" v-model="form.prizeName"></el-input>
@@ -135,18 +135,21 @@
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
       :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage"
       @changeLimit="changeLimit" />
+     <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
   </div>
 </template>
 
 <script>
 import ImgTabels from './../../../components/ImgTabels';
+import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum ,submitPictureTo} from './api'
+import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum ,submitPictureTo,exportStuInfo} from './api'
 var token =  localStorage.getItem('token')
 export default {
   name: 'Sa',
   components: {
-    ImgTabels
+    ImgTabels,
+    ExportStudentInfo
   },
   data() {
     return {
@@ -167,6 +170,8 @@ export default {
       headers:{
         token:token
       },
+      showSelect:false,
+      cityOptions:['学号','学生姓名','学生班级','奖项名称','奖项等级','获奖时间','指导老师','奖状电子版'],
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -174,8 +179,14 @@ export default {
         studentName: [
           { required: true, message: '请输入获奖学生姓名' }
         ],
-        studentClass: [
+        /* 班级必须规则
+        className: [
           { required: true, message: '请输入获奖学生班级' }
+        ], */
+        className:[
+          {
+            required:false
+          }
         ],
         prizeName: [
           { required: true, message: '请输入获奖名称' }
@@ -200,7 +211,7 @@ export default {
         studentName: [
           { required: true, message: '请输入获奖学生姓名' }
         ],
-        studentClass: [
+        className: [
           { required: true, message: '请输入获奖学生班级' }
         ],
         prizeName: [
@@ -450,6 +461,19 @@ export default {
         console.log(res);
       }) 
     } */
+    //导出学生信息
+    submitSelect(value){
+      exportStuInfo(value).then((res)=>{
+        window.open(res.data.data)
+        this.showSelect=false
+        this.$message({
+          message: '下载成功',
+          type: 'success'
+        });
+      }).catch((error)=>{
+        this.$message.error('未知错误');
+      })
+    },
 
   },
 
