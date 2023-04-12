@@ -2,33 +2,13 @@
     <div>
       <!-- 搜索学生 -->
     <div class="searchInfo">
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-          <el-dropdown-item @click.native="selectPizeid">请选择政治面貌</el-dropdown-item>
-          <el-dropdown-item @click.native="selectMore">多条件搜索</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
       <!-- 搜索框的显示 -->
-      <div v-show="showNum">
-        <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号">
+      <div>
+        <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号">
         </el-input>
-        <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
-      </div>
-      <div v-show="showPizeid">
-        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="searchInput">
+        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="input">
         </el-input>
-        <el-button icon="el-icon-search" circle class="search" @click="searchPolitical"></el-button>
-      </div>
-      <div v-show="showMore">
-        <el-input v-model="search.studentNum" class="searchInput1" placeholder="请输入学生学号">
-        </el-input>
-        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="searchInput2">
-        </el-input>
-        <el-button icon="el-icon-search" circle class="search1" @click="searchStudentMore"></el-button>
+        <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentMore"></el-button>
       </div>
     </div>
     <div class="btn">
@@ -158,9 +138,6 @@ export default {
       //导出信息组件的相关参数
       showSelect:false,
       cityOptions:['学生学号','学生姓名','学生班级','政治面貌','发展预备导员时间','转正党员时间'],
-      showNum: true,//选择类型对应输入框的显示参数
-      showPizeid: false,//选择类型对应输入框的显示参数
-      showMore:false,
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -353,89 +330,6 @@ export default {
       this.currentPage = val
       this.gepunishList();
     },
-
-    //使用学生学号进行搜索
-    searchStudentNum() {
-      if (!this.search.studentNum) {
-        // console.log('数据为空');
-        this.$message('请输入内容进行搜索');
-        this.geWinnerList()
-      }
-      else {
-        this.$message({
-          showClose: true,
-          message: '正在搜索请稍等'
-        });
-        const searchInfo = {
-          page: this.currentPage,
-          pageLimit: this.pageLimit,
-          studentNum: this.search.studentNum
-        }
-        search(searchInfo).then((res) => {
-          if (res.data.status === 0) {
-            this.tableData = res.data.data.partyMembers
-            this.$message({
-              message: '搜索成功',
-              type: 'success'
-            });
-          }
-          else {
-            this.$message({
-              showClose: true,
-              message: '查询失败',
-              type: 'error'
-            });
-          }
-        }).catch((error) => {
-          this.$message({
-            showClose: true,
-            message: '连接错误，请稍后',
-            type: 'error'
-          });
-        })
-      }
-    },
-    //根据政治面貌进行搜索
-    searchPolitical() {
-      if (!this.search.searchPoliticalStatus) {
-        // console.log('数据为空');
-        this.$message('请输入内容进行搜索');
-        this.gepunishList()
-      }
-      else {
-        const searchInfo = {
-          page: this.currentPage,
-          pageLimit: this.pageLimit,
-          politicalStatus: this.search.searchPoliticalStatus
-        }
-        this.$message({
-          showClose: true,
-          message: '正在搜索请稍等'
-        });
-        search(searchInfo).then((res) => {
-          if (res.data.status === 0) {
-            this.tableData = res.data.data.partyMembers
-            this.$message({
-              message: '搜索成功',
-              type: 'success'
-            });
-          }
-          else {
-            this.$message({
-              showClose: true,
-              message: '查询失败',
-              type: 'error'
-            });
-          }
-        }).catch((error) => {
-          this.$message({
-            showClose: true,
-            message: '连接错误，请稍后',
-            type: 'error'
-          });
-        })
-      }
-    },
     searchStudentMore(){
       if (!this.search.searchPoliticalStatus&&!this.search.searchStudentNum) {
         this.$message('请输入内容进行搜索');
@@ -489,19 +383,6 @@ export default {
   </script>
   
   <style scoped>
-.searchInfo {
-  position: relative;
-}
-
-/* 下拉框选择的基本样式 */
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409EFF;
-}
-
-.el-icon-arrow-down {
-  font-size: 12px;
-}
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
   display: flex;
@@ -510,55 +391,21 @@ export default {
   align-items: center;
   margin-bottom: 10px;
 }
-      /* 搜索框样式 */
-.searchInput {
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  top: 12px;
-  left: 145px;
-  width: 500px;
-}
-
-/* 下拉选择框样式 */
-.el-dropdown {
-  display: inline-block;
-  color: #606266;
-  font-size: 14px;
-  position: absolute;
-  z-index: 23;
-  top: 12px;
-  left: 30px;
-  height: 90px;
-}
-
 /* 搜索的按钮 */
-.search {
-  position: absolute;
-  top: 71px;
-  left: 650px;
-  z-index: 23;
+.searchMore {
+margin-left:10px;
 }
- .searchInput1{
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  top: 12px;
-  left: 145px;
-  width: 250px;
+
+/* 搜索框样式 */
+.searchInfo{
+  position:absolute;
+  left:250px;
+  z-index:11;
+  top:120px;
 }
-.searchInput2{
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  top: 12px;
-  left: 415px;
-  width: 250px;
+.input{
+  width: 210px;
+  margin-right:10px;
 }
-.search1{
-  position: absolute;
-  top: 71px;
-  left: 675px;
-  z-index: 23;
-}
+
   </style>

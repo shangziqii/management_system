@@ -1,20 +1,10 @@
 <template>
   <div class="page">
-     <!-- 搜索学生 -->
-     <el-dropdown>
-      <span class="el-dropdown-link">
-        选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-        <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
-      </el-dropdown-menu>
-    </el-dropdown>
       <!-- 搜索框的显示 -->
-    <div v-show="showNum">
-      <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号">
+    <div class="searchInfo">
+      <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号">
       </el-input>
-      <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
+      <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
     </div>
     <div class="btn">
       <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
@@ -56,7 +46,6 @@ export default {
       studentInfo:{},//要修改的学生的信息
       showSelect:false,
       cityOptions:['学号','困难等级','个人情况','备注'],
-      showNum: true,//选择类型对应输入框的显示参数
       search:{
         studentNum:''
       }
@@ -236,9 +225,6 @@ export default {
           });
         })
       }
-    },
-    selectStudentNum() {
-      this.showNum = true
     }
  },
  mounted() {
@@ -250,15 +236,6 @@ export default {
 </script>
 
 <style scoped>
-/* 下拉框选择的基本样式 */
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409EFF;
-}
-
-.el-icon-arrow-down {
-  font-size: 12px;
-}
  .page {
    width: 100%;
    height: 100%;
@@ -270,38 +247,21 @@ export default {
    align-items: center;
    margin-bottom: 10px;
  }
- /* 搜索框样式 */
-.searchInput {
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  /* top: 84px; */
-  top: 115px;
-  left: 377px;
-  width: 500px;
-}
-
-/* 下拉选择框样式 */
-.el-dropdown {
-  display: inline-block;
-  position: relative;
-  color: #606266;
-  font-size: 14px;
-  position: absolute;
-  z-index: 23;
-  /* top: 84px; */
-  top: 115px;
-  left: 262px;
-  height: 90px;
-}
 
 /* 搜索的按钮 */
-.search {
-  position: absolute;
-  /* top: 144px; */
-  top: 175px;
-  left: 887px;
-  z-index: 23;
+.searchMore {
+margin-left:10px;
 }
 
+/* 搜索框样式 */
+.searchInfo{
+  position:absolute;
+  left:250px;
+  z-index:11;
+  top:120px;
+}
+.input{
+  width: 300px;
+  margin-right:10px;
+}
 </style>

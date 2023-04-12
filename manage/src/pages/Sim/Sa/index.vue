@@ -1,29 +1,11 @@
 <template>
   <div>
     <!-- 搜索学生 -->
-    <div class="searchInfo">
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          选择搜索条件<i class="el-icon-arrow-down el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="selectStudentNum">学生学号搜索</el-dropdown-item>
-          <!-- <el-dropdown-item @click.native="selectPizeid">pizeid搜索</el-dropdown-item> -->
-        </el-dropdown-menu>
-      </el-dropdown>
-      <!-- 搜索框的显示 -->
-      <div v-show="showNum">
-        <el-input v-model="search.studentNum" class="searchInput" placeholder="请输入学生学号"
-          onkeyup="this.value=this.value.replace(/\s+/g,'')">
+      <div class="searchInfo">
+        <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input" placeholder="请输入学生学号">
           <!-- @change="onChange" -->
         </el-input>
-        <el-button icon="el-icon-search" circle class="search" @click="searchStudentNum"></el-button>
-      </div>
-      <div v-show="showPizeid">
-        <el-input v-model="search.studentNum" placeholder="请输入pizeid" class="searchInput">
-        </el-input>
-        <el-button icon="el-icon-search" circle class="search" @click="searchPizeId"></el-button>
-      </div>
+        <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
     </div>
     <div class="btn">
       <!-- 添加信息按钮 -->
@@ -165,8 +147,6 @@ export default {
       search: {
         studentNum: ''
       }, //根据字段进行搜索
-      showNum: true,//选择类型对应输入框的显示参数
-      showPizeid: false,//选择类型对应输入框的显示参数
       headers:{
         token:token
       },
@@ -358,20 +338,11 @@ export default {
     cancel2() {
       this.handleCloseChangeInfo()
     },
-    //选择了使用学生学号进行搜索调用的函数
-    selectStudentNum() {
-      this.showNum = true
-      this.showPizeid = false
-    },
-    //选择了使用学生获奖id进行搜索调用设计
-    selectPizeid() {
-      this.showPizeid = true
-      this.showNum = false
-    },
     //使用学生学号进行搜索
     searchStudentNum() {
       // console.log("使用学生学号进行搜索");
-      if (!this.search.studentNum) {
+      const studentNum = this.search.studentNum.replace(/\s+/g, '');
+      if (studentNum==='') {
         // console.log('数据为空');
         this.$message('请输入内容进行搜索');
         this.geWinnerList()
@@ -409,10 +380,6 @@ export default {
           });
         })
       }
-    },
-    //使用获奖id进行搜索
-    searchPizeId() {
-      console.log("使用获奖id进行搜索");
     },
     changeLimit(val) {
       this.pageLimit = val;
@@ -474,7 +441,10 @@ export default {
         this.$message.error('未知错误');
       })
     },
-
+    //导出信息页面的是否展示
+    exportShow(){
+      this.showSelect=!this.showSelect;
+    }
   },
 
   mounted() {
@@ -488,19 +458,6 @@ export default {
 </script>
 
 <style scoped>
-.searchInfo {
-  position: relative;
-}
-
-/* 下拉框选择的基本样式 */
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409EFF;
-}
-
-.el-icon-arrow-down {
-  font-size: 12px;
-}
 
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
@@ -510,35 +467,21 @@ export default {
   align-items: center;
   margin-bottom: 10px;
 }
+/* 搜索的按钮 */
+.searchMore {
+margin-left:10px;
+}
 
 /* 搜索框样式 */
-.searchInput {
-  position: absolute;
-  font-size: 14px;
-  z-index: 11;
-  top: 12px;
-  left: 145px;
-  width: 500px;
+.searchInfo{
+  position:absolute;
+  left:250px;
+  z-index:11;
+  top:120px;
 }
-
-/* 下拉选择框样式 */
-.el-dropdown {
-  display: inline-block;
-  color: #606266;
-  font-size: 14px;
-  position: absolute;
-  z-index: 23;
-  top: 12px;
-  left: 30px;
-  height: 90px;
-}
-
-/* 搜索的按钮 */
-.search {
-  position: absolute;
-  top: 71px;
-  left: 650px;
-  z-index: 23;
+.input{
+  width: 250px;
+  margin-right:10px;
 }
 
 /* 上传图片文件的相关样式 */
