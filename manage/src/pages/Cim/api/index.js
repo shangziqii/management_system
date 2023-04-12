@@ -3,10 +3,7 @@ import axios from "axios";
 export const classList = (params) => {
     return axios.get('/api/class/list', {
         headers: { 'token': localStorage.getItem('token') },
-        params: {
-            page: 1,
-            pageLimit: 20
-        }
+        params
     })
 }
 
@@ -29,7 +26,7 @@ export const delClass = (data) => {
         }
     })
 }
-// 查询班级信息
+// 查询班级信息（班级ID）
 export const searchClass = (params) => {
     return axios.get('/api/class/get', {
         headers: { 'token': localStorage.getItem('token') },

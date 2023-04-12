@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 搜索某班级所有谈话记录列表 -->
-    <div>
+    <!-- <div>
       <el-input v-model="search2.classId" class="searchInput2" placeholder="请输入班级ID查询谈话记录列表">
       </el-input>
       <el-button icon="el-icon-search" circle class="search2" @click="showLessonList"></el-button>
-    </div>
+    </div> -->
     <!-- 搜索框的显示 -->
     <!-- <div>
       <el-input v-model="search.listeningId" class="searchInput" placeholder="请输入听课ID查看听课记录">
@@ -17,9 +17,9 @@
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-          <el-form-item label="班级ID" prop="classId">
+          <!-- <el-form-item label="班级ID" prop="classId">
             <el-input placeholder="请输入听课班级的ID" v-model="form.classId"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="开始时间" prop="startTime">
             <el-date-picker v-model="form.startTime" type="datetime" placeholder="请选择开始时间" format="yyyy-MM-dd HH:mm:ss"
               value-format="yyyy-MM-dd HH:mm:ss">
@@ -64,9 +64,9 @@
           <el-form-item label="听课ID" prop="listeningId">
             <el-input placeholder="请输入听课ID" v-model="changeInfoForm.listeningId">{{ changeInfoForm.listeningId }}</el-input>
           </el-form-item>
-          <el-form-item label="班级ID" prop="classId">
+          <!-- <el-form-item label="班级ID" prop="classId">
             <el-input placeholder="请输入班级ID" :disabled="true" v-model="changeInfoForm.classId">{{ changeInfoForm.classId }}</el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="开始时间" prop="startTime">
             <el-date-picker v-model="changeInfoForm.startTime" type="datetime" placeholder="请选择开始时间" format="yyyy-MM-dd HH:mm:ss"
               value-format="yyyy-MM-dd HH:mm:ss">
@@ -143,6 +143,7 @@ export default {
         listeningId: ''
       },
       form: {
+        classId: JSON.parse(sessionStorage.getItem('baseData')).classId,
         files:''
       },
       dialogVisible: false,
@@ -198,7 +199,7 @@ export default {
         const params = {
          page: this.currentPage,
          pageLimit: this.pageLimit,
-         classId: this.search2.classId
+         classId: JSON.parse(sessionStorage.getItem('baseData')).classId
        }
        //发送获取查寝信息列表的请求
       getLessonList(params).then((res) => {
@@ -206,7 +207,7 @@ export default {
             this.tableData = res.data.data.listens
             this.total=res.data.total
             this.$message({
-            message:res.data.msg,
+            message:'获取列表信息成功',
             type: 'success'
             })
         }).catch((error)=>{
@@ -234,6 +235,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
+              this.showLessonList()
             }
             else {
               alert('添加失败', res.data.msg)
@@ -341,7 +343,7 @@ export default {
     },
   },
   mounted() {
-    // this.showLessonList()
+    this.showLessonList()
     this.columns = columns
     this.operaColums = operaColums
   },

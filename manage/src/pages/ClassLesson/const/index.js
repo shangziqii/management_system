@@ -1,12 +1,12 @@
 export const columns = [
-    {
-        label: '听课ID',
-        prop: 'listeningId'
-    },
-    {
-        label: '班级ID',
-        prop: 'classId'
-    },
+    // {
+    //     label: '听课ID',
+    //     prop: 'listeningId'
+    // },
+    // {
+    //     label: '班级ID',
+    //     prop: 'classId'
+    // },
     {
         label: '开始时间',
         prop: 'startTime'

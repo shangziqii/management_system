@@ -56,9 +56,9 @@
           </div>
           <div class="l-content">
             <!-- 面包屑部分 -->
-            <el-breadcrumb separator="/">
+            <!-- <el-breadcrumb separator="/">
               <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
-            </el-breadcrumb>
+            </el-breadcrumb> -->
           </div>
         </el-header>
         <CommonTag/>

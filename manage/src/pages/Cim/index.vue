@@ -1,7 +1,13 @@
 <template>
 <div>
   <div class="classManage" v-show="$route.path=='/Main/Cim'">
-    <!-- 查询用户信息弹窗 -->
+    <!-- 模糊搜索某班级 -->
+    <div>
+      <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput">
+      </el-input>
+      <el-button icon="el-icon-search" circle  @click="WhichClass" class="findButton"></el-button>
+    </div>
+    <!-- 查询班级信息弹窗 -->
     <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
       <el-form ref="searchInfo" :rules="rules2" :model="searchInfo" label-width="80px">
         <el-form-item label="班级ID" placeholder="请输入班级ID" prop="classId">
@@ -291,6 +297,10 @@ export default {
         studyCommittee: [
           { required: true, message: '请输入学委姓名' }
         ],
+      },
+      // 搜索某班级名称
+      findClass: {
+        className: ''
       }
     }
   },
@@ -395,6 +405,19 @@ export default {
           pageLimit: this.pageLimit,
         }
       classList(params).then(res => {
+        // console.log(res.data);
+        this.tableData = res.data.data.classes
+      })
+    },
+    // 搜索查询班级列表
+    WhichClass() {
+      const params = {
+        page: this.currentPage,
+        pageLimit: this.pageLimit,
+        searchClassName: this.findClass.className
+      }
+      classList(params).then(res => {
+        // console.log(res.data);
         this.tableData = res.data.data.classes
       })
     },
@@ -457,7 +480,7 @@ export default {
       },
       getSimpleList() {
         simpleList().then(res => {
-          console.log(res.data.data);
+          // console.log(res.data);
           if(res.status === 200) {
             this.UserIdList = res.data.data
           }
@@ -574,5 +597,18 @@ div /deep/ .el-dialog {
 }
 .manage-header {
   margin-top: 52px;
+}
+.findInput {
+  position: absolute;
+  top: 130px;
+  left: 250px;
+  width: 300px;
+  z-index: 11;
+}
+.findButton {
+  position: absolute;
+  top: 190px;
+  left: 560px;
+  z-index: 23;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- 搜索某班级所有谈话记录列表 -->
-    <div>
+    <!-- <div>
       <el-input v-model="search2.classId" class="searchInput2" placeholder="请输入班级ID查询谈话记录列表">
       </el-input>
       <el-button icon="el-icon-search" circle class="search2" @click="showTalkList"></el-button>
-    </div>
+    </div> -->
     <!-- 搜索框的显示 -->
     <!-- <div>
       <el-input v-model="search.meetingId" class="searchInput" placeholder="请输入谈话ID查看谈话记录">
@@ -17,9 +17,9 @@
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-        <el-form-item label="班级ID" prop="classId">
+        <!-- <el-form-item label="班级ID" prop="classId">
           <el-input placeholder="请输入谈话班级的ID" v-model="form.classId"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="谈话时间" prop="time">
           <el-date-picker v-model="form.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd HH:mm:ss"
             value-format="yyyy-MM-dd HH:mm:ss" class="pickTime">
@@ -58,9 +58,9 @@
           <el-form-item label="谈话ID" prop="interviewId">
             <el-input placeholder="请输入谈话ID" v-model="changeInfoForm.interviewId">{{ changeInfoForm.interviewId }}</el-input>
           </el-form-item>
-          <el-form-item label="班级ID" prop="classId">
+          <!-- <el-form-item label="班级ID" prop="classId">
             <el-input placeholder="请输入班级ID" :disabled="true" v-model="changeInfoForm.classId">{{ changeInfoForm.classId }}</el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="谈话时间" prop="time">
             <el-date-picker v-model="changeInfoForm.time" type="datetime" placeholder="请选择谈话时间" format="yyyy-MM-dd HH:mm:ss"
             value-format="yyyy-MM-dd HH:mm:ss" class="pickTime">
@@ -132,6 +132,7 @@ export default {
         meetingId: ''
       },
       form: {
+        classId: JSON.parse(sessionStorage.getItem('baseData')).classId,
         files:''
       },
       dialogVisible: false,
@@ -181,7 +182,7 @@ export default {
         const params = {
          page: this.currentPage,
          pageLimit: this.pageLimit,
-         classId: this.search2.classId
+         classId: JSON.parse(sessionStorage.getItem('baseData')).classId
        }
        //发送获取谈话信息列表的请求
       getTalkList(params).then((res) => {
@@ -190,7 +191,7 @@ export default {
             this.tableData = res.data.data.interviews
             this.total=res.data.total
             this.$message({
-            message:res.data.msg,
+            message:'获取列表信息成功',
             type: 'success'
             })
         }).catch((error)=>{
@@ -218,6 +219,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               })
+              this.showTalkList()
             }
             else {
               alert('添加失败', res.data.msg)
@@ -325,7 +327,7 @@ export default {
     },
   },
   mounted() {
-    // this.showTalkList()
+    this.showTalkList()
     this.columns = columns
     this.operaColums = operaColums
   },

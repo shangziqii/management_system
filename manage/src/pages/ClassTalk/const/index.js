@@ -1,12 +1,12 @@
 export const columns = [
-    {
-        label: '谈话ID',
-        prop: 'interviewId'
-    },
-    {
-        label: '班级ID',
-        prop: 'classId'
-    },
+    // {
+    //     label: '谈话ID',
+    //     prop: 'interviewId'
+    // },
+    // {
+    //     label: '班级ID',
+    //     prop: 'classId'
+    // },
     {
         label: '谈话时间',
         prop: 'time'
@@ -20,7 +20,7 @@ export const columns = [
         prop: 'location'
     },
     {
-        label: '查寝目标',
+        label: '谈话目标',
         prop: 'subject'
     },
     {
