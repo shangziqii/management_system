@@ -3,10 +3,10 @@ export const columns = [
         label: '寝室号',
         prop: 'dormitoryVisitId'
     },
-    {
-        label: '班级ID',
-        prop: 'classId'
-    },
+    // {
+    //     label: '班级ID',
+    //     prop: 'classId'
+    // },
     {
         label: '查寝时间',
         prop: 'time'

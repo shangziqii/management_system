@@ -3,10 +3,10 @@ export const columns = [
         label: '会议ID',
         prop: 'meetingId'
     },
-    {
-        label: '班级ID',
-        prop: 'classId'
-    },
+    // {
+    //     label: '班级ID',
+    //     prop: 'classId'
+    // },
     {
         label: '开始时间',
         prop: 'startTime'

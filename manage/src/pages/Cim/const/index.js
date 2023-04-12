@@ -1,8 +1,8 @@
 export const columns = [
-    {
-        label: '班级ID',
-        prop: 'classId',
-    },
+    // {
+    //     label: '班级ID',
+    //     prop: 'classId',
+    // },
     {
         label: '班级名称',
         prop: 'className',
@@ -19,10 +19,10 @@ export const columns = [
         label: '辅导员',
         prop: 'userName',
     },
-    {
-        label: '辅导员ID',
-        prop: 'userId',
-    },
+    // {
+    //     label: '辅导员ID',
+    //     prop: 'userId',
+    // },
     {
         label: '班长',
         prop: 'monitor',
