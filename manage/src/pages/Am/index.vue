@@ -180,8 +180,23 @@ export default {
           pageLimit: this.pageLimit,
         }
         getList(params).then(({ data }) => {
-        // console.log(data.data);
-        this.tableData = data.data.users
+        const users=data.data.users;
+        console.log(users);
+        for(let i=0;i<users.length;i++)
+        {
+          console.log(users[i].role);
+        if(users[i].role===0){
+          users[i].role='管理员'
+        }
+        else if(users[i].role===1){
+          users[i].role='辅导员'
+        }
+        else{
+          users[i].role='班主任'
+        }
+      }
+        console.log(users);
+        this.tableData = users
       })
       },
       changeLimit(val) {

@@ -17,6 +17,7 @@ export default new Vuex.Store({
         createPersistedState({
             key: 'my-app',
             storage: window.localStorage
+            // storage: window.sessionStorage
         })
     ]
 })
