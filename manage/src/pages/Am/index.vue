@@ -182,6 +182,7 @@ export default {
         getList(params).then(({ data }) => {
         // console.log(data.data);
         this.tableData = data.data.users
+        
       })
       },
       changeLimit(val) {
