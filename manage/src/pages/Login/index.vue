@@ -56,6 +56,10 @@ import { Login } from './api';
       };
     },
     methods: {
+      //更新vuex中的权限状态
+      handleLoginSuccess(permission){
+        this.$store.commit('setPermission', permission)
+      },
       submitForm(formName) {
           this.$refs[formName].validate((valid) => {
             // console.log('验证', valid);
@@ -71,11 +75,13 @@ import { Login } from './api';
           const instance =  Login(params); // axios返回promise实例
           instance.then((record) => {
               const { data, msg, status } = record.data;
+              console.log(data);
               if(data !== -1){
                     this.$message({
                     message:msg,
                     type: 'success'
                     });
+                    this.handleLoginSuccess(data);//vuex
                     const { token } = record.headers;//获取token
                   localStorage.setItem('token',token);//将token存储在localStorage
                   // 还将role的数值存放在localstorage中，便于后面增删班级操作
@@ -98,7 +104,6 @@ import { Login } from './api';
         this.$nextTick(() => {
           this.$refs.LoginForm.resetFields();
         })
-
       }
     }
   }

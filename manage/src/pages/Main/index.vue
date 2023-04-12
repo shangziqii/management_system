@@ -5,7 +5,7 @@
         <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
            background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
           <h3>管理系统</h3>
-          <el-menu-item v-for="item in noChildren" :key="item.name" :index="item.name" @click="clickMenu(item)">
+          <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow===0)" :key="item.name" :index="item.name" @click="clickMenu(item)">
             <i :class="`el-icon-${item.icon}`"></i>
             <span slot="title">{{ item.label }}</span>
           </el-menu-item>
@@ -90,7 +90,7 @@ export default {
           name: "Pim",
           label: "个人信息管理",
           icon: "user-solid",
-          index: "/Main/Pim",
+          index: "/Main/Pim"
         },
         {
           path: "/Main/Am",
@@ -98,6 +98,7 @@ export default {
           label: "账号管理",
           icon: "s-order",
           url: "/Main/Am",
+          disabled:true
         },
         {
           path: "/Main/Cim",
@@ -193,7 +194,11 @@ export default {
     },
     ...mapState({
       tags: state => state.detail.tabsList
-    })
+    }),
+    //接收vuex中获取的权限状态，来进行条件禁用侧边栏的项目
+     roleShow(){
+      return this.$store.state.showNav.permission
+    } 
   }
 }
 </script>

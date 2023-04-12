@@ -24,9 +24,9 @@
           </el-select>
         </el-form-item>
         <!-- 无管理班级选项 -->
-        <el-form-item label="管理班级" prop="className">
+       <!--  <el-form-item label="管理班级" prop="className">
           <el-input placeholder="请输入管理的班级" v-model="form.className"></el-input>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>

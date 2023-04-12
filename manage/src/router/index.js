@@ -5,7 +5,7 @@ import VueRouter from "vue-router";
 const originalPush = VueRouter.prototype.push
 
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+    return originalPush.call(this, location).catch(err => err)
 }
 
 Vue.use(VueRouter);
@@ -159,7 +159,7 @@ const router = new VueRouter({
 });
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
     if (to.path === '/Main') {
         if (localStorage.getItem('token')) {
             next();
@@ -172,6 +172,21 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
-})
+}) */
+const protectedRoutes = ['/Main', '/Pim', '/Am', '/Cim', '/Sim', '/Gar', '/Ser', '/Details', '/ClassLesson', '/ClassMeet', '/ClassTalk', '/Dormitory', '/Bsi', '/Dsi', '/Sa', '/Svrad', '/Pm', '/InfoDetails'];
+
+router.beforeEach((to, from, next) => {
+    if (protectedRoutes.includes(to.path)) {
+        if (localStorage.getItem('token')) {
+            next();
+        } else {
+            // 在这里显示错误消息，而不是使用 alert
+            next('/Login');
+        }
+    } else {
+        next();
+    }
+});
+
 export default router
 
