@@ -4,9 +4,9 @@
     <div class="searchInfo">
       <!-- 搜索框的显示 -->
       <div>
-        <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号">
+        <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
         </el-input>
-        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="input">
+        <el-input v-model="search.searchPoliticalStatus" placeholder="请选择政治面貌" class="input" clearable>
         </el-input>
         <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentMore"></el-button>
       </div>

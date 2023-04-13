@@ -3,7 +3,7 @@
   <div class="classManage" v-show="$route.path=='/Main/Cim'">
     <!-- 模糊搜索某班级 -->
     <div>
-      <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput">
+      <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput" clearable>
       </el-input>
       <el-button icon="el-icon-search" circle  @click="WhichClass" class="findButton"></el-button>
     </div>

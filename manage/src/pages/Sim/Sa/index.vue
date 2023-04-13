@@ -2,7 +2,7 @@
   <div>
     <!-- 搜索学生 -->
       <div class="searchInfo">
-        <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input" placeholder="请输入学生学号">
+        <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
           <!-- @change="onChange" -->
         </el-input>
         <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>

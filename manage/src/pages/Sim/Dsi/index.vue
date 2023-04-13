@@ -2,7 +2,7 @@
   <div class="page">
       <!-- 搜索框的显示 -->
     <div class="searchInfo">
-      <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号">
+      <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
       </el-input>
       <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
     </div>
