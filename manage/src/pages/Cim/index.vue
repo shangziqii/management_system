@@ -8,7 +8,7 @@
       <el-button icon="el-icon-search" circle  @click="WhichClass" class="findButton"></el-button>
     </div>
     <!-- 查询班级信息弹窗 -->
-    <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
+    <!-- <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
       <el-form ref="searchInfo" :rules="rules2" :model="searchInfo" label-width="80px">
         <el-form-item label="班级ID" placeholder="请输入班级ID" prop="classId">
           <el-input v-model="searchInfo.classId"></el-input>
@@ -18,7 +18,7 @@
         <el-button @click="cancel2">取 消</el-button>
         <el-button type="primary" @click="submit2">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 查询后展示班级信息的对话框 -->
     <el-dialog
       title="班级信息"
@@ -132,7 +132,7 @@
       </span>
     </el-dialog>
     <el-button @click="dialogVisible = true" type="primary" class="addButton">添加班级</el-button>
-    <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button>
+    <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
     <div class="manage-header">
 
       <Tabels 
@@ -357,10 +357,18 @@ export default {
           }
           addClass(classInfo).then((res) => {
             // console.log(res);
-            this.$message({
-                    message:res.data.msg,
-                    type: 'success'
-                    })
+            if(res.data.msg === '权限不足') {
+              this.$message({
+                type: 'error',
+                message: res.data.msg
+              });
+            } else {
+              this.$message({
+                message:res.data.msg,
+                type: 'success'
+              })
+            }
+            
             // 重新获取列表的接口
             this.getClassList()
           })
@@ -458,11 +466,19 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
           }).then(() => {
-            delClass({ classId: row.classId}).then(() => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
+            delClass({ classId: row.classId}).then(res => {
+              if(res.data.msg === '该班级不存在，或权限不足') {
+                this.$message({
+                  type: 'error',
+                  message: res.data.msg
+                })
+              } else {
+                this.$message({
+                  type: 'success',
+                  message: res.data.msg
+                });
+              }
+              
               // 重新获取列表接口
               this.getClassList()
             })
@@ -541,7 +557,7 @@ div /deep/ .el-dialog {
 } */
 .addButton{
     position: absolute;
-    right: 121px;
+    right: 20px;
     top: 109px;
 }
 .searchButton {
