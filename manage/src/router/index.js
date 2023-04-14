@@ -160,7 +160,7 @@ const router = new VueRouter({
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
 router.beforeEach((to, from, next) => {
-    if (to.path === '/Main') {
+    if (to.path !== '/Login') {
         if (localStorage.getItem('token')) {
             next();
         } else {
