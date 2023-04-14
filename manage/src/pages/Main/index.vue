@@ -50,7 +50,7 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>个人空间</el-dropdown-item>
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item @click="quitUser">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -77,6 +77,7 @@
 <script>
 import { mapState } from 'vuex';
 import CommonTag from '../../components/Tags/CommonTag.vue';
+import { checkToken } from './api/index'
 export default {
   name: 'Main',
   components: {
@@ -181,7 +182,10 @@ export default {
       }
       // 调用mutation来操作面包屑
       this.$store.commit('selectMenu', item)
-    }
+    },
+    quitUser() {
+      localStorage.removeItem('token')
+    },
   },
   computed: {
     // 没有子菜单
@@ -199,7 +203,7 @@ export default {
      roleShow(){
       return this.$store.state.showNav.permission
     } 
-  }
+  },
 }
 </script>
 
