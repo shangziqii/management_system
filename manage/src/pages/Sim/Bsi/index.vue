@@ -4,12 +4,11 @@
       <!-- 上传文件 -->
       <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleClose">
         <form>
-          <!-- <input type="file" ref="fileInput" @change="handleFileUpload"> -->
           <input type="file" ref="fileInput">
         </form>
-<!--         <div v-if="icon">
+        <div v-if="icon">
           <file-icon :icon="icon" size="48"></file-icon>
-        </div> -->
+        </div>
          <!-- 在这里使用 icon 组件 -->
     <!-- <component :is="icon" :icon-name="iconName" /> -->
         <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
@@ -49,7 +48,6 @@ import Tables from '../../../components/Tabels';
 import AddStudentInfo from './components/addStudentInfo';
 import ModifyFormInfo from './components/modifyStudentInfo';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
-// import { getFileIcon } from 'vue-material-design-icons/FileType.vue';
 
 
 import { getList, addStudent, deleteStudent, modifyStu, exportStuInfo, importStuInfo } from './api';

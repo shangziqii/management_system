@@ -49,3 +49,10 @@ export const searchUseNum = (params) => {
         params
     })
 }
+
+//导入学生信息
+export const importStuInfo = (params) => {
+    return axios.post('/api/difficultStudent/import', params, {
+        headers: { 'token': localStorage.getItem('token') }
+    })
+}

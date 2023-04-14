@@ -6,8 +6,18 @@
       </el-input>
       <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
     </div>
+     <!-- 导入信息上传文件页面 -->
+     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleClose">
+        <form>
+          <input type="file" ref="fileInput">
+        </form>
+        <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
+        <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+        <el-button @click="openTip">确认导入</el-button>
+      </el-dialog>
     <div class="btn">
       <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
+      <el-button type="primary" size="small" @click="addFileShow=true">导入信息</el-button>
       <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
       </div>
      <Tables 
@@ -30,12 +40,13 @@
 import Tables from '../../../components/Tabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import AddPoorStudentInfo from './components/addPoorStudentInfo';
-import { submitForm, getList, deleteStu ,exportStuInfo,searchUseNum} from './api';
+import { submitForm, getList, deleteStu ,exportStuInfo,searchUseNum,importStuInfo} from './api';
 import { columns, operaColumns } from './const';
 export default {
  name: 'Dsi',
  data() {
    return {
+      radio: '1',//单选框选中状态
       isShow: false,// 控制新增表单是否显示
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
@@ -45,6 +56,7 @@ export default {
       total: 0, // 数据条数
       studentInfo:{},//要修改的学生的信息
       showSelect:false,
+      addFileShow:false,//导入学生信息页面的显示
       cityOptions:['学号','困难等级','个人情况','备注'],
       search:{
         studentNum:''
@@ -223,6 +235,68 @@ export default {
             message: '连接错误，请稍后',
             type: 'error'
           });
+        })
+      }
+    },
+    //关闭导入信息页面前调用的函数
+    handleClose() {
+      this.radio = '1'
+      this.$refs.fileInput.value = null//关闭前将已选择文件清空
+      this.getTableList()
+      this.addFileShow = false
+    },
+    //点击导入信息按钮调用的函数
+    handleFileUpload() {
+      const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      importStuInfo(formData).then((res) => {
+        // this.form.files = res.data.data
+        console.log(res.data.status);
+
+        //这里status值
+        if (res.data.status === 0) {
+          this.$message({
+            type: 'success',
+            message: '导入成功!'
+          });
+          this.addFileShow=false
+          this.getTableList(); 
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '未知错误'
+          })
+        }
+      }).catch((error) => {
+        console.error(error);
+      })
+    },
+    openTip() {
+      const file = this.$refs.fileInput.files[0];
+      console.log(file);
+      if (file) {
+        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if (this.radio === '1') {
+            this.submitSelect()
+          }
+          this.handleFileUpload();
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消导入'
+          })
+        })
+      }
+      else {
+        this.$message({
+          type: 'error',
+          message: '请选择文件!'
         })
       }
     }

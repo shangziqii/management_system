@@ -8,6 +8,9 @@ import store from './store'
 
 Vue.component('get-file-icon', getFileIcon);
  */
+// import { getFileIcon } from 'vue-material-design-icons';
+// Vue.component('file-icon', getFileIcon);
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false

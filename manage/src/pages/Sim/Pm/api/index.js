@@ -44,7 +44,7 @@ export const search = (params) => {
 
 //导出学生信息
 export const exportStuInfo = (params) => {
-    return axios.get('/api/prizeStudent/export', {
+    return axios.get('/api/partyMember/export', {
         headers: { 'token': localStorage.getItem('token') },
         params
     })
@@ -52,8 +52,7 @@ export const exportStuInfo = (params) => {
 
 //导入学生信息
 export const importStuInfo = (params) => {
-    return axios.get('/api/student/import', {
-        headers: { 'token': localStorage.getItem('token') },
-        params
+    return axios.post('/api/partyMember/import', params, {
+        headers: { 'token': localStorage.getItem('token') }
     })
 }

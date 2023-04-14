@@ -11,11 +11,21 @@
         <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentMore"></el-button>
       </div>
     </div>
+     <!-- 导入信息上传文件页面 -->
+     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
+        <form>
+          <input type="file" ref="fileInput">
+        </form>
+        <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
+        <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+        <el-button @click="openTip">确认导入</el-button>
+      </el-dialog>
     <div class="btn">
       <!-- 添加信息按钮 -->
-      <el-button type="primary" size="small" class="addInfo" @click="dialogVisible = true">添加信息</el-button>
+      <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+      <el-button type="primary" size="small" @click="addFileShow=true">导入信息</el-button>
       <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
+      <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
     </div>
         <!-- 点击按钮弹出表单添加信息 -->
         <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -114,7 +124,7 @@
 import Tables from './../../../components/Tabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { punishList, addPunish, removeInfo, changeInfo,search ,exportStuInfo} from './api'
+import { punishList, addPunish, removeInfo, changeInfo,search ,exportStuInfo,importStuInfo} from './api'
 export default {
   name: 'Svrad',
   components: {
@@ -123,6 +133,8 @@ export default {
   },
   data() {
     return {
+      radio: '1',//单选框选中状态
+      addFileShow:false,
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
@@ -369,6 +381,66 @@ export default {
           });
         })
       }    
+    },
+    handleFileUpload() {
+      const file = this.$refs.fileInput.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      importStuInfo(formData).then((res) => {
+        // this.form.files = res.data.data
+        console.log(res.data.status);
+
+        //这里status值
+        if (res.data.status === 0) {
+          this.$message({
+            type: 'success',
+            message: '导入成功!'
+          });
+          this.addFileShow=false
+          this.gepunishList(); 
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '未知错误'
+          })
+        }
+      }).catch((error) => {
+        console.error(error);
+      })
+    },
+    openTip() {
+      const file = this.$refs.fileInput.files[0];
+      console.log(file);
+      if (file) {
+        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if (this.radio === '1') {
+            this.submitSelect()
+          }
+          this.handleFileUpload();
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消导入'
+          })
+        })
+      }
+      else {
+        this.$message({
+          type: 'error',
+          message: '请选择文件!'
+        })
+      }
+    },
+    handleCloseFile() {
+      this.radio = '1'
+      this.$refs.fileInput.value = null//关闭前将已选择文件清空
+      this.gepunishList()
+      this.addFileShow = false
     }
   },
   
