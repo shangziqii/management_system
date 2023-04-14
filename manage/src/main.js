@@ -10,6 +10,8 @@ Vue.component('get-file-icon', getFileIcon);
  */
 // import { getFileIcon } from 'vue-material-design-icons';
 // Vue.component('file-icon', getFileIcon);
+import SvgIcon from '@jamescoyle/vue-icon'
+Vue.component('file-icon', SvgIcon);
 
 Vue.use(ElementUI)
 

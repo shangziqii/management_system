@@ -7,6 +7,7 @@
           <input type="file" ref="fileInput">
         </form>
         <div v-if="icon">
+          <div>hello</div>
           <file-icon :icon="icon" size="48"></file-icon>
         </div>
          <!-- 在这里使用 icon 组件 -->
