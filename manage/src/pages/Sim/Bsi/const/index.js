@@ -37,9 +37,9 @@ export const operaColums = [
     {
         label: '修改',
         type: 'warning',
-    },
+    }/* ,
     {
         label: '详情',
         type: 'primary'
-    }
+    } */
 ]

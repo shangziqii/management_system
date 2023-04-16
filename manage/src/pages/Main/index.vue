@@ -5,7 +5,7 @@
         <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
            background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
           <h3>管理系统</h3>
-          <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow===0)" :key="item.name" :index="item.name" @click="clickMenu(item)">
+          <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow!=2)" :key="item.name" :index="item.name" @click="clickMenu(item)">
             <i :class="`el-icon-${item.icon}`"></i>
             <span slot="title">{{ item.label }}</span>
           </el-menu-item>

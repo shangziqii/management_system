@@ -18,8 +18,8 @@
         </el-form-item>
         <el-form-item label="身份" prop="role">
           <el-select placeholder="请选择身份" v-model="form.role">
-            <el-option label="管理员" value='0'></el-option>
-            <el-option label="辅导员" value='1'></el-option>
+            <el-option label="管理员" value='0' v-show="roleShow===0"></el-option>
+            <el-option label="辅导员" value='1' v-show="roleShow===0"></el-option>
             <el-option label="班主任" value='2'></el-option>
           </el-select>
         </el-form-item>
@@ -214,6 +214,12 @@ export default {
       this.columns = columns
       this.operaColums = operaColums
     },
+    computed:{
+       //接收vuex中获取的权限状态，来进行条件禁用侧边栏的项目
+     roleShow(){
+      return this.$store.state.showNav.permission
+    } 
+    }
 }
 </script>
 
