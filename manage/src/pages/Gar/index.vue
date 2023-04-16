@@ -22,6 +22,13 @@
           <el-form-item label="评定阶段" prop="status">
             <el-input v-model="subInfo.status" placeholder="请输入当前评定阶段"></el-input>
           </el-form-item>
+          <el-form-item label="文件URL" prop="files">
+            <el-input placeholder="请输入要上传文件的URL" v-model="subInfo.files" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput" @change="uploadFile">
+            </div>
+          </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="cancel">取 消</el-button>
@@ -42,6 +49,14 @@
           </el-form-item>
           <el-form-item label="评定阶段" prop="status">
             <el-input placeholder="请输入当前评定阶段" v-model="changeInfoForm.status">{{ changeInfoForm.status }}</el-input>
+          </el-form-item>
+          <el-form-item label="上传文件" prop="files">
+            <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
+            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files" :disabled="true"></el-input>
+              <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput" @change="uploadFile2">
+            </div>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -73,7 +88,7 @@
   <script>
   import Tabels from '../../components/Tabels/index.vue'
   import { columns, operaColums} from './const'
-  import { subsList, addSub, delSub, editSub } from './api/index'
+  import { subsList, addSub, delSub, editSub, uploadFiles } from './api/index'
   export default {
     name: 'Gar',
     components: {
@@ -95,6 +110,7 @@
           grade: '', //年级
           subsidiesTime: '', //评定的时间范围
           status: '', //当前评定阶段
+          files: '', //文件
         },
         // 查询班级信息
         searchInfo: {
@@ -123,7 +139,9 @@
           ]
         },
         changeInfoShow:false,
-        changeInfoForm:{},
+        changeInfoForm:{
+          files:''
+        },
         changRules: {
           major: [
             { required: true, message: '请输入专业名称' }
@@ -149,13 +167,6 @@
         this.$refs.subInfo.resetFields()
         this.dialogVisible = false
       },
-      handleClose2() {
-        this.$refs.searchInfo.resetFields()
-        this.dialogVisible2 = false
-      },
-      handleClose3() {
-        this.infoVisible = false
-      },
       // 修改表单关闭逻辑
       handleCloseChangeInfo(){
         this.$refs.changeInfoForm.resetFields()
@@ -163,9 +174,6 @@
       },
       cancel() {
         this.handleClose()
-      },
-      cancel2() {
-        this.handleClose2()
       },
       cancel3(){
         this.handleCloseChangeInfo()
@@ -191,36 +199,6 @@
             })
             this.handleClose()
           }
-        })
-      },
-      submit2() {
-          this.$refs.searchInfo.validate((valid) => {
-            if (valid) {
-              // 后续对表单数据的处理
-              const searchInfo = {
-                classId: this.searchInfo.classId
-              }
-              searchClass(searchInfo).then((res) => {
-                const { data } = res.data
-                console.log(data);
-                if(data === null) {
-                  this.$message({
-                      message:'不存在该班级信息',
-                      type: 'error'
-                      });
-                  return
-                }
-                // 获取到班级信息后，对应填入展示卡片中
-                this.getClassData = data
-                // console.log(this.getClassData);
-  
-              })
-              this.handleClose2()
-              // 将原本隐藏的展示卡片显示出来
-              if(this.getClassData !== null) {
-                this.infoVisible = true
-              }
-            }
         })
       },
       //获取助学金列表
@@ -275,7 +253,28 @@
         }
       })
       },
-  
+      //上传相关文件
+      uploadFile() {
+        const file = this.$refs.fileInput.files[0];
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        uploadFiles(formData).then((res) => {
+          this.subInfo.files = res.data.data
+        }).catch((error) => {
+          console.error(error);
+        })
+      },
+      //修改信息页面的上传相关文件
+      uploadFile2() {
+        const file = this.$refs.fileInput.files[0];
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        uploadFiles(formData).then((res) => {
+          this.changeInfoForm.files = res.data.data
+        }).catch((error) => {
+          console.error(error);
+        })
+      },
       // 删除某条班级信息
         handleDelete(row) {
           if(this.role === '1') {

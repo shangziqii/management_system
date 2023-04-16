@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import axios from "axios";
+
 
 
 const originalPush = VueRouter.prototype.push
@@ -158,9 +160,27 @@ const router = new VueRouter({
     routes
 });
 
+// token 测试
+const tokenTest = () => {
+    return axios.get('/api/user/test', {
+        headers: { 'token': localStorage.getItem('token') },
+    })
+}
 // 全局前置路由守卫---初始化和每次路由切换之前调用
 router.beforeEach((to, from, next) => {
     if (to.path !== '/Login') {
+        // tokenTest().then(res => {
+        //     console.log(res.data);
+        //     const {status} = res
+        //     if(status === 200) {
+        //         next();
+        //     } else {
+        //     alert('未登录，请先登录！')
+        //     next({
+        //         path: '/Login'
+        //     })
+        //     }
+        // })
         if (localStorage.getItem('token')) {
             next();
         } else {

@@ -35,3 +35,11 @@ export const editSub = (data) => {
         }
     })
 }
+// 文件上传接口
+export const uploadFiles = (params) => {
+    return axios.post('/api/studentSubsidies/uploadFile', params, {
+        headers: {
+            'token': localStorage.getItem('token')
+        }
+    })
+}

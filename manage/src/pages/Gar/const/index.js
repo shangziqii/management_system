@@ -19,6 +19,11 @@ export const columns = [
         label: '当前评定阶段',
         prop: 'status',
     },
+    {
+        label: '相关文件',
+        prop: 'files',
+        paper: true
+    },
 ];
 
 export const operaColums = [
