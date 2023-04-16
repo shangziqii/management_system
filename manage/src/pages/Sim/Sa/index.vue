@@ -233,6 +233,7 @@ export default {
       const params = {
         page: this.currentPage,
         pageLimit: this.pageLimit,
+        
       }
       console.log(params);
       //发送获取学生列表的请求

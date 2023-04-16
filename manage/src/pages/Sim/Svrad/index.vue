@@ -29,7 +29,9 @@
         <el-form-item label="学号" prop="studentNum">
           <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
         </el-form-item>
+        <transition>
 
+        </transition>
         <el-form-item label="姓名" prop="studentName">
           <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
         </el-form-item>

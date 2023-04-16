@@ -2,7 +2,7 @@
   <div>
     <div class="btn">
       <!-- 添加信息按钮 -->
-      <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+      <el-button type="primary" size="small" @click="dialogVisible = true" v-show="role===1">添加信息</el-button>
     </div>
     <!-- 添加信息弹窗 -->
     <el-dialog title="添加奖学金评定记录" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -337,7 +337,7 @@ export default {
       })
     },
     uploadFile2() {
-      const file = this.$refs.fileInput1.files[0];
+      const file = this.$refs.fileInput2.files[0];
       const formData = new FormData();
       formData.append('uploadFile', file);
       console.log(formData);
@@ -359,7 +359,7 @@ export default {
       })
     },
     uploadChangeFile2() {
-      const file = this.$refs.fileInput1.files[0];
+      const file = this.$refs.fileInput2.files[0];
       const formData = new FormData();
       formData.append('uploadFile', file);
       console.log(formData);
@@ -417,4 +417,8 @@ export default {
   width: 250px;
   margin-right: 10px;
 }
+/* 
+.el-card__body, .el-main {
+    padding: 24px;
+} */
 </style>

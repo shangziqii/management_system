@@ -23,7 +23,7 @@
           :width="operaColums.length * 80">
           <template slot-scope="scope">
             <el-button v-for="(item, index) in operaColums" :key="item.label" :type="item.type"
-              @click="btnClick(scope.row, index)" plain size="small">{{ item.label }}
+              @click="btnClick(scope.row, index)" plain size="small" v-show="item.show==='1'">{{ item.label }}
             </el-button>
           </template>
         </el-table-column>
