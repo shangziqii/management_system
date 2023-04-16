@@ -14,7 +14,7 @@
           <el-input v-model="scholInfo.grade" placeholder="请输入所属年级"></el-input>
         </el-form-item>
         <!-- <el-form-item label="时间范围" prop="scholarshipTime"> -->
-          <!-- <el-input v-model="scholInfo.scholarshipTime" placeholder="请输入评定的时间范围"></el-input> -->
+        <!-- <el-input v-model="scholInfo.scholarshipTime" placeholder="请输入评定的时间范围"></el-input> -->
         <el-form-item label="时间范围" prop="selectTime">
           <!-- 开始年份的下拉框 -->
           <el-select v-model="startYear" placeholder="请选择开始年份">
@@ -30,10 +30,10 @@
         <el-form-item label="评定阶段" prop="status">
           <!-- <el-input v-model="scholInfo.status" placeholder="请输入当前评定阶段"></el-input> -->
           <el-select v-model="scholInfo.status">
-      <el-option label="已完成" value="已完成"></el-option>
-      <el-option label="进行中" value="未完成"></el-option>
-      <el-option label="未完成" value="进行中"></el-option>
-    </el-select>
+            <el-option label="已完成" value="已完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未完成" value="未完成"></el-option>
+          </el-select>
         </el-form-item>
 
         <!-- 上传综测成绩记录文件 -->
@@ -69,10 +69,24 @@
           <el-input placeholder="请输入专业年级" v-model="changeInfoForm.grade"></el-input>
         </el-form-item>
         <el-form-item label="评定时间范围" prop="scholarshipTime">
-          <el-input placeholder="请选择评定时间范围" v-model="changeInfoForm.scholarshipTime"></el-input>
+          <!-- <el-input placeholder="请选择评定时间范围" v-model="changeInfoForm.scholarshipTime"></el-input> -->
+          <!-- 开始年份的下拉框 -->
+          <el-select v-model="startYear" placeholder="请选择开始年份">
+            <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+          </el-select>
+
+          <!-- 结束年份的下拉框 -->
+          <el-select v-model="endYear" placeholder="请选择结束年份">
+            <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="当前评定阶段" prop="status">
-          <el-input placeholder="请选择当前评定阶段" v-model="changeInfoForm.status"></el-input>
+          <!-- <el-input placeholder="请选择当前评定阶段" v-model="changeInfoForm.status"></el-input> -->
+          <el-select v-model="changeInfoForm.status">
+            <el-option label="已完成" value="已完成"></el-option>
+            <el-option label="进行中" value="进行中"></el-option>
+            <el-option label="未完成" value="未完成"></el-option>
+          </el-select>
         </el-form-item>
 
         <!-- 综测成绩记录 -->
@@ -137,9 +151,9 @@ export default {
         grade: [
           { required: true, message: '请输入所属年级' }
         ],
-/*         scholarshipTime: [
-          { required: true, message: '请输入评定的时间范围' }
-        ], */
+        /*         scholarshipTime: [
+                  { required: true, message: '请输入评定的时间范围' }
+                ], */
         // selectTime:[{ required: true, message: '请输入评定的时间范围' }],
         status: [
           { required: true, message: '请输入当前评定阶段' }
@@ -187,12 +201,12 @@ export default {
     submit() {
       const startYear = this.startYear || '';
       const endYear = this.endYear || '';
-  // 将时间范围字符串存储在scholInfo对象中
-  if (startYear && endYear) {
-    this.scholInfo.scholarshipTime = `${startYear} 至 ${endYear}`;
-  } else {
-    this.scholInfo.scholarshipTime = '';
-  }
+      // 将时间范围字符串存储在scholInfo对象中
+      if (startYear && endYear) {
+        this.scholInfo.scholarshipTime = `${startYear} 至 ${endYear}`;
+      } else {
+        this.scholInfo.scholarshipTime = '';
+      }
       this.$refs.scholInfo.validate((valid) => {
         console.log('添加的评定记录信息为：', valid);
         if (valid) {
@@ -239,6 +253,14 @@ export default {
     },
     //提交修改后的信息
     submitChangeInfo() {
+      const startYear = this.startYear || '';
+      const endYear = this.endYear || '';
+      // 将时间范围字符串存储在scholInfo对象中
+      if (startYear && endYear) {
+        this.changeInfoForm.scholarshipTime = `${startYear} 至 ${endYear}`;
+      } else {
+        this.changeInfoForm.scholarshipTime = '';
+      }
       this.$refs.changeInfoForm.validate((valid) => {
         if (valid) {
           changeInfo(this.changeInfoForm).then((res) => {
