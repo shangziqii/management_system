@@ -164,7 +164,7 @@ export default {
       this.radio = '1'
       this.$refs.fileInput.value = null//关闭前将已选择文件清空
       this.getTableList()
-      this.addFileShow = false
+      // this.addFileShow = false
     },
     modify(values) {
       this.modifyFormShow = true;
@@ -176,7 +176,7 @@ export default {
         .then((res) => {
           const { status, msg } = res.data;
           if (status === 0) {
-            this.message({
+            this.$message({
               type: 'success',
               message: msg
             })
@@ -184,13 +184,14 @@ export default {
             this.pageLimit = 5;
             this.getTableList();
           } else {
-            this.message({
+            this.$message({
               type: 'error',
               message: msg,
             })
           }
         })
         .catch((err) => {
+          alert('cuoeu')
           throw new Error(err)
         })
     },
@@ -273,12 +274,6 @@ export default {
         }
         getList(searchInfo).then((res) => {
           if (res.data.status === 0) {
-            const extension = file.name.split('.').pop().toLowerCase();
-            this.icon = getFileIcon(extension);
-     /*        this.icon = {
-  template: '<get-file-icon :icon="iconName" />',
-  props: ['iconName']
-}; */
             this.tableList = res.data.data.students
             this.$message({
               message: '搜索成功',
