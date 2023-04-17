@@ -20,8 +20,18 @@ export const columns = [
         prop: 'status',
     },
     {
-        label: '相关文件',
-        prop: 'files',
+        label: '文件一',
+        prop: 'files1',
+        paper: true
+    },
+    {
+        label: '文件二',
+        prop: 'files2',
+        paper: true
+    },
+    {
+        label: '文件三',
+        prop: 'files3',
         paper: true
     },
 ];

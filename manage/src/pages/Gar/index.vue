@@ -22,11 +22,25 @@
           <el-form-item label="评定阶段" prop="status">
             <el-input v-model="subInfo.status" placeholder="请输入当前评定阶段"></el-input>
           </el-form-item>
-          <el-form-item label="文件URL" prop="files">
-            <el-input placeholder="请输入要上传文件的URL" v-model="subInfo.files" :disabled="true"></el-input>
+          <el-form-item label="申请助学金的学生列表，及证明材料" prop="files1">
+            <el-input placeholder="请选择相关文件" v-model="subInfo.files1" :disabled="true"></el-input>
             <!-- 上传相关文件 -->
             <div>
-              <input type="file" ref="fileInput" @change="uploadFile">
+              <input type="file" ref="fileInput1" @change="uploadFile1">
+            </div>
+          </el-form-item>
+          <el-form-item label="困难生评议记录以及评议结果" prop="files2">
+            <el-input placeholder="请选择相关文件" v-model="subInfo.files2" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput2" @change="uploadFile2">
+            </div>
+          </el-form-item>
+          <el-form-item label="最终发放助学金的学生名单、助学金金额" prop="files3">
+            <el-input placeholder="请选择相关文件" v-model="subInfo.files3" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput3" @change="uploadFile3">
             </div>
           </el-form-item>
         </el-form>
@@ -50,12 +64,28 @@
           <el-form-item label="评定阶段" prop="status">
             <el-input placeholder="请输入当前评定阶段" v-model="changeInfoForm.status">{{ changeInfoForm.status }}</el-input>
           </el-form-item>
-          <el-form-item label="上传文件" prop="files">
+          <el-form-item label="申请助学金的学生列表，及证明材料" prop="files1">
             <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
-            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files" :disabled="true"></el-input>
+            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files1" :disabled="true"></el-input>
               <!-- 上传相关文件 -->
             <div>
-              <input type="file" ref="fileInput" @change="uploadFile2">
+              <input type="file" ref="fileInput1" @change="uploadChangeFile1">
+            </div>
+          </el-form-item>
+          <el-form-item label="困难生评议记录以及评议结果" prop="files2">
+            <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
+            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files2" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput2" @change="uploadChangeFile2">
+            </div>
+          </el-form-item>
+          <el-form-item label="最终发放助学金的学生名单、助学金金额" prop="files3">
+            <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
+            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files3" :disabled="true"></el-input>
+            <!-- 上传相关文件 -->
+            <div>
+              <input type="file" ref="fileInput3" @change="uploadChangeFile3">
             </div>
           </el-form-item>
         </el-form>
@@ -65,11 +95,11 @@
         </span>
       </el-dialog>
       <!-- 只能由辅导员(role = 1)增删 -->
-      <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role === '1'">添加记录</el-button>
+      <el-button @click="dialogVisible = true" type="primary" class="addButton" >添加记录</el-button>
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
   
-        <Tabels 
+        <ImgTabels
            :tableColumns="columns" 
            :tableData="tableData" 
            :operaColums="operaColums" 
@@ -86,13 +116,13 @@
   </template>
   
   <script>
-  import Tabels from '../../components/Tabels/index.vue'
+  import ImgTabels from '../../components/ImgTabels/index.vue'
   import { columns, operaColums} from './const'
   import { subsList, addSub, delSub, editSub, uploadFiles } from './api/index'
   export default {
     name: 'Gar',
     components: {
-      Tabels
+      ImgTabels
     },
     data() {
       return {
@@ -110,7 +140,9 @@
           grade: '', //年级
           subsidiesTime: '', //评定的时间范围
           status: '', //当前评定阶段
-          files: '', //文件
+          files1: '',
+          files2: '',
+          files3: ''
         },
         // 查询班级信息
         searchInfo: {
@@ -139,9 +171,7 @@
           ]
         },
         changeInfoShow:false,
-        changeInfoForm:{
-          files:''
-        },
+        changeInfoForm:{},
         changRules: {
           major: [
             { required: true, message: '请输入专业名称' }
@@ -254,23 +284,66 @@
       })
       },
       //上传相关文件
-      uploadFile() {
-        const file = this.$refs.fileInput.files[0];
+      uploadFile1() {
+        const file = this.$refs.fileInput1.files[0];
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          this.subInfo.files = res.data.data
+          this.subInfo.files1 = res.data.data
+        }).catch((error) => {
+          console.error(error);
+        })
+      },
+      uploadFile2() {
+        const file = this.$refs.fileInput2.files[0];
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        uploadFiles(formData).then((res) => {
+          this.subInfo.files2 = res.data.data
+        }).catch((error) => {
+          console.error(error);
+        })
+      },
+      uploadFile3() {
+        const file = this.$refs.fileInput3.files[0];
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        uploadFiles(formData).then((res) => {
+          this.subInfo.files3 = res.data.data
         }).catch((error) => {
           console.error(error);
         })
       },
       //修改信息页面的上传相关文件
-      uploadFile2() {
-        const file = this.$refs.fileInput.files[0];
+      uploadChangeFile1() {
+      const file = this.$refs.fileInput1.files[0];
+      const formData = new FormData();
+      formData.append('uploadFile', file);
+      console.log(formData);
+      uploadFiles(formData).then((res) => {
+        this.changeInfoForm.files1 = res.data.data
+      }).catch((error) => {
+        console.error(error);
+      })
+      },
+      uploadChangeFile2() {
+        const file = this.$refs.fileInput2.files[0];
         const formData = new FormData();
         formData.append('uploadFile', file);
+        console.log(formData);
         uploadFiles(formData).then((res) => {
-          this.changeInfoForm.files = res.data.data
+          this.changeInfoForm.files2 = res.data.data
+        }).catch((error) => {
+          console.error(error);
+        })
+      },
+      uploadChangeFile3() {
+        const file = this.$refs.fileInput3.files[0];
+        const formData = new FormData();
+        formData.append('uploadFile', file);
+        console.log(formData);
+        uploadFiles(formData).then((res) => {
+          this.changeInfoForm.files3 = res.data.data
         }).catch((error) => {
           console.error(error);
         })
