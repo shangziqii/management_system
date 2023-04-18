@@ -95,7 +95,7 @@
         </span>
       </el-dialog>
       <!-- 只能由辅导员(role = 1)增删 -->
-      <el-button @click="dialogVisible = true" type="primary" class="addButton" >添加记录</el-button>
+      <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role==='1'">添加记录</el-button>
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
   
