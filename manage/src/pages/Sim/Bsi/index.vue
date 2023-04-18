@@ -10,8 +10,8 @@
           <div>hello</div>
           <file-icon :icon="icon" size="48"></file-icon>
         </div>
-         <!-- 在这里使用 icon 组件 -->
-    <!-- <component :is="icon" :icon-name="iconName" /> -->
+        <!-- 在这里使用 icon 组件 -->
+        <!-- <component :is="icon" :icon-name="iconName" /> -->
         <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
         <el-radio v-model="radio" label="2">不导出原信息</el-radio>
         <el-button @click="openTip">确认导入</el-button>
@@ -36,7 +36,7 @@
       <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
         :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @click_3="details" @changeLimit="changeLimit"
         @changePage="changePage" />
-      <AddStudentInfo :isShow="addFormShow" @change="changeShow" @submit="submitForm" />
+      <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm" />
       <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" />
       <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
     </div>
@@ -180,6 +180,9 @@ export default {
               type: 'success',
               message: msg
             })
+            console.log(this.$refs.addForm.ruleForm);
+            this.addFormShow = Boolean(false);
+            this.$refs.addForm.ruleForm = {}
             this.currentPage = 1;
             this.pageLimit = 5;
             this.getTableList();
@@ -191,7 +194,6 @@ export default {
           }
         })
         .catch((err) => {
-          alert('cuoeu')
           throw new Error(err)
         })
     },
@@ -274,11 +276,20 @@ export default {
         }
         getList(searchInfo).then((res) => {
           if (res.data.status === 0) {
-            this.tableList = res.data.data.students
-            this.$message({
-              message: '搜索成功',
-              type: 'success'
-            });
+            if (res.data.data.students.length>0) {
+              this.tableList = res.data.data.students
+              this.$message({
+                message: '搜索成功',
+                type: 'success'
+              });
+            }
+            else {
+              this.$message({
+                showClose: true,
+                message: '无相关信息'
+              });
+              this.getTableList()
+            }
           }
           else {
             this.$message({
@@ -310,8 +321,8 @@ export default {
             type: 'success',
             message: '导入成功!'
           });
-          this.addFileShow=false
-          this.getTableList(); 
+          this.addFileShow = false
+          this.getTableList();
         }
         else {
           this.$message({
