@@ -42,7 +42,7 @@ export const getDor = (params) => {
         params
     })
 }
-// 文件上传接口？？？
+// 文件上传接口
 export const uploadFiles = (params) => {
     return axios.post('/api/classDormitory/uploadFile', params, {
         headers: {
