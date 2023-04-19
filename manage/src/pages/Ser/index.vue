@@ -115,7 +115,7 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" class="tabel"/>
   </div>
 </template>
 
@@ -417,8 +417,7 @@ export default {
   width: 250px;
   margin-right: 10px;
 }
-/* 
-.el-card__body, .el-main {
-    padding: 24px;
-} */
+.tabel{
+  margin-top:52px;
+}
 </style>
