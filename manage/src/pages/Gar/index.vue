@@ -41,14 +41,14 @@
             <div>
               <input type="file" ref="fileInput1" @change="uploadFile1">
             </div>
-            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
               <div class="item">
                 <a :href="item" download>
                   <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName(item) }}
+                  {{ getFileName1(item) }}
                 </a>
                 <!-- 取消上传按钮 -->
-                <div @click="cancelUp(item)" class="cancelDiv">
+                <div @click="cancelUp1(item)" class="cancelDiv">
                   <i class="el-icon-error"></i>
                 </div>
               </div>
@@ -59,14 +59,14 @@
             <div>
               <input type="file" ref="fileInput2" @change="uploadFile2">
             </div>
-            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
               <div class="item">
                 <a :href="item" download>
                   <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName(item) }}
+                  {{ getFileName2(item) }}
                 </a>
                 <!-- 取消上传按钮 -->
-                <div @click="cancelUp(item)" class="cancelDiv">
+                <div @click="cancelUp2(item)" class="cancelDiv">
                   <i class="el-icon-error"></i>
                 </div>
               </div>
@@ -77,14 +77,14 @@
             <div>
               <input type="file" ref="fileInput3" @change="uploadFile3">
             </div>
-            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
               <div class="item">
                 <a :href="item" download>
                   <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName(item) }}
+                  {{ getFileName3(item) }}
                 </a>
                 <!-- 取消上传按钮 -->
-                <div @click="cancelUp(item)" class="cancelDiv">
+                <div @click="cancelUp3(item)" class="cancelDiv">
                   <i class="el-icon-error"></i>
                 </div>
               </div>
@@ -123,28 +123,59 @@
               <el-option label="未完成" value="未完成"></el-option>
             </el-select>
           </el-form-item>
+          <!-- 修改信息页面文件上传 -->
           <el-form-item label="文件一" prop="files1">
-            <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
             <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="changeInfoForm.files1" :disabled="true"></el-input>
-              <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput1" @change="uploadChangeFile1">
             </div>
+            <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName1(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp1(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item label="文件二" prop="files2">
-            <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
             <el-input placeholder="困难生评议记录以及评议结果" v-model="changeInfoForm.files2" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput2" @change="uploadChangeFile2">
             </div>
+            <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName2(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp2(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
+            </div>
           </el-form-item>
           <el-form-item label="文件三" prop="files3">
-            <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
             <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="changeInfoForm.files3" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput3" @change="uploadChangeFile3">
+            </div>
+            <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName3(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp3(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
             </div>
           </el-form-item>
         </el-form>
@@ -154,8 +185,7 @@
         </span>
       </el-dialog>
       <!-- 只能由辅导员(role = 1)增删 -->
-      <el-button @click="dialogVisible = true" type="primary" class="addButton" >添加记录</el-button>
-      <!-- v-show="role==='1'" -->
+      <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role==='1'">添加记录</el-button>
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
   
@@ -253,8 +283,12 @@
           ],
         },
         //关于文件上传的相关参数
-        fileList: [],//存储上传的文件
-        fileName: []//存储上传后的文件名
+        fileList1: [],//存储上传的文件
+        fileName1: [],//存储上传后的文件名
+        fileList2: [],
+        fileName2: [],
+        fileList3: [],
+        fileName3: [],
       }
     },
     methods: {
@@ -281,9 +315,9 @@
       },
       submit() {
         // 将存储文件链接信息的数组转换为字符串
-        this.subInfo.files1 = this.fileList.toString()
-        this.subInfo.files2 = this.fileList.toString()
-        this.subInfo.files3 = this.fileList.toString()
+        this.subInfo.files1 = this.fileList1.toString()
+        this.subInfo.files2 = this.fileList2.toString()
+        this.subInfo.files3 = this.fileList3.toString()
 
         const startYear = this.startYear || '';
         const endYear = this.endYear || '';
@@ -333,14 +367,22 @@
         this.changeInfoShow = true
         this.changeInfoForm=value
         //这里判断如果修改信息原本有文件上传，将其转数组存储
-        if (this.changeInfoForm.files) {
-          this.fileList = this.changeInfoForm.files.split(',')
+        if (this.changeInfoForm.files1) {
+          this.fileList1 = this.changeInfoForm.files1.split(',')
+        }
+        if (this.changeInfoForm.files2) {
+          this.fileList2 = this.changeInfoForm.files2.split(',')
+        }
+        if (this.changeInfoForm.files3) {
+          this.fileList3 = this.changeInfoForm.files3.split(',')
         }
       },
       //修改信息提交按钮
       submitChangeInfo(){
         // 将存储文件链接信息的数组转换为字符串
-        this.changeInfoForm.files = this.fileList.toString()
+        this.changeInfoForm.files1 = this.fileList1.toString()
+        this.changeInfoForm.files2 = this.fileList2.toString()
+        this.changeInfoForm.files3 = this.fileList3.toString()
 
         const startYear = this.startYear || '';
         const endYear = this.endYear || '';
@@ -379,18 +421,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          if (this.subInfo.files) {
-            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          if (this.subInfo.files1) {
+            this.subInfo.files1 = this.subInfo.files1 + ',' + res.data.data
           }
           else {
-            this.subInfo.files = res.data.data
+            this.subInfo.files1 = res.data.data
           }
-          this.fileList = this.subInfo.files.split(',')
+          this.fileList1 = this.subInfo.files1.split(',')
           const uploadedFile = {
             name: file.name,
             file: res.data.data
           };
-          this.fileName.push(uploadedFile)
+          this.fileName1.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -400,18 +442,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          if (this.subInfo.files) {
-            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          if (this.subInfo.files2) {
+            this.subInfo.files2 = this.subInfo.files2 + ',' + res.data.data
           }
           else {
-            this.subInfo.files = res.data.data
+            this.subInfo.files2 = res.data.data
           }
-          this.fileList = this.subInfo.files.split(',')
+          this.fileList2 = this.subInfo.files2.split(',')
           const uploadedFile = {
             name: file.name,
             file: res.data.data
           };
-          this.fileName.push(uploadedFile)
+          this.fileName2.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -421,18 +463,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          if (this.subInfo.files) {
-            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          if (this.subInfo.files2) {
+            this.subInfo.files2 = this.subInfo.files2 + ',' + res.data.data
           }
           else {
-            this.subInfo.files = res.data.data
+            this.subInfo.files2 = res.data.data
           }
-          this.fileList = this.subInfo.files.split(',')
+          this.fileList3 = this.subInfo.files2.split(',')
           const uploadedFile = {
             name: file.name,
             file: res.data.data
           };
-          this.fileName.push(uploadedFile)
+          this.fileName3.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -442,9 +484,19 @@
       const file = this.$refs.fileInput1.files[0];
       const formData = new FormData();
       formData.append('uploadFile', file);
-      console.log(formData);
       uploadFiles(formData).then((res) => {
-        this.changeInfoForm.files1 = res.data.data
+        if (this.changeInfoForm.files1) {
+          this.changeInfoForm.files1 = this.changeInfoForm.files1 + ',' + res.data.data
+        }
+        else {
+          this.changeInfoForm.files1 = res.data.data
+        }
+        this.fileList1 = this.changeInfoForm.files1.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName1.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
@@ -453,9 +505,19 @@
         const file = this.$refs.fileInput2.files[0];
         const formData = new FormData();
         formData.append('uploadFile', file);
-        console.log(formData);
         uploadFiles(formData).then((res) => {
-          this.changeInfoForm.files2 = res.data.data
+          if (this.changeInfoForm.files2) {
+            this.changeInfoForm.files2 = this.changeInfoForm.files2 + ',' + res.data.data
+          }
+          else {
+            this.changeInfoForm.files2 = res.data.data
+          }
+          this.fileList2 = this.changeInfoForm.files2.split(',')
+          const uploadedFile = {
+            name: file.name,
+            file: res.data.data
+          };
+          this.fileName2.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -464,9 +526,19 @@
         const file = this.$refs.fileInput3.files[0];
         const formData = new FormData();
         formData.append('uploadFile', file);
-        console.log(formData);
         uploadFiles(formData).then((res) => {
-          this.changeInfoForm.files3 = res.data.data
+          if (this.changeInfoForm.files3) {
+            this.changeInfoForm.files3 = this.changeInfoForm.files3 + ',' + res.data.data
+          }
+          else {
+            this.changeInfoForm.files3 = res.data.data
+          }
+          this.fileList3 = this.changeInfoForm.files3.split(',')
+          const uploadedFile = {
+            name: file.name,
+            file: res.data.data
+          };
+          this.fileName3.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -498,12 +570,46 @@
         }
       },
       //获取本地上传时的文件名
-      getFileName(item) {
-        if (this.fileName.length != 0) {
-          for (let i = 0; i < this.fileName.length; i++) {
-            if (this.fileName[i].file === item) {
-              console.log('yes', this.fileName[i].name);
-              return this.fileName[i].name
+      getFileName1(item) {
+        if (this.fileName1.length != 0) {
+          for (let i = 0; i < this.fileName1.length; i++) {
+            if (this.fileName1[i].file === item) {
+              console.log('yes', this.fileName1[i].name);
+              return this.fileName1[i].name
+            }
+            else {
+        // return filePath.name.split('/').pop();
+              return item.split('/').pop();
+            }
+          }
+        }
+        else {
+          return item.split('/').pop();
+        }
+      },
+      getFileName2(item) {
+        if (this.fileName2.length != 0) {
+          for (let i = 0; i < this.fileName2.length; i++) {
+            if (this.fileName2[i].file === item) {
+              console.log('yes', this.fileName2[i].name);
+              return this.fileName2[i].name
+            }
+            else {
+        // return filePath.name.split('/').pop();
+              return item.split('/').pop();
+            }
+          }
+        }
+        else {
+          return item.split('/').pop();
+        }
+      },
+      getFileName3(item) {
+        if (this.fileName3.length != 0) {
+          for (let i = 0; i < this.fileName3.length; i++) {
+            if (this.fileName3[i].file === item) {
+              console.log('yes', this.fileName3[i].name);
+              return this.fileName3[i].name
             }
             else {
         // return filePath.name.split('/').pop();
@@ -516,8 +622,14 @@
         }
       },
       // 删除上传文件函数
-      cancelUp(item) {
-        this.fileList.splice(this.fileList.indexOf(item), 1);
+      cancelUp1(item) {
+        this.fileList1.splice(this.fileList1.indexOf(item), 1);
+      },
+      cancelUp2(item) {
+        this.fileList2.splice(this.fileList2.indexOf(item), 1);
+      },
+      cancelUp3(item) {
+        this.fileList3.splice(this.fileList3.indexOf(item), 1);
       },
 
       // 删除某条班级信息
