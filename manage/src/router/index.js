@@ -166,20 +166,22 @@ const tokenTest = () => {
         headers: { 'token': localStorage.getItem('token') },
     })
 }
+
 // 全局前置路由守卫---初始化和每次路由切换之前调用
 router.beforeEach((to, from, next) => {
     if (to.path !== '/Login') {
-        // tokenTest().then(res => {
-        //     console.log(res.data);
-        //     const {status} = res
-        //     if(status === 200) {
-        //         next();
-        //     } else {
-        //     alert('未登录，请先登录！')
-        //     next({
-        //         path: '/Login'
+        // const tokenRes = new Promise((resolve, reject) => {
+        //     tokenTest().then(res => {
+        //         console.log(res.data)
+        //         if(res.data.status === 0) {
+        //             next()
+        //         } else {
+        //             alert('未登录，请先登录！')
+        //             next({
+        //                 path: '/Login'
+        //             })
+        //         }
         //     })
-        //     }
         // })
         if (localStorage.getItem('token')) {
             next();
