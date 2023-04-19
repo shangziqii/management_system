@@ -166,31 +166,26 @@ const tokenTest = () => {
         headers: { 'token': localStorage.getItem('token') },
     })
 }
+// 添加一个变量来保存是否已经弹窗
+let hasAlerted = false
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
 router.beforeEach((to, from, next) => {
     if (to.path !== '/Login') {
-        // const tokenRes = new Promise((resolve, reject) => {
-        //     tokenTest().then(res => {
-        //         console.log(res.data)
-        //         if(res.data.status === 0) {
-        //             next()
-        //         } else {
-        //             alert('未登录，请先登录！')
-        //             next({
-        //                 path: '/Login'
-        //             })
-        //         }
-        //     })
-        // })
-        if (localStorage.getItem('token')) {
-            next();
-        } else {
-            alert('未登录，请先登录！')
-            next({
-                path: '/Login'
-            })
-        }
+        tokenTest().then(res => {
+            if(res.data.data.userId !== -1) {
+                next()
+            } else {
+                 // 如果已经弹窗，则不再重复弹窗
+                 if (!hasAlerted) {
+                    alert('未登录，请先登录！')
+                    hasAlerted = true
+                }
+                next({
+                    path: '/Login'
+                })
+            }
+        })
     } else {
         next()
     }

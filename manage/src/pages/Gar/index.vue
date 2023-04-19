@@ -546,7 +546,7 @@
       //获取文件类型对应图标
       getFileIcon(filePath) {
         const extension = filePath.split('.').pop();
-        console.log(extension);
+        // console.log(extension);
         switch (extension) {
           case 'jpg':
             return require('@/assets/img/JPG.png')
