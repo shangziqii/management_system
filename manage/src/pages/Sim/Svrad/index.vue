@@ -504,7 +504,7 @@ export default {
             return this.fileName[i].name
           }
           else {
-      // return filePath.name.split('/').pop();
+            // return filePath.name.split('/').pop();
             return item.split('/').pop();
           }
         }
