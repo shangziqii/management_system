@@ -16,31 +16,78 @@
           <el-form-item label="年级" prop="grade">
             <el-input v-model="subInfo.grade" placeholder="请输入所属年级"></el-input>
           </el-form-item>
-          <el-form-item label="时间范围" prop="subsidiesTime">
-            <el-input v-model="subInfo.subsidiesTime" placeholder="请输入评定的时间范围"></el-input>
+          <el-form-item label="时间范围" prop="selectTime">
+            <!-- 开始年份的下拉框 -->
+            <el-select v-model="startYear" placeholder="请选择开始年份">
+              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
+
+            <!-- 结束年份的下拉框 -->
+            <el-select v-model="endYear" placeholder="请选择结束年份">
+              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
+
           </el-form-item>
           <el-form-item label="评定阶段" prop="status">
-            <el-input v-model="subInfo.status" placeholder="请输入当前评定阶段"></el-input>
+            <el-select v-model="subInfo.status">
+              <el-option label="已完成" value="已完成"></el-option>
+              <el-option label="进行中" value="进行中"></el-option>
+              <el-option label="未完成" value="未完成"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="申请助学金的学生列表，及证明材料" prop="files1">
-            <el-input placeholder="请选择相关文件" v-model="subInfo.files1" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
+          <!-- 添加信息文件上传部分 -->
+          <el-form-item label="文件一" prop="files1">
+            <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="subInfo.files1" :disabled="true"></el-input>
             <div>
               <input type="file" ref="fileInput1" @change="uploadFile1">
             </div>
+            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
+            </div>
           </el-form-item>
-          <el-form-item label="困难生评议记录以及评议结果" prop="files2">
-            <el-input placeholder="请选择相关文件" v-model="subInfo.files2" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
+          <el-form-item label="文件二" prop="files2">
+            <el-input placeholder="困难生评议记录以及评议结果" v-model="subInfo.files2" :disabled="true"></el-input>
             <div>
               <input type="file" ref="fileInput2" @change="uploadFile2">
             </div>
+            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
+            </div>
           </el-form-item>
-          <el-form-item label="最终发放助学金的学生名单、助学金金额" prop="files3">
-            <el-input placeholder="请选择相关文件" v-model="subInfo.files3" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
+          <el-form-item label="文件三" prop="files3">
+            <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="subInfo.files3" :disabled="true"></el-input>
             <div>
               <input type="file" ref="fileInput3" @change="uploadFile3">
+            </div>
+            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
             </div>
           </el-form-item>
         </el-form>
@@ -59,30 +106,42 @@
             <el-input placeholder="请输入所属年级" v-model="changeInfoForm.grade">{{ changeInfoForm.grade }}</el-input>
           </el-form-item>
           <el-form-item label="时间范围" prop="subsidiesTime">
-            <el-input placeholder="请输入评定的时间范围" v-model="changeInfoForm.subsidiesTime">{{ changeInfoForm.subsidiesTime }}</el-input>
+            <!-- 开始年份的下拉框 -->
+            <el-select v-model="startYear" placeholder="请选择开始年份">
+              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
+
+            <!-- 结束年份的下拉框 -->
+            <el-select v-model="endYear" placeholder="请选择结束年份">
+              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="评定阶段" prop="status">
-            <el-input placeholder="请输入当前评定阶段" v-model="changeInfoForm.status">{{ changeInfoForm.status }}</el-input>
+            <el-select v-model="changeInfoForm.status">
+              <el-option label="已完成" value="已完成"></el-option>
+              <el-option label="进行中" value="进行中"></el-option>
+              <el-option label="未完成" value="未完成"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="申请助学金的学生列表，及证明材料" prop="files1">
+          <el-form-item label="文件一" prop="files1">
             <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
-            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files1" :disabled="true"></el-input>
+            <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="changeInfoForm.files1" :disabled="true"></el-input>
               <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput1" @change="uploadChangeFile1">
             </div>
           </el-form-item>
-          <el-form-item label="困难生评议记录以及评议结果" prop="files2">
+          <el-form-item label="文件二" prop="files2">
             <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
-            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files2" :disabled="true"></el-input>
+            <el-input placeholder="困难生评议记录以及评议结果" v-model="changeInfoForm.files2" :disabled="true"></el-input>
             <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput2" @change="uploadChangeFile2">
             </div>
           </el-form-item>
-          <el-form-item label="最终发放助学金的学生名单、助学金金额" prop="files3">
+          <el-form-item label="文件三" prop="files3">
             <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
-            <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files3" :disabled="true"></el-input>
+            <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="changeInfoForm.files3" :disabled="true"></el-input>
             <!-- 上传相关文件 -->
             <div>
               <input type="file" ref="fileInput3" @change="uploadChangeFile3">
@@ -95,7 +154,8 @@
         </span>
       </el-dialog>
       <!-- 只能由辅导员(role = 1)增删 -->
-      <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role==='1'">添加记录</el-button>
+      <el-button @click="dialogVisible = true" type="primary" class="addButton" >添加记录</el-button>
+      <!-- v-show="role==='1'" -->
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
   
@@ -171,7 +231,13 @@
           ]
         },
         changeInfoShow:false,
-        changeInfoForm:{},
+        changeInfoForm: {},
+        //修改数据对象
+        changeInfoShow: false,
+        startYear: '2022',
+        endYear: '2023',
+        minYear: 2010, // 最小年份
+        maxYear: new Date().getFullYear(), // 最大年份为当前年份
         changRules: {
           major: [
             { required: true, message: '请输入专业名称' }
@@ -186,20 +252,25 @@
             { required: true, message: '请输入当前评定阶段' }
           ],
         },
-        // 搜索某班级名称
-        // findClass: {
-        //   className: ''
-        // }
+        //关于文件上传的相关参数
+        fileList: [],//存储上传的文件
+        fileName: []//存储上传后的文件名
       }
     },
     methods: {
       handleClose() {
         this.$refs.subInfo.resetFields()
+         //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
         this.dialogVisible = false
       },
       // 修改表单关闭逻辑
       handleCloseChangeInfo(){
         this.$refs.changeInfoForm.resetFields()
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
         this.changeInfoShow = false
       },
       cancel() {
@@ -209,6 +280,19 @@
         this.handleCloseChangeInfo()
       },
       submit() {
+        // 将存储文件链接信息的数组转换为字符串
+        this.subInfo.files1 = this.fileList.toString()
+        this.subInfo.files2 = this.fileList.toString()
+        this.subInfo.files3 = this.fileList.toString()
+
+        const startYear = this.startYear || '';
+        const endYear = this.endYear || '';
+        // 将时间范围字符串存储在scholInfo对象中
+        if (startYear && endYear) {
+          this.subInfo.subsidiesTime = `${startYear} 至 ${endYear}`;
+        } else {
+          this.subInfo.subsidiesTime = '';
+        }
         this.$refs.subInfo.validate((valid) => {
           if (valid ) {
             addSub(this.subInfo).then((res) => {
@@ -240,26 +324,32 @@
           subsList(params).then(res => {
           // console.log(res.data);
           this.tableData = res.data.data.studentSubsidies
-        })
+          this.total = res.data.sum
+          }).catch((error) => {
+            this.$message.error('拉取列表错误', error);
+          })
       },
-      // 搜索查询班级列表
-      // WhichClass() {
-      //   const params = {
-      //     page: this.currentPage,
-      //     pageLimit: this.pageLimit,
-      //     searchClassName: this.findClass.className
-      //   }
-      //   classList(params).then(res => {
-      //     // console.log(res.data);
-      //     this.tableData = res.data.data.classes
-      //   })
-      // },
       edit(value) {
         this.changeInfoShow = true
         this.changeInfoForm=value
+        //这里判断如果修改信息原本有文件上传，将其转数组存储
+        if (this.changeInfoForm.files) {
+          this.fileList = this.changeInfoForm.files.split(',')
+        }
       },
       //修改信息提交按钮
       submitChangeInfo(){
+        // 将存储文件链接信息的数组转换为字符串
+        this.changeInfoForm.files = this.fileList.toString()
+
+        const startYear = this.startYear || '';
+        const endYear = this.endYear || '';
+        // 将时间范围字符串存储在scholInfo对象中
+        if (startYear && endYear) {
+          this.changeInfoForm.subsidiesTime = `${startYear} 至 ${endYear}`;
+        } else {
+          this.changeInfoForm.subsidiesTime = '';
+        }
         this.$refs.changeInfoForm.validate((valid) => {
           if (valid) {
         // console.log('修改信息提交了');
@@ -289,7 +379,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          this.subInfo.files1 = res.data.data
+          if (this.subInfo.files) {
+            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          }
+          else {
+            this.subInfo.files = res.data.data
+          }
+          this.fileList = this.subInfo.files.split(',')
+          const uploadedFile = {
+            name: file.name,
+            file: res.data.data
+          };
+          this.fileName.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -299,7 +400,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          this.subInfo.files2 = res.data.data
+          if (this.subInfo.files) {
+            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          }
+          else {
+            this.subInfo.files = res.data.data
+          }
+          this.fileList = this.subInfo.files.split(',')
+          const uploadedFile = {
+            name: file.name,
+            file: res.data.data
+          };
+          this.fileName.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -309,7 +421,18 @@
         const formData = new FormData();
         formData.append('uploadFile', file);
         uploadFiles(formData).then((res) => {
-          this.subInfo.files3 = res.data.data
+          if (this.subInfo.files) {
+            this.subInfo.files = this.subInfo.files + ',' + res.data.data
+          }
+          else {
+            this.subInfo.files = res.data.data
+          }
+          this.fileList = this.subInfo.files.split(',')
+          const uploadedFile = {
+            name: file.name,
+            file: res.data.data
+          };
+          this.fileName.push(uploadedFile)
         }).catch((error) => {
           console.error(error);
         })
@@ -348,6 +471,55 @@
           console.error(error);
         })
       },
+      //获取文件类型对应图标
+      getFileIcon(filePath) {
+        const extension = filePath.split('.').pop();
+        console.log(extension);
+        switch (extension) {
+          case 'jpg':
+            return require('@/assets/img/JPG.png')
+          case 'png':
+            return require('@/assets/img/PNG.png')
+          case 'pdf':
+            return require('@/assets/img/Pdf.png')
+          case 'xlsx':
+            return require('@/assets/img/xlsx.png')
+          case 'doc':
+            return require('@/assets/img/doc.png')
+          case 'docx':
+            return require('@/assets/img/docx.png')
+          case 'ppt':
+            return require('@/assets/img/ppt.png')
+          case 'pptx':
+            return require('@/assets/img/pptx.png')
+          // 其他文件类型的判断逻辑
+          default:
+            return require('@/assets/img/other.png');
+        }
+      },
+      //获取本地上传时的文件名
+      getFileName(item) {
+        if (this.fileName.length != 0) {
+          for (let i = 0; i < this.fileName.length; i++) {
+            if (this.fileName[i].file === item) {
+              console.log('yes', this.fileName[i].name);
+              return this.fileName[i].name
+            }
+            else {
+        // return filePath.name.split('/').pop();
+              return item.split('/').pop();
+            }
+          }
+        }
+        else {
+          return item.split('/').pop();
+        }
+      },
+      // 删除上传文件函数
+      cancelUp(item) {
+        this.fileList.splice(this.fileList.indexOf(item), 1);
+      },
+
       // 删除某条班级信息
         handleDelete(row) {
           if(this.role === '1') {
@@ -384,6 +556,15 @@
           this.currentPage=val
           this.getSubsList()
         },
+    },
+    computed: {
+      years() {
+        const years = [];
+        for (let year = this.maxYear; year >= this.minYear; year--) {
+          years.push(year);
+        }
+        return years;
+      }
     },
     mounted() {
       // this.getSimpleList()
@@ -481,5 +662,45 @@
     top: 190px;
     left: 560px;
     z-index: 23;
+  }
+  /* 文件上传相关 */
+  .fileListShow {
+    margin-left: -39px;
+  }
+  .item {
+    position: relative;
+  }
+  .el-icon-error {
+    font-size: 21px;
+    color: indianred;
+  }
+
+  .cancelDiv {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .fileListShow {
+    margin-left: -39px;
+  }
+
+  .el-dialog__body a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+  }
+
+  .el-dialog__body a:hover {
+    color: #409EFF;
   }
   </style>

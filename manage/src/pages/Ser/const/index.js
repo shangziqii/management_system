@@ -32,7 +32,6 @@ export const operaColums = [
     {
         label: '修改',
         type: 'warning',
-        show: '1'
     },
     {
         label: '删除',

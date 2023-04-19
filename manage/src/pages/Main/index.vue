@@ -20,16 +20,7 @@
             </el-menu-item-group>
           </el-submenu>
 
-          <!-- 助学金评定记录 -->
-          <el-menu-item index="/Main/Gar">
-            <i class="el-icon-menu"></i>
-            <span slot="title">助学金评定记录</span>
-          </el-menu-item>
-          <!-- 奖学金评定记录 -->
-          <el-menu-item index="/Main/Ser">
-            <i class="el-icon-document"></i>
-            <span slot="title">奖学金评定记录</span>
-          </el-menu-item>
+
         </el-menu>
       </el-aside>
       <el-container>
@@ -151,7 +142,7 @@ export default {
               url:'/Main/Sim/Pm'
             }
           ]
-        }/* ,
+        },
         {
           path: "/Main/Gar",
           name: "Gar",
@@ -165,7 +156,7 @@ export default {
           label: "奖学金评定记录",
           icon: "s-order",
           url: "/Main/Ser",
-        }, */
+        },
       ]
     }
   },

@@ -40,8 +40,6 @@ export const operaColums = [
     {
         label: '编辑',
         type: 'warning',
-        // 删除权限
-        show: '1'
     },
     {
         label: '删除',
