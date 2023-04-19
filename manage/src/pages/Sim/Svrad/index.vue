@@ -59,14 +59,12 @@
             <div class="item">
               <a :href="item" download>
                 <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
               </a>
               <!-- 取消上传按钮 -->
               <div @click="cancelUp(item)" class="cancelDiv">
                 <i class="el-icon-error"></i>
               </div>
-              <a :href="item" download>
-                {{ getFileName(item) }}
-              </a>
             </div>
           </div>
         </el-form-item>
@@ -116,14 +114,12 @@
             <div class="item">
               <a :href="item" download>
                 <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
               </a>
               <!-- 取消上传按钮 -->
               <div @click="cancelUp(item)" class="cancelDiv">
                 <i class="el-icon-error"></i>
               </div>
-              <a :href="item" download>
-                {{ getFileName(item) }}
-              </a>
             </div>
           </div>
         </el-form-item>
@@ -256,6 +252,9 @@ export default {
     },
     // 提交用户表单函数
     submit() {
+      // 将存储文件链接信息的数组转换为字符串
+      this.form.files = this.fileList.toString()
+
       this.$refs.form.validate((valid) => {
         if (valid) {
           addPunish(this.form).then((res) => {
@@ -315,16 +314,18 @@ export default {
       console.log(value);
       this.changeInfoShow = true
       this.changeInfoForm = value
-      
+
       //这里判断如果修改信息原本有文件上传，将其转数组存储
       if (this.changeInfoForm.files) {
         this.fileList = this.changeInfoForm.files.split(',')
       }
-      
+
     },
     //修改信息提交按钮
     submitchangeInfo() {
+      // 将存储文件链接信息的数组转换为字符串
       this.changeInfoForm.files = this.fileList.toString()
+
       changeInfo(this.changeInfoForm).then((res) => {
         console.log(res);
         if (res.status === 200) {
@@ -343,23 +344,12 @@ export default {
         this.changeInfoShow = false
       })
     },
-    // 弹窗关闭时重置表单
-    handleClose() {
-      this.$refs.form.resetFields()
-      this.fileList = []
-      this.fileName = []
-      this.gepunishList()
-      this.dialogVisible = false
-    },
+
     //取消函数
     cancel() {
       this.handleClose()
     },
-    handleClosechangeInfo() {
-      this.$refs.changeInfoForm.resetFields()
-      this.gepunishList()
-      this.changeInfoShow = false
-    },
+
     cancel2() {
       this.handleClosechangeInfo()
     },
@@ -479,7 +469,7 @@ export default {
     },
 
     //获取文件类型对应图标
-     getFileIcon(filePath) {
+    getFileIcon(filePath) {
       const extension = filePath.split('.').pop();
       console.log(extension);
       switch (extension) {
@@ -507,7 +497,6 @@ export default {
 
     //获取本地上传时的文件名
     getFileName(item) {
-      // return filePath.name.split('/').pop();
       if (this.fileName.length != 0) {
         for (let i = 0; i < this.fileName.length; i++) {
           if (this.fileName[i].file === item) {
@@ -515,18 +504,43 @@ export default {
             return this.fileName[i].name
           }
           else {
-            return item
+      // return filePath.name.split('/').pop();
+            return item.split('/').pop();
           }
         }
       }
       else {
-        return item
+        return item.split('/').pop();
       }
     },
 
     // 删除上传文件函数
     cancelUp(item) {
       this.fileList.splice(this.fileList.indexOf(item), 1);
+    },
+
+    //修改信息窗口关闭时调用的函数
+    handleClosechangeInfo() {
+      this.$refs.changeInfoForm.resetFields()
+
+      //关闭后将文件相关显示的数据清空
+      this.fileList = []
+      this.fileName = []
+
+      this.gepunishList()
+      this.changeInfoShow = false
+    },
+
+    // 新增信息弹窗关闭时重置表单
+    handleClose() {
+      this.$refs.form.resetFields()
+
+      //关闭后将文件相关显示的数据清空
+      this.fileList = []
+      this.fileName = []
+
+      this.gepunishList()
+      this.dialogVisible = false
     },
 
     //导出学生信息
@@ -665,7 +679,7 @@ export default {
 }
 
 .fileListShow {
-  margin-left: -72px;
+  margin-left: -39px;
 }
 
 .el-dialog__body a {
