@@ -12,12 +12,12 @@ export const columns = [
         prop: 'className'
     },
     {
-        label: '处分等级',
-        prop: 'punishLevel'
-    },
-    {
         label: '处分名称',
         prop: 'punishName'
+    },
+    {
+        label: '处分等级',
+        prop: 'punishLevel'
     },
     {
         label: '处分时间',
@@ -43,3 +43,31 @@ export const operaColums = [
         type: 'warning'
     }
 ]
+//获取文件类型对应图标
+export const getFileIcon = (filePath) => {
+    const extension = filePath.split('.').pop();
+    console.log(extension);
+    switch (extension) {
+        case 'jpg':
+            return require('@/assets/img/JPG.png')
+        case 'png':
+            return require('@/assets/img/PNG.png')
+        case 'pdf':
+            return require('@/assets/img/Pdf.png')
+        case 'xlsx':
+            return require('@/assets/img/xlsx.png')
+        case 'doc':
+            return require('@/assets/img/doc.png')
+        case 'docx':
+            return require('@/assets/img/docx.png')
+        case 'ppt':
+            return require('@/assets/img/ppt.png')
+        case 'pptx':
+            return require('@/assets/img/pptx.png')
+        // 其他文件类型的判断逻辑
+        default:
+            return require('@/assets/img/other.png');
+    }
+}
+
+//获取文件name
