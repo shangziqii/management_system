@@ -2,7 +2,7 @@
   <div>
     <div class="btn">
       <!-- 添加信息按钮 -->
-      <el-button type="primary" size="small" @click="dialogVisible = true" v-show="role===1">添加信息</el-button>
+      <el-button type="primary" size="small" @click="dialogVisible = true" v-show="role === 1">添加信息</el-button>
     </div>
     <!-- 添加信息弹窗 -->
     <el-dialog title="添加奖学金评定记录" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -37,20 +37,42 @@
         </el-form-item>
 
         <!-- 上传综测成绩记录文件 -->
-        <el-form-item label="综测成绩记录" prop="files1">
-          <el-input placeholder="请选择相关文件" v-model="scholInfo.files1" :disabled="true"></el-input>
-          <!-- 上传相关文件 -->
+        <!-- 上传相关文件1 -->
+        <el-form-item label="综测成绩" prop="files1">
           <div>
             <input type="file" ref="fileInput1" @change="uploadFile1">
+          </div>
+          <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div class="item">
+              <a :href="item" download>
+                <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
+              </a>
+              <!-- 取消上传按钮 -->
+              <div @click="cancelUp(item)" class="cancelDiv">
+                <i class="el-icon-error"></i>
+              </div>
+            </div>
           </div>
         </el-form-item>
 
         <!-- 上传奖学金发放记录文件 -->
-        <el-form-item label="奖学金发放记录" prop="files2">
-          <el-input placeholder="请选择相关文件" v-model="scholInfo.files2" :disabled="true"></el-input>
-          <!-- 上传相关文件 -->
+        <el-form-item label="奖学金发放" prop="files2">
+          <!-- <el-input placeholder="请选择相关文件" v-model="scholInfo.files2" :disabled="true"></el-input> -->
           <div>
             <input type="file" ref="fileInput2" @change="uploadFile2">
+          </div>
+          <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
+            <div class="item">
+              <a :href="item" download>
+                <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
+              </a>
+              <!-- 取消上传按钮 -->
+              <div @click="cancelUp1(item)" class="cancelDiv">
+                <i class="el-icon-error"></i>
+              </div>
+            </div>
           </div>
         </el-form-item>
       </el-form>
@@ -59,8 +81,10 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+
+
     <!-- 修改评定记录 -->
-    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
+    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo" class="my-dialog">
       <el-form ref="changeInfoForm" :rules="changeInfoRules" :model="changeInfoForm" label-width="80px">
         <el-form-item label="专业" prop="major">
           <el-input placeholder="请输入专业名称" v-model="changeInfoForm.major"></el-input>
@@ -90,22 +114,43 @@
         </el-form-item>
 
         <!-- 综测成绩记录 -->
-        <el-form-item label="综测成绩记录" prop="files1">
-          <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
-          <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files1" :disabled="true"></el-input>
-          <!-- 上传相关文件 -->
+        <!-- 修改信息，上传相关文件1 -->
+        <el-form-item label="综测成绩" prop="files1">
           <div>
             <input type="file" ref="fileInput1" @change="uploadChangeFile1">
+          </div>
+          <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div class="item">
+              <a :href="item" download>
+                <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
+              </a>
+              <!-- 取消上传按钮 -->
+              <div @click="cancelUp(item)" class="cancelDiv">
+                <i class="el-icon-error"></i>
+              </div>
+            </div>
           </div>
         </el-form-item>
 
         <!-- 奖学金发放记录 -->
-        <el-form-item label="奖学金发放记录" prop="files2">
-          <!-- <el-input placeholder="请输入相关文件" v-model="changeInfoForm.files"></el-input> -->
-          <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files2" :disabled="true"></el-input>
-          <!-- 上传相关文件 -->
+        <!-- 修改信息，上传相关文件2 -->
+        <el-form-item label="奖学金发放" prop="files2">
+
           <div>
             <input type="file" ref="fileInput2" @change="uploadChangeFile2">
+          </div>
+          <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
+            <div class="item">
+              <a :href="item" download>
+                <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
+              </a>
+              <!-- 取消上传按钮 -->
+              <div @click="cancelUp1(item)" class="cancelDiv">
+                <i class="el-icon-error"></i>
+              </div>
+            </div>
           </div>
         </el-form-item>
       </el-form>
@@ -115,7 +160,7 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" class="tabel"/>
+      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" class="tabel" />
   </div>
 </template>
 
@@ -180,6 +225,12 @@ export default {
       endYear: '2023',
       minYear: 2010, // 最小年份
       maxYear: new Date().getFullYear(), // 最大年份为当前年份
+      //关于文件上传的相关参数
+      // 文件参数1
+      fileList: [],//存储上传的文件
+      fileName: [],//存储上传后的文件名
+      fileList1: [],
+      fileName1: []
     }
   },
   methods: {
@@ -199,6 +250,10 @@ export default {
     },
     //提交新增信息记录
     submit() {
+      // 将存储文件链接信息的数组转换为字符串
+      this.scholInfo.files1 = this.fileList.toString()
+      this.scholInfo.files2 = this.fileList.toString()
+
       const startYear = this.startYear || '';
       const endYear = this.endYear || '';
       // 将时间范围字符串存储在scholInfo对象中
@@ -234,6 +289,13 @@ export default {
     handleClose() {
       this.dialogVisible = false
       this.$refs.scholInfo.resetFields()
+      //关闭后将文件相关显示的数据清空
+
+      this.fileList = []
+      this.fileName = []
+      this.fileList1 = []
+      this.fileName1 = []
+
       this.getList()
     },
     cancel() {
@@ -242,10 +304,32 @@ export default {
     edit(value) {
       this.changeInfoShow = true
       this.changeInfoForm = value
+      //这里判断如果修改信息原本有文件上传，将其转数组存储
+/*       if (this.changeInfoForm.files1 || this.changeInfoForm.files2) {
+        if (this.changeInfoForm.files1) {
+          this.fileList = this.changeInfoForm.files1.split(',')
+        }
+        if (this.changeInfoForm.files2) {
+          this.fileList1 = this.changeInfoForm.files2.split(',')
+        }
+      } */
+      if(this.changeInfoForm.files1){
+        this.fileList=this.changeInfoForm.files1.split(',')
+      }
+      if(this.changeInfoForm.files2){
+        this.fileList1=this.changeInfoForm.files2.split(',')
+      }
     },
     handleCloseChangeInfo() {
       this.changeInfoShow = false
       this.$refs.changeInfoForm.resetFields()
+
+      //关闭后将文件相关显示的数据清空
+      this.fileList = []
+      this.fileName = []
+      this.fileList1 = []
+      this.fileName1 = []
+
       this.getList()
     },
     cancel1() {
@@ -253,6 +337,11 @@ export default {
     },
     //提交修改后的信息
     submitChangeInfo() {
+
+      // 将存储文件链接信息的数组转换为字符串
+      this.changeInfoForm.files1 = this.fileList.toString()
+      this.changeInfoForm.files2 = this.fileList1.toString()
+
       const startYear = this.startYear || '';
       const endYear = this.endYear || '';
       // 将时间范围字符串存储在scholInfo对象中
@@ -318,11 +407,6 @@ export default {
       this.currentPage = val
       this.getList()
     },
-    handleCloseChangeInfo() {
-      this.changeInfoShow = false
-      this.$refs.changeInfoForm.resetFields()
-      this.getList()
-    },
     //添加信息页面上传文件
     //上传相关文件
     uploadFile1() {
@@ -331,7 +415,19 @@ export default {
       formData.append('uploadFile', file);
       console.log(formData);
       uploadFiles(formData).then((res) => {
-        this.scholInfo.files1 = res.data.data
+        // this.scholInfo.files1 = res.data.data
+        if (this.scholInfo.files1) {
+          this.scholInfo.files1 = this.scholInfo.files1 + ',' + res.data.data
+        }
+        else {
+          this.scholInfo.files1 = res.data.data
+        }
+        this.fileList = this.scholInfo.files1.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
@@ -342,7 +438,19 @@ export default {
       formData.append('uploadFile', file);
       console.log(formData);
       uploadFiles(formData).then((res) => {
-        this.scholInfo.files2 = res.data.data
+        // this.scholInfo.files2 = res.data.data
+        if (this.scholInfo.files2) {
+          this.scholInfo.files2 = this.scholInfo.files2 + ',' + res.data.data
+        }
+        else {
+          this.scholInfo.files2 = res.data.data
+        }
+        this.fileList1 = this.scholInfo.files2.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName1.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
@@ -353,7 +461,19 @@ export default {
       formData.append('uploadFile', file);
       console.log(formData);
       uploadFiles(formData).then((res) => {
-        this.changeInfoForm.files1 = res.data.data
+        // this.changeInfoForm.files1 = res.data.data
+        if (this.changeInfoForm.files1) {
+          this.changeInfoForm.files1 = this.changeInfoForm.files1 + ',' + res.data.data
+        }
+        else {
+          this.changeInfoForm.files1 = res.data.data
+        }
+        this.fileList = this.changeInfoForm.files1.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
@@ -364,11 +484,76 @@ export default {
       formData.append('uploadFile', file);
       console.log(formData);
       uploadFiles(formData).then((res) => {
-        this.changeInfoForm.files2 = res.data.data
+        // this.changeInfoForm.files2 = res.data.data
+        if (this.changeInfoForm.files2) {
+          this.changeInfoForm.files2 = this.changeInfoForm.files2 + ',' + res.data.data
+        }
+        else {
+          this.changeInfoForm.files2 = res.data.data
+        }
+        this.fileList1 = this.changeInfoForm.files2.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName1.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
+    },
+    //获取文件类型对应图标
+    getFileIcon(filePath) {
+      const extension = filePath.split('.').pop();
+      console.log(extension);
+      switch (extension) {
+        case 'jpg':
+          return require('@/assets/img/JPG.png')
+        case 'png':
+          return require('@/assets/img/PNG.png')
+        case 'pdf':
+          return require('@/assets/img/Pdf.png')
+        case 'xlsx':
+          return require('@/assets/img/xlsx.png')
+        case 'doc':
+          return require('@/assets/img/doc.png')
+        case 'docx':
+          return require('@/assets/img/docx.png')
+        case 'ppt':
+          return require('@/assets/img/ppt.png')
+        case 'pptx':
+          return require('@/assets/img/pptx.png')
+        // 其他文件类型的判断逻辑
+        default:
+          return require('@/assets/img/other.png');
+      }
+    },
+    //获取本地上传时的文件名
+    getFileName(item) {
+      if (this.fileName.length != 0) {
+        for (let i = 0; i < this.fileName.length; i++) {
+          if (this.fileName[i].file === item) {
+            console.log('yes', this.fileName[i].name);
+            return this.fileName[i].name
+          }
+          else {
+            // return filePath.name.split('/').pop();
+            return item.split('/').pop();
+          }
+        }
+      }
+      else {
+        return item.split('/').pop();
+      }
+    },
+    // 删除上传文件函数
+    cancelUp(item) {
+      this.fileList.splice(this.fileList.indexOf(item), 1);
+    },
+    cancelUp1(item) {
+      this.fileList1.splice(this.fileList1.indexOf(item), 1);
     }
+    
+
   },
   mounted() {
     this.getList()
@@ -417,7 +602,47 @@ export default {
   width: 250px;
   margin-right: 10px;
 }
-.tabel{
-  margin-top:52px;
+
+.tabel {
+  margin-top: 52px;
 }
+
+/* 多文件显示样式 */
+ .item {
+  position: relative;
+}
+
+.el-icon-error{
+  font-size: 21px;
+  color: indianred;
+}
+
+.cancelDiv {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fileListShow {
+  margin-left: -39px;
+}
+
+.el-dialog__body a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+}
+
+.el-dialog__body a:hover {
+  color: #409EFF;
+} 
 </style>

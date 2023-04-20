@@ -36,6 +36,7 @@ export const operaColums = [
     {
         label: '删除',
         type: 'danger',
+        // 删除权限
         show: localStorage.getItem('role')
     }
 ]
