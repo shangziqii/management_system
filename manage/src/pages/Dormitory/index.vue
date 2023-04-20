@@ -31,11 +31,22 @@
         <el-form-item label="内容记录" prop="contentRecord">
           <el-input placeholder="请输入需要记录的关键内容" v-model="form.contentRecord"></el-input>
         </el-form-item>
-        <el-form-item label="文件URL" prop="files">
-          <el-input placeholder="请输入要上传文件的URL" v-model="form.files" :disabled="true"></el-input>
-          <!-- 上传相关文件 -->
+        <!-- 添加信息文件上传部分 -->
+        <el-form-item label="相关文件" prop="files">
           <div>
             <input type="file" ref="fileInput" @change="uploadFile">
+          </div>
+          <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+            <div class="item">
+              <a :href="item" download>
+                <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                {{ getFileName(item) }}
+              </a>
+              <!-- 取消上传按钮 -->
+              <div @click="cancelUp(item)" class="cancelDiv">
+                <i class="el-icon-error"></i>
+              </div>
+            </div>
           </div>
         </el-form-item>
       </el-form>
@@ -65,13 +76,23 @@
           <el-form-item label="内容记录" prop="contentRecord">
             <el-input placeholder="请输入关键内容记录" v-model="changeInfoForm.contentRecord">{{ changeInfoForm.contentRecord }}</el-input>
           </el-form-item>
-          <el-form-item label="上传文件" prop="files">
-            <!-- <el-input placeholder="请上传文件" v-model="changeInfoForm.files"></el-input> -->
-          <el-input placeholder="请选择相关文件" v-model="changeInfoForm.files" :disabled="true"></el-input>
-            <!-- 上传相关文件 -->
-          <div>
-            <input type="file" ref="fileInput" @change="uploadFile2">
-          </div>
+          <!-- 修改信息页面文件上传 -->
+          <el-form-item label="相关文件" prop="files">
+            <div>
+              <input type="file" ref="fileInput" @change="uploadFile2">
+            </div>
+            <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
+              <div class="item">
+                <a :href="item" download>
+                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                  {{ getFileName(item) }}
+                </a>
+                <!-- 取消上传按钮 -->
+                <div @click="cancelUp(item)" class="cancelDiv">
+                  <i class="el-icon-error"></i>
+                </div>
+              </div>
+            </div>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -148,7 +169,10 @@ export default {
         contentRecord: [
           { required: true, message: '请输入关键内容记录' }
         ],
-      }
+      },
+      //关于文件上传的相关参数
+      fileList: [],//存储上传的文件
+      fileName: []//存储上传后的文件名
     }
   },
   methods: {
@@ -217,6 +241,9 @@ export default {
     // 弹窗关闭时重置表单
     handleClose() {
       this.$refs.form.resetFields()
+      //关闭后将文件相关显示的数据清空
+      this.fileList = []
+      this.fileName = []
       this.dialogVisible = false
     },
     //取消函数
@@ -225,6 +252,8 @@ export default {
     },
     // 添加信息提交表单
     submit() {
+        // 将存储文件链接信息的数组转换为字符串
+        this.form.files = this.fileList.toString()
         this.$refs.form.validate((valid) => {
           if(valid) {
             addDor(this.form).then((res) => {
@@ -288,10 +317,17 @@ export default {
       // console.log(value);
       this.changeInfoShow = true
       this.changeInfoForm=value
+      //这里判断如果修改信息原本有文件上传，将其转数组存储
+      if (this.changeInfoForm.files) {
+        this.fileList = this.changeInfoForm.files.split(',')
+      }
     },
     // 修改表单关闭逻辑
     handleCloseChangeInfo(){
       this.$refs.changeInfoForm.resetFields()
+      //关闭后将文件相关显示的数据清空
+      this.fileList = []
+      this.fileName = []
       this.changeInfoShow = false
     },
     cancel2(){
@@ -299,6 +335,8 @@ export default {
     },
     //修改信息提交按钮
     submitChangeInfo(){
+      // 将存储文件链接信息的数组转换为字符串
+      this.changeInfoForm.files = this.fileList.toString()
       this.$refs.changeInfoForm.validate((valid) => {
         if (valid) {
       // console.log('修改信息提交了');
@@ -326,28 +364,104 @@ export default {
       this.currentPage=val
       this.showDorList()
     },
-    //上传相关文件
+    //新增信息页面文件的上传
     uploadFile() {
       const file = this.$refs.fileInput.files[0];
       const formData = new FormData();
       formData.append('uploadFile', file);
       uploadFiles(formData).then((res) => {
-        this.form.files = res.data.data
+        if (this.form.files) {
+          this.form.files = this.form.files + ',' + res.data.data
+        }
+        else {
+          this.form.files = res.data.data
+        }
+        this.fileList = this.form.files.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
     },
+
     //修改信息页面的上传相关文件
     uploadFile2() {
       const file = this.$refs.fileInput.files[0];
       const formData = new FormData();
       formData.append('uploadFile', file);
       uploadFiles(formData).then((res) => {
-        this.changeInfoForm.files = res.data.data
+        // this.changeInfoForm.files = res.data.data
+        if (this.changeInfoForm.files) {
+          this.changeInfoForm.files = this.changeInfoForm.files + ',' + res.data.data
+        }
+        else {
+          this.changeInfoForm.files = res.data.data
+        }
+        this.fileList = this.changeInfoForm.files.split(',')
+        const uploadedFile = {
+          name: file.name,
+          file: res.data.data
+        };
+        this.fileName.push(uploadedFile)
       }).catch((error) => {
         console.error(error);
       })
     },
+
+    //获取文件类型对应图标
+    getFileIcon(filePath) {
+      const extension = filePath.split('.').pop();
+      console.log(extension);
+      switch (extension) {
+        case 'jpg':
+          return require('@/assets/img/JPG.png')
+        case 'png':
+          return require('@/assets/img/PNG.png')
+        case 'pdf':
+          return require('@/assets/img/Pdf.png')
+        case 'xlsx':
+          return require('@/assets/img/xlsx.png')
+        case 'doc':
+          return require('@/assets/img/doc.png')
+        case 'docx':
+          return require('@/assets/img/docx.png')
+        case 'ppt':
+          return require('@/assets/img/ppt.png')
+        case 'pptx':
+          return require('@/assets/img/pptx.png')
+        // 其他文件类型的判断逻辑
+        default:
+          return require('@/assets/img/other.png');
+      }
+    },
+
+    //获取本地上传时的文件名
+    getFileName(item) {
+      if (this.fileName.length != 0) {
+        for (let i = 0; i < this.fileName.length; i++) {
+          if (this.fileName[i].file === item) {
+            console.log('yes', this.fileName[i].name);
+            return this.fileName[i].name
+          }
+          else {
+            // return filePath.name.split('/').pop();
+            return item.split('/').pop();
+          }
+        }
+      }
+      else {
+        return item.split('/').pop();
+      }
+    },
+
+    // 删除上传文件函数
+    cancelUp(item) {
+      this.fileList.splice(this.fileList.indexOf(item), 1);
+    },
+
   },
   mounted() {
     this.showDorList()
@@ -398,5 +512,45 @@ export default {
 /* 时间选择框的设置 */
 .pickTime {
   width: 100%;
+}
+/* 文件上传相关 */
+.fileListShow {
+  margin-left: -39px;
+}
+.item {
+  position: relative;
+}
+.el-icon-error {
+  font-size: 21px;
+  color: indianred;
+}
+
+.cancelDiv {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fileListShow {
+  margin-left: -39px;
+}
+
+.el-dialog__body a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+}
+
+.el-dialog__body a:hover {
+  color: #409EFF;
 }
 </style>
