@@ -67,6 +67,7 @@ export default {
           },
           rules: {
            studentNum: {required: true, message: '学号不能为空', trigger: 'blur' },
+           studentName: {required: true, message: '姓名不能为空', trigger: 'blur' },
           },
           options: [], // 困难等级选择
         };

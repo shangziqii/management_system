@@ -37,15 +37,11 @@ export const columns = [
 // 操作栏配置
 export const operaColumns = [
     {
-        label: '删除',
-        type: 'danger',
-    },
-    {
         label: '修改',
-        type: 'warning',
+        type: 'warning'
     },
     {
-        label: '详情',
-        type: 'primary'
-    },
+        label: '删除',
+        type: 'danger'
+    }
 ]

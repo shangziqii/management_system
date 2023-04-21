@@ -37,9 +37,7 @@
           :width="operaColums.length * 80">
           <template slot-scope="scope">
             <el-button v-for="(item, index) in operaColums" :key="item.label" :type="item.type"
-              @click="btnClick(scope.row, index)" plain size="small"
-              v-show="item.show != '1' && $route.path != ($route.path !== '/Main/Gar' || $route.path !== '/Main/Ser')">{{
-                item.label }}
+              @click="btnClick(scope.row, index)" plain size="small" v-show="getShowDelet(item)">{{ item.label }}
             </el-button>
           </template>
         </el-table-column>
@@ -131,8 +129,36 @@ export default {
     },
     getFileName(filePath) {
       return filePath.split('/').pop();
-    }
+    },
+    //判断是否显示删除按钮的权限
+    getShowDelet(item) {
 
+        if ((item.show === '0' || item.show === '2') && (this.$route.path === '/Main/Gar' || this.$route.path === '/Main/Ser')) {
+          return false
+        }
+        else {
+          return true
+        }
+    }
+  },
+/*   watch: {
+    '$route.path': function () {
+      console.log('gaibianbauisia');
+      this.showDelet = this.getShowDelet();
+      this.$forceUpdate();//强制刷新页面
+    },
+    '$storage.role': function () {
+      this.showDelet = this.getShowDelet();
+      this.$forceUpdate();
+    }
+  }, */
+  computed: {
+    showDelet() {
+      return this.getShowDelet();
+    }
+  },
+  mounted() {
+    // this.$forceUpdate(); 
   }
 };
 </script>
@@ -142,20 +168,22 @@ export default {
 .el-dialog__title {
   font-size: 20px;
   color: #333;
-  margin-bottom: 10px; /* 将标题下方的 margin 调整为 10px */
+  margin-bottom: 10px;
+  /* 将标题下方的 margin 调整为 10px */
 }
 
 /* 调整对话框内容样式 */
-.el-dialog__body > div:first-child {
-  margin-top: -105px; /* 将第一个 div 元素的 margin-top 值设为 0 */
+.el-dialog__body>div:first-child {
+  margin-top: -105px;
+  /* 将第一个 div 元素的 margin-top 值设为 0 */
 }
 
 /* 调整对话框内容样式 */
-.el-dialog__body > div {
+.el-dialog__body>div {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  margin-left:20px;
+  margin-left: 20px;
 }
 
 .el-dialog__body a {
@@ -172,7 +200,8 @@ export default {
 .el-dialog__body a:hover {
   color: #409EFF;
 }
-.el-dialog__body > div {
+
+.el-dialog__body>div {
   display: flex;
   align-items: center;
   margin-bottom: -80px;
@@ -184,11 +213,13 @@ export default {
   justify-content: space-between;
   padding-top: 20px;
 }
+
 .dialog-footer .el-button {
   width: 100px;
   height: 40px;
   font-size: 16px;
 }
+
 .dialog-footer .el-button:first-child {
   background-color: #fff;
   border: 1px solid #dcdfe6;
@@ -200,9 +231,9 @@ export default {
   border: none;
   color: #fff;
 }
+
 .dialog-footer .el-button:last-child:hover {
   background-color: #66b1ff;
 }
-
 </style>
   

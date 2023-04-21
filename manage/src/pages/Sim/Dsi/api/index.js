@@ -1,11 +1,21 @@
 import axios from "axios";
 
-// 新增平困生信息
+// 新增贫困生信息
 export const submitForm = (params) => {
     return axios.post('/api/difficultStudent/add', params, {
         headers: {
             'token': localStorage.getItem('token'),
             'Content-Type': 'application/json'
+        }
+    })
+}
+
+//修改贫困生信息
+export const changeFrom = (params) => {
+    return axios.post('/api/difficultStudent/modify', params, {
+        headers: {
+            'token': localStorage.getItem('token'),
+            "Content-Type": 'application/json'
         }
     })
 }
