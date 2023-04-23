@@ -533,14 +533,18 @@ export default {
 
     // 新增信息弹窗关闭时重置表单
     handleClose() {
-      this.$refs.form.resetFields()
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.form.resetFields()
 
-      //关闭后将文件相关显示的数据清空
-      this.fileList = []
-      this.fileName = []
+          //关闭后将文件相关显示的数据清空
+          this.fileList = []
+          this.fileName = []
 
-      this.gepunishList()
-      this.dialogVisible = false
+          this.gepunishList()
+          this.dialogVisible = false
+        })
+        .catch(_ => { });
     },
 
     //导出学生信息
@@ -610,10 +614,14 @@ export default {
       }
     },
     handleCloseFile() {
-      this.radio = '1'
-      this.$refs.fileInput.value = null//关闭前将已选择文件清空
-      this.gepunishList()
-      this.addFileShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.radio = '1'
+          this.$refs.fileInput.value = null//关闭前将已选择文件清空
+          this.gepunishList()
+          this.addFileShow = false
+        })
+        .catch(_ => { });
     }
   },
 

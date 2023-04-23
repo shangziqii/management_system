@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <!-- 搜索学生 -->
+  <div>
+    <!-- 搜索学生 -->
     <div class="searchInfo">
       <!-- 搜索框的显示 -->
       <div>
@@ -11,34 +11,34 @@
         <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentMore"></el-button>
       </div>
     </div>
-     <!-- 导入信息上传文件页面 -->
-     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
-        <form>
-          <input type="file" ref="fileInput">
-        </form>
-        <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-        <el-radio v-model="radio" label="2">不导出原信息</el-radio>
-        <el-button @click="openTip">确认导入</el-button>
-      </el-dialog>
+    <!-- 导入信息上传文件页面 -->
+    <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
+      <form>
+        <input type="file" ref="fileInput">
+      </form>
+      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
+      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      <el-button @click="openTip">确认导入</el-button>
+    </el-dialog>
     <div class="btn">
       <!-- 添加信息按钮 -->
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
-      <el-button type="primary" size="small" @click="addFileShow=true">导入信息</el-button>
+      <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <!-- 导出excel表格 -->
       <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
     </div>
-        <!-- 点击按钮弹出表单添加信息 -->
-        <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-          <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-            <el-form-item label="学号" prop="studentNum">
-              <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名" prop="studentName">
-              <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
-            </el-form-item>
-  
-            <!-- 添加班级表单 -->
-           <!--  <el-form-item label="班级" prop="studentClass">
+    <!-- 点击按钮弹出表单添加信息 -->
+    <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="学号" prop="studentNum">
+          <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="studentName">
+          <el-input placeholder="请输入姓名" v-model="form.studentName"></el-input>
+        </el-form-item>
+
+        <!-- 添加班级表单 -->
+        <!--  <el-form-item label="班级" prop="studentClass">
               <el-input placeholder="请输入班级" v-model="form.studentClass"></el-input>
             </el-form-item> -->
 
@@ -116,7 +116,7 @@
       :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
+    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
   </div>
 </template>
   
@@ -124,7 +124,7 @@
 import Tables from './../../../components/Tabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { punishList, addPunish, removeInfo, changeInfo,search ,exportStuInfo,importStuInfo} from './api'
+import { punishList, addPunish, removeInfo, changeInfo, search, exportStuInfo, importStuInfo } from './api'
 export default {
   name: 'Svrad',
   components: {
@@ -134,7 +134,7 @@ export default {
   data() {
     return {
       radio: '1',//单选框选中状态
-      addFileShow:false,
+      addFileShow: false,
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
@@ -148,12 +148,15 @@ export default {
         searchPoliticalStatus: ''
       }, //根据字段进行搜索
       //导出信息组件的相关参数
-      showSelect:false,
-      cityOptions:['学生学号','学生姓名','学生班级','政治面貌','发展预备导员时间','转正党员时间'],
+      showSelect: false,
+      cityOptions: ['学生学号', '学生姓名', '学生班级', '政治面貌', '发展预备导员时间', '转正党员时间'],
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
         ],
+        studentName: [
+          { required: true, message: '请输入学生姓名' }
+        ]
         /*       studentName: [
                   { required: true, message: '请输入获奖学生姓名' }
                 ], */
@@ -207,7 +210,7 @@ export default {
         if (valid) {
           addPunish(this.form).then((res) => {
             console.log(res);
-            if (res.status === 200) {
+            if (res.data.status === 0) {
               console.log('添加成功');
               this.$message({
                 message: '添加成功',
@@ -215,10 +218,12 @@ export default {
               });
             }
             else {
-              alert('添加失败', res.data.msg)
+              this.$message.error(res.data.msg);
             }
             // 重新获取列表的接口
             this.gepunishList()
+          }).catch((error) => {
+            this.$message.error(error);
           })
           // 重置表单
           this.$refs.form.resetFields()
@@ -229,7 +234,8 @@ export default {
     },
     //删除用户
     deleteStu(value) {
-      this.$confirm('此操作将永久删除该信息, 是否继续?', '提示', {
+      const { studentName } = value
+      this.$confirm(`此操作将永久删除${studentName}的此条信息, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -286,16 +292,24 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$refs.form.resetFields()
-      this.dialogVisible = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.form.resetFields()
+          this.dialogVisible = false
+        })
+        .catch(_ => { });
     },
     //取消函数
     cancel() {
       this.handleClose()
     },
     handleClosechangeInfo() {
-      this.$refs.changeInfoForm.resetFields()
-      this.changeInfoShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.changeInfoForm.resetFields()
+          this.changeInfoShow = false
+        })
+        .catch(_ => { });
     },
     cancel2() {
       this.handleClosechangeInfo()
@@ -304,33 +318,33 @@ export default {
     selectStudentNum() {
       this.showNum = true
       this.showPizeid = false
-      this.showMore=false
+      this.showMore = false
     },
     //选择了使用学生获奖id进行搜索调用设计
     selectPizeid() {
       this.showPizeid = true
       this.showNum = false
-      this.showMore=false
+      this.showMore = false
     },
-    selectMore(){
+    selectMore() {
       this.showPizeid = false
       this.showNum = false
-      this.showMore=true
+      this.showMore = true
     },
     //导出信息的页面是否展示
-    exportShow(){
-      this.showSelect=!this.showSelect;
+    exportShow() {
+      this.showSelect = !this.showSelect;
     },
     //导出学生信息
-    submitSelect(value){
-      exportStuInfo(value).then((res)=>{
+    submitSelect(value) {
+      exportStuInfo(value).then((res) => {
         window.open(res.data.data)
-        this.showSelect=false
+        this.showSelect = false
         this.$message({
           message: '下载成功',
           type: 'success'
         });
-      }).catch((error)=>{
+      }).catch((error) => {
         this.$message.error('未知错误');
       })
     },
@@ -342,8 +356,8 @@ export default {
       this.currentPage = val
       this.gepunishList();
     },
-    searchStudentMore(){
-      if (!this.search.searchPoliticalStatus&&!this.search.searchStudentNum) {
+    searchStudentMore() {
+      if (!this.search.searchPoliticalStatus && !this.search.searchStudentNum) {
         this.$message('请输入内容进行搜索');
         this.gepunishList()
       }
@@ -380,7 +394,7 @@ export default {
             type: 'error'
           });
         })
-      }    
+      }
     },
     handleFileUpload() {
       const file = this.$refs.fileInput.files[0];
@@ -396,8 +410,8 @@ export default {
             type: 'success',
             message: '导入成功!'
           });
-          this.addFileShow=false
-          this.gepunishList(); 
+          this.addFileShow = false
+          this.gepunishList();
         }
         else {
           this.$message({
@@ -437,24 +451,28 @@ export default {
       }
     },
     handleCloseFile() {
-      this.radio = '1'
-      this.$refs.fileInput.value = null//关闭前将已选择文件清空
-      this.gepunishList()
-      this.addFileShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.radio = '1'
+          this.$refs.fileInput.value = null//关闭前将已选择文件清空
+          this.gepunishList()
+          this.addFileShow = false
+        })
+        .catch(_ => { });
     }
   },
-  
-    mounted() {
-      //进来页面直接调用获取学生列表函数
-      this.gepunishList()
-      this.columns=columns
-      this.operaColums=operaColums  
-    }
+
+  mounted() {
+    //进来页面直接调用获取学生列表函数
+    this.gepunishList()
+    this.columns = columns
+    this.operaColums = operaColums
   }
+}
+
+</script>
   
-  </script>
-  
-  <style scoped>
+<style scoped>
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
   display: flex;
@@ -463,21 +481,22 @@ export default {
   align-items: center;
   margin-bottom: 10px;
 }
+
 /* 搜索的按钮 */
 .searchMore {
-margin-left:10px;
+  margin-left: 10px;
 }
 
 /* 搜索框样式 */
-.searchInfo{
-  position:absolute;
-  left:250px;
-  z-index:11;
-  top:120px;
-}
-.input{
-  width: 210px;
-  margin-right:10px;
+.searchInfo {
+  position: absolute;
+  left: 250px;
+  z-index: 11;
+  top: 120px;
 }
 
-  </style>
+.input {
+  width: 210px;
+  margin-right: 10px;
+}
+</style>

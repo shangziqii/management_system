@@ -90,9 +90,8 @@ export default {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          if(this.form.role==='班主任')
-          {
-            this.form.role='2'
+          if (this.form.role === '班主任') {
+            this.form.role = '2'
           }
           // 后续对表单数据的处理
           const form = {
@@ -128,8 +127,12 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$refs.form.resetFields()
-      this.dialogVisible = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.form.resetFields()
+          this.dialogVisible = false
+        })
+        .catch(_ => { });
     },
     cancel() {
       this.handleClose()
@@ -137,7 +140,7 @@ export default {
     // 删除某条用户信息
     handleDelete(row) {
       // console.log(row);
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该条信息, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

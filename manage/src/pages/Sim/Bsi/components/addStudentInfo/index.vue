@@ -59,7 +59,7 @@
     },
     methods: {
       handleClose(done) {
-        this.$confirm('确认关闭？')
+      this.$confirm('确认关闭？')
           .then(_ => {
             this.$emit('change')
             this.$refs.ruleForm.resetFields();

@@ -31,12 +31,12 @@ export const columns = [
 
 export const operaColums = [
     {
-        label: '删除',
-        type: 'danger',
-    },
-    {
         label: '修改',
         type: 'warning',
+    },
+    {
+        label: '删除',
+        type: 'danger',
     }/* ,
     {
         label: '详情',

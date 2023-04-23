@@ -84,7 +84,8 @@
 
 
     <!-- 修改评定记录 -->
-    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo" class="my-dialog">
+    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo"
+      class="my-dialog">
       <el-form ref="changeInfoForm" :rules="changeInfoRules" :model="changeInfoForm" label-width="80px">
         <el-form-item label="专业" prop="major">
           <el-input placeholder="请输入专业名称" v-model="changeInfoForm.major"></el-input>
@@ -287,16 +288,20 @@ export default {
       })
     },
     handleClose() {
-      this.dialogVisible = false
-      this.$refs.scholInfo.resetFields()
-      //关闭后将文件相关显示的数据清空
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.dialogVisible = false
+          this.$refs.scholInfo.resetFields()
+          //关闭后将文件相关显示的数据清空
 
-      this.fileList = []
-      this.fileName = []
-      this.fileList1 = []
-      this.fileName1 = []
+          this.fileList = []
+          this.fileName = []
+          this.fileList1 = []
+          this.fileName1 = []
 
-      this.getList()
+          this.getList()
+        })
+        .catch(_ => { });
     },
     cancel() {
       this.handleClose()
@@ -305,32 +310,36 @@ export default {
       this.changeInfoShow = true
       this.changeInfoForm = value
       //这里判断如果修改信息原本有文件上传，将其转数组存储
-/*       if (this.changeInfoForm.files1 || this.changeInfoForm.files2) {
-        if (this.changeInfoForm.files1) {
-          this.fileList = this.changeInfoForm.files1.split(',')
-        }
-        if (this.changeInfoForm.files2) {
-          this.fileList1 = this.changeInfoForm.files2.split(',')
-        }
-      } */
-      if(this.changeInfoForm.files1){
-        this.fileList=this.changeInfoForm.files1.split(',')
+      /*       if (this.changeInfoForm.files1 || this.changeInfoForm.files2) {
+              if (this.changeInfoForm.files1) {
+                this.fileList = this.changeInfoForm.files1.split(',')
+              }
+              if (this.changeInfoForm.files2) {
+                this.fileList1 = this.changeInfoForm.files2.split(',')
+              }
+            } */
+      if (this.changeInfoForm.files1) {
+        this.fileList = this.changeInfoForm.files1.split(',')
       }
-      if(this.changeInfoForm.files2){
-        this.fileList1=this.changeInfoForm.files2.split(',')
+      if (this.changeInfoForm.files2) {
+        this.fileList1 = this.changeInfoForm.files2.split(',')
       }
     },
     handleCloseChangeInfo() {
-      this.changeInfoShow = false
-      this.$refs.changeInfoForm.resetFields()
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.changeInfoShow = false
+          this.$refs.changeInfoForm.resetFields()
 
-      //关闭后将文件相关显示的数据清空
-      this.fileList = []
-      this.fileName = []
-      this.fileList1 = []
-      this.fileName1 = []
+          //关闭后将文件相关显示的数据清空
+          this.fileList = []
+          this.fileName = []
+          this.fileList1 = []
+          this.fileName1 = []
 
-      this.getList()
+          this.getList()
+        })
+        .catch(_ => { });
     },
     cancel1() {
       this.handleCloseChangeInfo()
@@ -552,7 +561,7 @@ export default {
     cancelUp1(item) {
       this.fileList1.splice(this.fileList1.indexOf(item), 1);
     }
-    
+
 
   },
   mounted() {
@@ -608,11 +617,11 @@ export default {
 }
 
 /* 多文件显示样式 */
- .item {
+.item {
   position: relative;
 }
 
-.el-icon-error{
+.el-icon-error {
   font-size: 21px;
   color: indianred;
 }
@@ -644,5 +653,5 @@ export default {
 
 .el-dialog__body a:hover {
   color: #409EFF;
-} 
+}
 </style>

@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 
 import detail from './detail'
 import showNav from './showNav'
+// import menu from './menu'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     modules: {
         detail,
-        showNav
+        showNav,
+        // menu
     },
     plugins: [
         createPersistedState({

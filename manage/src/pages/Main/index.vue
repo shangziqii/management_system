@@ -2,10 +2,13 @@
   <div class="main">
     <el-container style="width:100%; height:100%">
       <el-aside width="200px">
-        <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-           background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
+       <!--  <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+          background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router> -->
+          <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+          background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
           <h3>管理系统</h3>
-          <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow!=2)" :key="item.name" :index="item.name" @click="clickMenu(item)">
+          <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow != 2)"
+            :key="item.name" :index="item.name" @click="clickMenu(item)" :style="{ color: active === item.path ? activeColor : '' }">
             <i :class="`el-icon-${item.icon}`"></i>
             <span slot="title">{{ item.label }}</span>
           </el-menu-item>
@@ -16,7 +19,7 @@
               <span slot="title">{{ item.label }}</span>
             </template>
             <el-menu-item-group v-for="subItem in item.children" :key="subItem.label">
-              <el-menu-item :index="subItem.label" @click="clickMenu(subItem)">{{ subItem.label }}</el-menu-item>
+              <el-menu-item :index="subItem.label" @click="clickMenu(subItem)" :style="{ color: active === subItem.path ? activeColor : '' }">{{ subItem.label }}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -29,11 +32,11 @@
           <div class="l-content">
             <!-- <el-button icon="el-icon-menu" size="mini"></el-button> -->
             <div>
-            <img src="./../../assets/img/logo_jw_w.png" alt="">
-          </div>
+              <img src="./../../assets/img/logo_jw_w.png" alt="">
+            </div>
           </div>
           <!-- 右侧header -->
-          
+
           <div class="r-content">
             <el-dropdown>
               <span class="el-dropdown-link">
@@ -52,7 +55,7 @@
             </el-breadcrumb> -->
           </div>
         </el-header>
-        <CommonTag/>
+        <CommonTag />
         <div class="mainContent">
           <el-main>
             <router-view>
@@ -82,7 +85,7 @@ export default {
           name: "Pim",
           label: "个人信息管理",
           icon: "user-solid",
-          index: "/Main/Pim"
+          index: "/Main/Pim",
         },
         {
           path: "/Main/Am",
@@ -90,7 +93,7 @@ export default {
           label: "账号管理",
           icon: "s-order",
           url: "/Main/Am",
-          disabled:true
+          disabled: true
         },
         {
           path: "/Main/Cim",
@@ -135,11 +138,11 @@ export default {
               url: "/Main/Sim/Svrad",
             },
             {
-              path:'/Main/Sim/Pm',
-              name:'Pm',
-              label:'学生党员信息',
-              icon:'tickets',
-              url:'/Main/Sim/Pm'
+              path: '/Main/Sim/Pm',
+              name: 'Pm',
+              label: '学生党员信息',
+              icon: 'tickets',
+              url: '/Main/Sim/Pm'
             }
           ]
         },
@@ -157,7 +160,9 @@ export default {
           icon: "s-order",
           url: "/Main/Ser",
         },
-      ]
+      ],
+      active:'/Main/Pim',
+      activeColor: "#ffd04b" // 设置默认颜色为红色
     }
   },
   methods: {
@@ -167,13 +172,27 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+
     clickMenu(item) {
+      this.active=item.path
+      window.sessionStorage.setItem("activeRouter",item.path)
       if (this.$route.path !== item.path) {
         this.$router.push(item.path)
       }
       // 调用mutation来操作面包屑
       this.$store.commit('selectMenu', item)
+
     },
+    /*  clickMenu(item) {
+       if (this.$route.path !== item.path) {
+         this.$router.push(item.path)
+       }
+       // 调用mutation来操作面包屑
+       this.$store.commit('selectMenu', item)
+ 
+       //vuex存储当前选中的菜单索引值
+       this.$store.commit('currentMenuIndex', item.index)
+     }, */
     quitUser() {
       localStorage.removeItem('token')
     },
@@ -191,42 +210,58 @@ export default {
       tags: state => state.detail.tabsList
     }),
     //接收vuex中获取的权限状态，来进行条件禁用侧边栏的项目
-     roleShow(){
+    roleShow() {
       return this.$store.state.showNav.permission
-    } 
+    },
+    activeColor() {
+      return "pink"; // 返回作为活动颜色
+    }
+
+
+    /*     activeRoute() {
+          return this.$route.path;
+        } */
   },
+  mounted(){
+    this.active=window.sessionStorage.getItem("activeRouter")
+
+  }
 }
 </script>
 
 <style scoped>
-
 /* 隐藏侧边导航栏下边的滚动条 */
 .el-aside::-webkit-scrollbar {
-     display: none;
+  display: none;
 }
 
-.r-content{
-  position:absolute;
-  right:10px;
+.r-content {
+  position: absolute;
+  right: 10px;
   width: 50px;
 }
-.l-content{
-  position:absolute;
-  left:10px;
-  top:5px;
+
+.l-content {
+  position: absolute;
+  left: 10px;
+  top: 5px;
   /* width: 50px; */
 }
+
 .el-dropdown-link {
-    cursor: pointer;
-  }
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
+  cursor: pointer;
+}
+
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+
 .el-button {
   position: absolute;
   top: 15px;
   left: 20px;
 }
+
 .el-breadcrumb {
   position: absolute;
   top: 25px;
@@ -271,35 +306,56 @@ export default {
   text-align: center;
   line-height: 48px;
 }
+
 .l-content /deep/ .el-breadcrumb__item .el-breadcrumb__inner {
   font-weight: normal;
 
 }
-.l-content /deep/ .el-breadcrumb__item .el-breadcrumb__inner.is-link{
+
+.l-content /deep/ .el-breadcrumb__item .el-breadcrumb__inner.is-link {
   color: #666;
 }
-.l-content /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner{
+
+.l-content /deep/ .el-breadcrumb__item:last-child .el-breadcrumb__inner {
   /* color: #fff; */
-  color:#000;
+  color: #000;
 }
+
 .mainContent {
   margin-top: 30px;
 }
+
 .el-breadcrumb[data-v-c9c526c0] {
-    position: absolute;
-    /* top: 59px; */
-    top: 77px;
-    left: 4px;
-    z-index: 15;
-    width: 1000px;
+  position: absolute;
+  /* top: 59px; */
+  top: 77px;
+  left: 4px;
+  z-index: 15;
+  width: 1000px;
 }
+
 .tabs[data-v-7a918e6e] {
-    position: absolute;
-    left: 210px;
-    /* top: 67px; */
-    top: 103px;
-    margin: 10px 0;
-    z-index:1;
+  position: absolute;
+  left: 210px;
+  /* top: 67px; */
+  top: 103px;
+  margin: 10px 0;
+  z-index: 1;
+}
+
+/* 新增 */
+/* .el-menu-item.active,
+.el-submenu.is-active > .el-submenu__title {
+  background-color: #409EFF;
+  color: #fff;
+} */
+
+/* .el-menu-item.is-active {
+          color: #6681FA!important;
+          background-color: #EAEEFF!important;
+        } */
+.el-menu-item {
+  color:white;
 }
 
 </style>

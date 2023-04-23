@@ -24,8 +24,9 @@
       :currentPage="currentPage" @click_1="changeStudentInfo" @click_2="deletePoorStudent" @changeLimit="changeLimit"
       @changePage="changePage" />
     <AddPoorStudentInfo :isShow="isShow" @changeShow="changeShow" @submit="submit" />
-    <ModifyStudentInfo :isChangeInfoShow="isChangeInfoShow" @changeInfoShow="changeInfoShow" @submit="submitChangeInfo" :studentInfo="studentInfo"/>
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
+    <ModifyStudentInfo :isChangeInfoShow="isChangeInfoShow" @changeInfoShow="changeInfoShow" @submit="submitChangeInfo"
+      :studentInfo="studentInfo" />
+    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
   </div>
 </template>
 
@@ -133,34 +134,47 @@ export default {
 
     //删除对应信息调用函数
     deletePoorStudent(val) {
-      const difficultId = val.voDifficultId;
-      const params = {
-        difficultId
-      };
-      const instance = deleteStu(params);
-      instance.then((res) => {
-        const { status, msg } = res.data;
-        if (status === 0) {
-          this.$message({
-            type: 'success',
-            message: msg
+      const { studentName } = val;
+      this.$confirm(`您确定要删除${studentName}信息吗?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(_ => {
+          const difficultId = val.difficultId;
+          const params = {
+            difficultId
+          };
+          const instance = deleteStu(params);
+          instance.then((res) => {
+            const { status, msg } = res.data;
+            if (status === 0) {
+              this.$message({
+                type: 'success',
+                message: msg
+              })
+              this.currentPage = 1;
+              this.pageLimit = 5;
+              this.getTableList();
+            } else {
+              this.$message({
+                type: 'error',
+                message: msg,
+              })
+            }
           })
-          this.currentPage = 1;
-          this.pageLimit = 5;
-          this.getTableList();
-        } else {
-          this.$message({
-            type: 'error',
-            message: msg,
-          })
-        }
-      })
-        .catch((err) => {
-          this.$message({
-            type: 'error',
-            message: '前方拥堵，请稍后再试！',
-          })
+            .catch((err) => {
+              this.$message({
+                type: 'error',
+                message: '前方拥堵，请稍后再试！',
+              })
+            })
         })
+        .catch(()=>{
+          this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+        });
     },
 
     //修改页面显示的数量和页面
@@ -236,10 +250,14 @@ export default {
 
     //关闭导入信息页面前调用的函数
     handleClose() {
-      this.radio = '1'
-      this.$refs.fileInput.value = null//关闭前将已选择文件清空
-      this.getTableList()
-      this.addFileShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.radio = '1'
+          this.$refs.fileInput.value = null//关闭前将已选择文件清空
+          this.getTableList()
+          this.addFileShow = false
+        })
+        .catch(_ => { });
     },
 
     //点击导入信息按钮调用的函数
@@ -337,7 +355,7 @@ export default {
     changeStudentInfo(value) {
       // 传递数据到子组件
       this.isChangeInfoShow = true;
-      this.studentInfo=value
+      this.studentInfo = value
     }
   },
   mounted() {

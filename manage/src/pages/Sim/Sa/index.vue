@@ -1,25 +1,26 @@
 <template>
   <div>
     <!-- 搜索学生 -->
-      <div class="searchInfo">
-        <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
-          <!-- @change="onChange" -->
-        </el-input>
-        <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
+    <div class="searchInfo">
+      <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input"
+        placeholder="请输入学生学号" clearable>
+        <!-- @change="onChange" -->
+      </el-input>
+      <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
     </div>
-     <!-- 导入信息上传文件页面 -->
-     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
-        <form>
-          <input type="file" ref="fileInput">
-        </form>
-        <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-        <el-radio v-model="radio" label="2">不导出原信息</el-radio>
-        <el-button @click="openTip">确认导入</el-button>
-      </el-dialog>
+    <!-- 导入信息上传文件页面 -->
+    <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
+      <form>
+        <input type="file" ref="fileInput">
+      </form>
+      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
+      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      <el-button @click="openTip">确认导入</el-button>
+    </el-dialog>
     <div class="btn">
       <!-- 添加信息按钮 -->
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
-      <el-button type="primary" size="small" @click="addFileShow=true">导入信息</el-button>
+      <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <!-- 导出excel表格 -->
       <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
     </div>
@@ -55,8 +56,8 @@
         <el-form-item label="奖状电子版" prop="files">
           <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input>
           <div>
-            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers" :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
+            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
+              :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -111,8 +112,8 @@
           <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input> -->
           <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input>
           <div>
-            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers" :on-success="handleAvatarSuccess2"
-              :before-upload="beforeAvatarUpload">
+            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
+              :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -127,7 +128,7 @@
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
       :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage"
       @changeLimit="changeLimit" />
-     <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect"/>
+    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
   </div>
 </template>
 
@@ -135,8 +136,8 @@
 import ImgTabels from './../../../components/ImgTabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
-import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum ,submitPictureTo,exportStuInfo,importStuInfo} from './api'
-var token =  localStorage.getItem('token')
+import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum, submitPictureTo, exportStuInfo, importStuInfo } from './api'
+var token = localStorage.getItem('token')
 export default {
   name: 'Sa',
   components: {
@@ -145,7 +146,7 @@ export default {
   },
   data() {
     return {
-      radio:'1',
+      radio: '1',
       imageUrl: '',
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
@@ -155,15 +156,15 @@ export default {
       columns: [],//列表配置
       operaColums: [],//操作按钮配置
       dialogVisible: false,//弹出窗口是否显示参数
-      addFileShow:false,
+      addFileShow: false,
       search: {
         studentNum: ''
       }, //根据字段进行搜索
-      headers:{
-        token:token
+      headers: {
+        token: token
       },
-      showSelect:false,
-      cityOptions:['学号','学生姓名','学生班级','奖项名称','奖项等级','获奖时间','指导老师','奖状电子版'],
+      showSelect: false,
+      cityOptions: ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '奖状电子版'],
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -175,9 +176,9 @@ export default {
         className: [
           { required: true, message: '请输入获奖学生班级' }
         ], */
-        className:[
+        className: [
           {
-            required:false
+            required: false
           }
         ],
         prizeName: [
@@ -224,7 +225,7 @@ export default {
       },//修改信息的规则
       changeInfoShow: false,
       changeInfoForm: {}
-        }
+    }
   },
   methods: {
     //拉取获奖学生列表
@@ -233,7 +234,7 @@ export default {
       const params = {
         page: this.currentPage,
         pageLimit: this.pageLimit,
-        
+
       }
       console.log(params);
       //发送获取学生列表的请求
@@ -274,7 +275,9 @@ export default {
     },
     //删除用户
     deleteStu(value) {
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      const { studentName } = value;
+
+      this.$confirm(`此操作将永久删除${studentName}的该条信息, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -335,18 +338,26 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$refs.form.resetFields()
-      this.dialogVisible = false
-      this.geWinnerList()
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.form.resetFields()
+          this.dialogVisible = false
+          this.geWinnerList()
+        })
+        .catch(_ => { });
     },
     //取消函数
     cancel() {
       this.handleClose()
     },
     handleCloseChangeInfo() {
-      this.$refs.changeInfoForm.resetFields()
-      this.geWinnerList()
-      this.changeInfoShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.$refs.changeInfoForm.resetFields()
+          this.geWinnerList()
+          this.changeInfoShow = false
+        })
+        .catch(_ => { });
     },
     cancel2() {
       this.handleCloseChangeInfo()
@@ -355,7 +366,7 @@ export default {
     searchStudentNum() {
       // console.log("使用学生学号进行搜索");
       const studentNum = this.search.studentNum.replace(/\s+/g, '');
-      if (studentNum==='') {
+      if (studentNum === '') {
         // console.log('数据为空');
         this.$message('请输入内容进行搜索');
         this.geWinnerList()
@@ -412,12 +423,12 @@ export default {
     //提交获奖电子证书方法
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      this.form.files=res.data
+      this.form.files = res.data
     },
     //提交修改页面的电子证书方法
     handleAvatarSuccess2(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      this.changeInfoForm.files=res.data
+      this.changeInfoForm.files = res.data
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
@@ -434,29 +445,29 @@ export default {
 
     // 覆盖默认的上传行为，可以自定义上传的实现
     // 提交表单信息具体方法
-   /*  submitPicture(param){
-      let fd=new FormData()
-      fd.append('uploadFile',param.file)
-      submitPictureTo(fd).then((res)=>{
-        console.log(res);
-      }) 
-    } */
+    /*  submitPicture(param){
+       let fd=new FormData()
+       fd.append('uploadFile',param.file)
+       submitPictureTo(fd).then((res)=>{
+         console.log(res);
+       }) 
+     } */
     //导出学生信息
-    submitSelect(value){
-      exportStuInfo(value).then((res)=>{
+    submitSelect(value) {
+      exportStuInfo(value).then((res) => {
         window.open(res.data.data)
-        this.showSelect=false
+        this.showSelect = false
         this.$message({
           message: '下载成功',
           type: 'success'
         });
-      }).catch((error)=>{
+      }).catch((error) => {
         this.$message.error('未知错误');
       })
     },
     //导出信息页面的是否展示
-    exportShow(){
-      this.showSelect=!this.showSelect;
+    exportShow() {
+      this.showSelect = !this.showSelect;
     },
     handleFileUpload() {
       const file = this.$refs.fileInput.files[0];
@@ -472,8 +483,8 @@ export default {
             type: 'success',
             message: '导入成功!'
           });
-          this.addFileShow=false
-          this.geWinnerList(); 
+          this.addFileShow = false
+          this.geWinnerList();
         }
         else {
           this.$message({
@@ -513,10 +524,14 @@ export default {
       }
     },
     handleCloseFile() {
-      this.radio = '1'
-      this.$refs.fileInput.value = null//关闭前将已选择文件清空
-      this.geWinnerList()
-      this.addFileShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.radio = '1'
+          this.$refs.fileInput.value = null//关闭前将已选择文件清空
+          this.geWinnerList()
+          this.addFileShow = false
+        })
+        .catch(_ => { });
     }
   },
 
@@ -531,7 +546,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
   display: flex;
@@ -540,21 +554,23 @@ export default {
   align-items: center;
   margin-bottom: 10px;
 }
+
 /* 搜索的按钮 */
 .searchMore {
-margin-left:10px;
+  margin-left: 10px;
 }
 
 /* 搜索框样式 */
-.searchInfo{
-  position:absolute;
-  left:250px;
-  z-index:11;
-  top:120px;
+.searchInfo {
+  position: absolute;
+  left: 250px;
+  z-index: 11;
+  top: 120px;
 }
-.input{
+
+.input {
   width: 250px;
-  margin-right:10px;
+  margin-right: 10px;
 }
 
 /* 上传图片文件的相关样式 */

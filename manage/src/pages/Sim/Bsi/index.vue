@@ -34,8 +34,9 @@
         <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
       </div>
       <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
-        :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @click_3="details" @changeLimit="changeLimit"
+        :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changeLimit="changeLimit"
         @changePage="changePage" />
+      <!-- @click_3="details" -->
       <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm" />
       <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" />
       <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
@@ -161,10 +162,14 @@ export default {
         })
     },
     handleClose() {
-      this.radio = '1'
-      this.$refs.fileInput.value = null//关闭前将已选择文件清空
-      this.getTableList()
-      // this.addFileShow = false
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.radio = '1'
+          this.$refs.fileInput.value = null//关闭前将已选择文件清空
+          this.getTableList()
+          this.addFileShow = false
+        })
+        .catch(_ => { });
     },
     modify(values) {
       this.modifyFormShow = true;
@@ -198,9 +203,8 @@ export default {
         })
     },
     deleteStu(values) {
-      console.log(values)
       const { studentId, studentName } = values;
-      this.$confirm(`您确定要删除${studentName}信息吗?`, '提示', {
+      this.$confirm(`您确定要删除${studentName}的信息吗?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -276,7 +280,7 @@ export default {
         }
         getList(searchInfo).then((res) => {
           if (res.data.status === 0) {
-            if (res.data.data.students.length>0) {
+            if (res.data.data.students.length > 0) {
               this.tableList = res.data.data.students
               this.$message({
                 message: '搜索成功',
