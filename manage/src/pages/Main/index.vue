@@ -43,8 +43,7 @@
                 <span class="el-icon-user-solid"></span><i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人空间</el-dropdown-item>
-                <el-dropdown-item @click="quitUser">退出登录</el-dropdown-item>
+                <el-dropdown-item @click.native="quitUser()">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -183,18 +182,20 @@ export default {
       this.$store.commit('selectMenu', item)
 
     },
-    /*  clickMenu(item) {
-       if (this.$route.path !== item.path) {
-         this.$router.push(item.path)
-       }
-       // 调用mutation来操作面包屑
-       this.$store.commit('selectMenu', item)
- 
-       //vuex存储当前选中的菜单索引值
-       this.$store.commit('currentMenuIndex', item.index)
-     }, */
     quitUser() {
-      localStorage.removeItem('token')
+      this.$confirm(`是否确认退出`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('token')
+        this.$router.push('/Login');
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消退出'
+        });
+      });
     },
   },
   computed: {
@@ -212,9 +213,6 @@ export default {
     //接收vuex中获取的权限状态，来进行条件禁用侧边栏的项目
     roleShow() {
       return this.$store.state.showNav.permission
-    },
-    activeColor() {
-      return "pink"; // 返回作为活动颜色
     }
 
 
