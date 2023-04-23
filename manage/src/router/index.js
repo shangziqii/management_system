@@ -170,14 +170,14 @@ const tokenTest = () => {
 let hasAlerted = false
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
-/* router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
     if (to.path !== '/Login') {
         tokenTest().then(res => {
-            if(res.data.data.userId !== -1) {
+            if (res.data.data.userId !== -1) {
                 next()
             } else {
-                 // 如果已经弹窗，则不再重复弹窗
-                 if (!hasAlerted) {
+                // 如果已经弹窗，则不再重复弹窗
+                if (!hasAlerted) {
                     alert('未登录，请先登录！')
                     hasAlerted = true
                 }
@@ -189,7 +189,7 @@ let hasAlerted = false
     } else {
         next()
     }
-}) */
+})
 /* const protectedRoutes = ['/Main', '/Pim', '/Am', '/Cim', '/Sim', '/Gar', '/Ser', '/Details', '/ClassLesson', '/ClassMeet', '/ClassTalk', '/Dormitory', '/Bsi', '/Dsi', '/Sa', '/Svrad', '/Pm', '/InfoDetails'];
 
 router.beforeEach((to, from, next) => {
