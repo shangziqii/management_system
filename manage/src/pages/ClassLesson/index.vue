@@ -175,6 +175,8 @@ export default {
       },
       changeInfoShow: false,
       changeInfoForm: {},
+      originalData: null, //用于判断表单是否修改
+      isFormInitialized: false, // 默认表单未初始化
       changRules: {
         listeningId: [
           { required: true, message: '请输入听课ID' }
@@ -302,7 +304,8 @@ export default {
     },
     //修改信息
     modify(value) {
-      // console.log(value);
+      this.isFormInitialized = true // 初始化表单
+      this.originalData = { ...value }; // 存储原始数据
       this.changeInfoShow = true
       this.changeInfoForm = value
       //这里判断如果修改信息原本有文件上传，将其转数组存储
@@ -312,11 +315,23 @@ export default {
     },
     // 修改表单关闭逻辑
     handleCloseChangeInfo() {
-      this.$refs.changeInfoForm.resetFields()
-      //关闭后将文件相关显示的数据清空
-      this.fileList = []
-      this.fileName = []
-      this.changeInfoShow = false
+      if (this.isDataChanged) { // 如果修改过，就弹窗提示
+        this.$confirm('表单已更改，确认关闭？')
+        .then(_ => {
+          this.$refs.changeInfoForm.resetFields()
+          //关闭后将文件相关显示的数据清空
+          this.fileList = []
+          this.fileName = []
+          this.changeInfoShow = false
+        })
+        .catch(_ => { });
+      } else {
+        this.$refs.changeInfoForm.resetFields()
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+        this.changeInfoShow = false
+      }
     },
     cancel2() {
       this.handleCloseChangeInfo()
@@ -402,7 +417,7 @@ export default {
     //获取文件类型对应图标
     getFileIcon(filePath) {
       const extension = filePath.split('.').pop();
-      console.log(extension);
+      // console.log(extension);
       switch (extension) {
         case 'jpg':
           return require('@/assets/img/JPG.png')
@@ -431,7 +446,7 @@ export default {
       if (this.fileName.length != 0) {
         for (let i = 0; i < this.fileName.length; i++) {
           if (this.fileName[i].file === item) {
-            console.log('yes', this.fileName[i].name);
+            // console.log('yes', this.fileName[i].name);
             return this.fileName[i].name
           }
           else {
@@ -450,6 +465,14 @@ export default {
       this.fileList.splice(this.fileList.indexOf(item), 1);
     },
 
+  },
+  computed: {
+    isDataChanged() {
+      if (!this.isFormInitialized) {
+        return false; // 如果表单未初始化，代表新建操作，返回false
+      }
+      return JSON.stringify(this.changeInfoForm) !== JSON.stringify(this.originalData);
+    },
   },
   mounted() {
     this.showLessonList()
