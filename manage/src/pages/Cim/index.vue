@@ -20,7 +20,7 @@
       </span>
     </el-dialog> -->
       <!-- 查询后展示班级信息的对话框 -->
-      <el-dialog title="班级信息" :visible.sync="infoVisible" width="30%" :before-close="handleClose3">
+      <!-- <el-dialog title="班级信息" :visible.sync="infoVisible" width="30%" :before-close="handleClose3">
         <ul class="classInfoShow">
           <li><span>班级ID：</span> {{ getClassData.classId }}</li>
           <li><span>班级名称：</span> {{ getClassData.className }}</li>
@@ -33,7 +33,7 @@
           <li><span>班长：</span>{{ getClassData.monitor }}</li>
           <li><span>学习委员：</span>{{ getClassData.studyCommittee }}</li>
         </ul>
-      </el-dialog>
+      </el-dialog> -->
       <!-- 添加班级信息弹窗 -->
       <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px">
@@ -193,7 +193,7 @@ export default {
         dormitory: '',//宿舍
         monitor: '',//班长
         studyCommittee: '',//学习委员
-        userId: '',//辅导员Id
+        userId: -1,//辅导员Id
       },
       // 查询班级信息
       searchInfo: {
@@ -201,7 +201,7 @@ export default {
       },
       dialogVisible: false,
       dialogVisible2: false,
-      infoVisible: false,
+      // infoVisible: false,
       rules: {
         className: [
           { required: true, message: '请输入班级名称' }
@@ -244,6 +244,8 @@ export default {
       },
       changeInfoShow: false,
       changeInfoForm: {},
+      originalData: null, //用于判断表单是否修改
+      isFormInitialized: false, // 默认表单未初始化
       changRules: {
         classId: [
           { required: true, message: '请输入班级ID' }
@@ -296,21 +298,26 @@ export default {
         })
         .catch(_ => { });
     },
-    handleClose2() {
-      this.$refs.searchInfo.resetFields()
-      this.dialogVisible2 = false
-    },
-    handleClose3() {
-      this.infoVisible = false
-    },
+    // handleClose2() {
+    //   this.$refs.searchInfo.resetFields()
+    //   this.dialogVisible2 = false
+    // },
+    // handleClose3() {
+    //   this.infoVisible = false
+    // },
     // 修改表单关闭逻辑
     handleCloseChangeInfo() {
-      this.$confirm('确认关闭？')
+      if (this.isDataChanged) { // 如果修改过，就弹窗提示
+        this.$confirm('表单已更改，确认关闭？')
         .then(_ => {
           this.$refs.changeInfoForm.resetFields()
           this.changeInfoShow = false
         })
         .catch(_ => { });
+      } else {
+        this.$refs.changeInfoForm.resetFields()
+        this.changeInfoShow = false
+      }
     },
     cancel() {
       this.handleClose()
@@ -356,36 +363,36 @@ export default {
         }
       })
     },
-    submit2() {
-      this.$refs.searchInfo.validate((valid) => {
-        if (valid) {
-          // 后续对表单数据的处理
-          const searchInfo = {
-            classId: this.searchInfo.classId
-          }
-          searchClass(searchInfo).then((res) => {
-            const { data } = res.data
-            console.log(data);
-            if (data === null) {
-              this.$message({
-                message: '不存在该班级信息',
-                type: 'error'
-              });
-              return
-            }
-            // 获取到班级信息后，对应填入展示卡片中
-            this.getClassData = data
-            // console.log(this.getClassData);
+    // submit2() {
+    //   this.$refs.searchInfo.validate((valid) => {
+    //     if (valid) {
+    //       // 后续对表单数据的处理
+    //       const searchInfo = {
+    //         classId: this.searchInfo.classId
+    //       }
+    //       searchClass(searchInfo).then((res) => {
+    //         const { data } = res.data
+    //         console.log(data);
+    //         if (data === null) {
+    //           this.$message({
+    //             message: '不存在该班级信息',
+    //             type: 'error'
+    //           });
+    //           return
+    //         }
+    //         // 获取到班级信息后，对应填入展示卡片中
+    //         this.getClassData = data
+    //         // console.log(this.getClassData);
 
-          })
-          this.handleClose2()
-          // 将原本隐藏的展示卡片显示出来
-          if (this.getClassData !== null) {
-            this.infoVisible = true
-          }
-        }
-      })
-    },
+    //       })
+    //       this.handleClose2()
+    //       // 将原本隐藏的展示卡片显示出来
+    //       if (this.getClassData !== null) {
+    //         this.infoVisible = true
+    //       }
+    //     }
+    //   })
+    // },
     //获取班级列表
     getClassList() {
       const params = {
@@ -410,6 +417,8 @@ export default {
       })
     },
     edit(value) {
+      this.isFormInitialized = true // 初始化表单
+      this.originalData = { ...value }; // 存储原始数据
       this.changeInfoShow = true
       this.changeInfoForm = value
     },
@@ -476,7 +485,7 @@ export default {
     },
     getSimpleList() {
       simpleList().then(res => {
-        // console.log(res.data);
+        console.log(res.data.data);
         if (res.status === 200) {
           this.UserIdList = res.data.data
         }
@@ -500,14 +509,22 @@ export default {
     },
     // 最终选择的数据
     handleSelect(val) {
-      // console.log(val, '选择')
-      this.classInfo.userId = val.userId
+      // this.classInfo.userId = String(val.userId) 
+      this.classInfo.userId = val.userId 
     },
     // 点击clearable清空小图标按钮以后，继续重新在输入框中输入数据，querySearch会触发，但是cb函数不会触发
     // 这样的话就会出现发请求了，也获取数据了，但是input框的输入建议下拉框不呈现在页面上的问题，所以解决方法就是
     // 只要用户点击了clearable清空按钮以后，就让当前获取焦点的输入框失去焦点，回到最初状态，一切重新开始
     blurForBug() {
       document.activeElement.blur()
+    },
+  },
+  computed: {
+    isDataChanged() {
+      if (!this.isFormInitialized) {
+        return false; // 如果表单未初始化，代表新建操作，返回false
+      }
+      return JSON.stringify(this.changeInfoForm) !== JSON.stringify(this.originalData);
     },
   },
   mounted() {
