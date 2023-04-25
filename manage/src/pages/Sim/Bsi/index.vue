@@ -6,12 +6,7 @@
         <form>
           <input type="file" ref="fileInput">
         </form>
-        <div v-if="icon">
-          <div>hello</div>
-          <file-icon :icon="icon" size="48"></file-icon>
-        </div>
-        <!-- 在这里使用 icon 组件 -->
-        <!-- <component :is="icon" :icon-name="iconName" /> -->
+
         <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
         <el-radio v-model="radio" label="2">不导出原信息</el-radio>
         <el-button @click="openTip">确认导入</el-button>
@@ -38,7 +33,9 @@
         @changePage="changePage" />
       <!-- @click_3="details" -->
       <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm" />
-      <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" />
+      <!-- <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" /> -->
+      <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" :originData="originData"/>
+
       <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
     </div>
     <router-view></router-view>
@@ -78,6 +75,7 @@ export default {
         studentClass: '',
         studentGrade: ''
       }, //根据字段进行搜索
+      originData:{}
     }
   },
   components: {
@@ -116,9 +114,6 @@ export default {
           throw new Error(err);
         })
 
-    },
-    modifyStudnet() {
-      console.log('提交选择信息');
     },
     changeShow() {
       this.addFormShow = !this.addFormShow;
@@ -174,6 +169,8 @@ export default {
     modify(values) {
       this.modifyFormShow = true;
       this.studentInfo = values;
+      //将原始数据进行记录
+      this.originData=values
     },
     submitForm(values) {
       const instance = addStudent(values);

@@ -10,9 +10,9 @@
     </div>
     <!-- 上传文件 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
-      <form>
+      <el-form>
         <input type="file" ref="fileInput">
-      </form>
+      </el-form>
       <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
       <el-radio v-model="radio" label="2">不导出原信息</el-radio>
       <el-button @click="openTip">确认导入</el-button>
@@ -127,7 +127,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel2">取 消</el-button>
-        <el-button type="primary" @click="submitchangeInfo">提 交</el-button>
+        <el-button type="primary" @click="submitchangeInfo">保 存</el-button>
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"

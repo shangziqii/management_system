@@ -157,7 +157,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel1">取 消</el-button>
-        <el-button type="primary" @click="submitChangeInfo">确 定</el-button>
+        <el-button type="primary" @click="submitChangeInfo">保 存</el-button>
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"

@@ -10,9 +10,9 @@
     </div>
     <!-- 导入信息上传文件页面 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
-      <form>
+      <el-form>
         <input type="file" ref="fileInput">
-      </form>
+      </el-form>
       <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
       <el-radio v-model="radio" label="2">不导出原信息</el-radio>
       <el-button @click="openTip">确认导入</el-button>
@@ -54,7 +54,7 @@
 
         <!-- 上传电子版奖状（文件） -->
         <el-form-item label="奖状电子版" prop="files">
-          <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input>
+          <!-- <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input> -->
           <div>
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
@@ -110,7 +110,7 @@
         </el-form-item>
         <el-form-item label="奖状电子版" prop="files">
           <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input> -->
-          <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input>
+          <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input> -->
           <div>
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
               :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload">
@@ -122,7 +122,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel2">取 消</el-button>
-        <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
+        <el-button type="primary" @click="submitChangeInfo">保 存</el-button>
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
@@ -341,6 +341,8 @@ export default {
       this.$confirm('确认关闭？')
         .then(_ => {
           this.$refs.form.resetFields()
+          this.imageUrl = ''
+          this.form.files = ''
           this.dialogVisible = false
           this.geWinnerList()
         })
@@ -354,6 +356,7 @@ export default {
       this.$confirm('确认关闭？')
         .then(_ => {
           this.$refs.changeInfoForm.resetFields()
+          this.imageUrl = ''
           this.geWinnerList()
           this.changeInfoShow = false
         })
@@ -422,8 +425,12 @@ export default {
 
     //提交获奖电子证书方法
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.form.files = res.data
+      if (res.data.state === 0) { // 判断上传是否成功
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.form.files = res.data.url;
+      } else {
+        this.$message.error(res.msg); // 显示上传失败的提示信息
+      }
     },
     //提交修改页面的电子证书方法
     handleAvatarSuccess2(res, file) {
@@ -442,6 +449,7 @@ export default {
       }
       return isJPG && isLt2M;
     },
+
 
     // 覆盖默认的上传行为，可以自定义上传的实现
     // 提交表单信息具体方法

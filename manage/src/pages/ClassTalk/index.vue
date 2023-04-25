@@ -110,7 +110,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel2">取 消</el-button>
-        <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
+        <el-button type="primary" @click="submitChangeInfo">保 存</el-button>
       </span>
     </el-dialog>
 

@@ -170,7 +170,7 @@ const tokenTest = () => {
 let hasAlerted = false
 
 // 全局前置路由守卫---初始化和每次路由切换之前调用
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
     if (to.path !== '/Login') {
         tokenTest().then(res => {
             if (res.data.data.userId !== -1) {
@@ -189,7 +189,8 @@ router.beforeEach((to, from, next) => {
     } else {
         next()
     }
-})
+}) */
+
 /* const protectedRoutes = ['/Main', '/Pim', '/Am', '/Cim', '/Sim', '/Gar', '/Ser', '/Details', '/ClassLesson', '/ClassMeet', '/ClassTalk', '/Dormitory', '/Bsi', '/Dsi', '/Sa', '/Svrad', '/Pm', '/InfoDetails'];
 
 router.beforeEach((to, from, next) => {

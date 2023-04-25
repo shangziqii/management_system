@@ -109,7 +109,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel2">取 消</el-button>
-        <el-button type="primary" @click="submitchangeInfo">提 交</el-button>
+        <el-button type="primary" @click="submitchangeInfo">保 存</el-button>
       </span>
     </el-dialog>
     <Tables :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"

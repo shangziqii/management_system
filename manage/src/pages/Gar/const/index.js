@@ -20,17 +20,17 @@ export const columns = [
         prop: 'status',
     },
     {
-        label: '文件一',
+        label: '申请学生列表',
         prop: 'files1',
         paper: true
     },
     {
-        label: '文件二',
+        label: '评议记录及结果',
         prop: 'files2',
         paper: true
     },
     {
-        label: '文件三',
+        label: '助学金名单及金额',
         prop: 'files3',
         paper: true
     },
