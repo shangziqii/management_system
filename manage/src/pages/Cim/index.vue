@@ -40,10 +40,10 @@
           <el-form-item label="班级名" prop="className">
             <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>
           </el-form-item>
-          <el-form-item label="辅导员ID" prop="userId" v-show="role === '0'">
+          <el-form-item label="辅导员" prop="userName" v-show="role === '0'">
             <!-- <el-input v-model="classInfo.userId" placeholder="请输入辅导员Id"></el-input> -->
-            <el-autocomplete clearable class="handle-input-width" v-model="classInfo.userId" value-key="userId"
-              :fetch-suggestions="FilterUserId" :trigger-on-focus="true" placeholder="请选择辅导员ID" @clear="blurForBug()"
+            <el-autocomplete clearable class="userInput" v-model="classInfo.userName" value-key="name"
+              :fetch-suggestions="FilterUserName" :trigger-on-focus="true" placeholder="请选择辅导员" @clear="blurForBug()"
               @select="handleSelect">
             </el-autocomplete>
           </el-form-item>
@@ -80,10 +80,10 @@
           <el-form-item label="班级名称" prop="className">
             <el-input placeholder="请输入班级名称" v-model="changeInfoForm.className">{{ changeInfoForm.className }}</el-input>
           </el-form-item>
-          <el-form-item label="辅导员Id" prop="userId" v-show="role === '0'">
+          <el-form-item label="辅导员" prop="userName" v-show="role === '0'">
             <!-- <el-input placeholder="请输入辅导员Id" v-model="changeInfoForm.userId">{{ changeInfoForm.userId }}</el-input> -->
-            <el-autocomplete clearable class="handle-input-width" v-model="changeInfoForm.userId" value-key="userId"
-              :fetch-suggestions="FilterUserId" :trigger-on-focus="true" placeholder="请选择辅导员ID" @clear="blurForBug()"
+            <el-autocomplete clearable class="userInput" v-model="changeInfoForm.userName" value-key="name"
+              :fetch-suggestions="FilterUserName" :trigger-on-focus="true" placeholder="请选择辅导员" @clear="blurForBug()"
               @select="handleSelect">
             </el-autocomplete>
           </el-form-item>
@@ -119,44 +119,6 @@
         <Tabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total"
           :limit="pageLimit" :currentPage="currentPage" @click_1="showDetails" @click_2="edit" @click_3="handleDelete"
           @changePage="changePage" />
-        <!-- 班级信息列表 -->
-        <!-- <el-table
-            :data="tableData"
-            style="width: 100%"
-            class="classList"
-            >
-            <el-table-column
-              prop="classId"
-              label="班级ID"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="className"
-              label="班级名称"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="department"
-              label="学院"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="profession"
-              label="专业"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="instructor"
-              label="辅导员"
-              >
-            </el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                <el-button @click="showDetails(scope.row)" size="small">详情</el-button>
-                <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table> -->
       </div>
     </div>
     <router-view></router-view>
@@ -193,8 +155,12 @@ export default {
         dormitory: '',//宿舍
         monitor: '',//班长
         studyCommittee: '',//学习委员
-        userId: -1,//辅导员Id
+        userName: '',
+        userId: ''
       },
+      originalInfo: {
+        userName: ''
+      }, //用于判断表单是否修改
       // 查询班级信息
       searchInfo: {
         classId: '', //班级Id（根据后台文档，目前只能通过Id查询，后续增添查询功能）
@@ -291,12 +257,17 @@ export default {
       this.$router.push('/Main/Cim/Details/Dormitory')
     },
     handleClose() {
-      this.$confirm('确认关闭？')
+      if (this.isInfoChanged) { // 如果修改过，就弹窗提示
+        this.$confirm('表单已更改，确认关闭？')
         .then(_ => {
           this.$refs.classInfo.resetFields()
           this.dialogVisible = false
         })
         .catch(_ => { });
+      } else {
+        this.$refs.classInfo.resetFields()
+        this.dialogVisible = false
+      }
     },
     // handleClose2() {
     //   this.$refs.searchInfo.resetFields()
@@ -311,6 +282,7 @@ export default {
         this.$confirm('表单已更改，确认关闭？')
         .then(_ => {
           this.$refs.changeInfoForm.resetFields()
+          this.changeInfoForm.name = ''
           this.changeInfoShow = false
         })
         .catch(_ => { });
@@ -334,14 +306,16 @@ export default {
           // 后续对表单数据的处理
           const classInfo = {
             className: this.classInfo.className,
-            userId: this.classInfo.userId,
             profession: this.classInfo.profession,
             department: this.classInfo.department,
             grade: this.classInfo.grade,
             dormitory: this.classInfo.dormitory,
             monitor: this.classInfo.monitor,
-            studyCommittee: this.classInfo.studyCommittee
+            studyCommittee: this.classInfo.studyCommittee,
+            userName: this.classInfo.userName,
+            userId: this.classInfo.userId
           }
+          // console.log(classInfo);
           addClass(classInfo).then((res) => {
             // console.log(res);
             if (res.data.msg === '权限不足') {
@@ -359,7 +333,9 @@ export default {
             // 重新获取列表的接口
             this.getClassList()
           })
-          this.handleClose()
+          this.$refs.classInfo.resetFields()
+          this.dialogVisible = false
+
         }
       })
     },
@@ -417,6 +393,7 @@ export default {
       })
     },
     edit(value) {
+      // console.log(value);
       this.isFormInitialized = true // 初始化表单
       this.originalData = { ...value }; // 存储原始数据
       this.changeInfoShow = true
@@ -487,30 +464,32 @@ export default {
       simpleList().then(res => {
         console.log(res.data.data);
         if (res.status === 200) {
-          this.UserIdList = res.data.data
+          this.UserList = res.data.data
         }
       })
     },
     // 辅导员信息列表
-    FilterUserId(queryString, cb) {
-      var UserIdList2 = this.UserIdList;
+    FilterUserName(queryString, cb) {
+      if(queryString == '') {
+        return
+      }
+      var UserList2 = this.UserList;
       var results = queryString
-        ? UserIdList2.filter(this.createFilter(queryString))
-        : UserIdList2;
+        ? UserList2.filter(this.createFilter(queryString))
+        : UserList2;
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
     // 只要该输入内容的都匹配
     createFilter(queryString) {
       return (res) => {
-        // console.log(Array.from(res.userId).indexOf(queryString));
-        // return (res.userId.indexOf(queryString) !== -1);
+        return (res.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
     // 最终选择的数据
     handleSelect(val) {
-      // this.classInfo.userId = String(val.userId) 
-      this.classInfo.userId = val.userId 
+      this.classInfo.userName = val.name 
+      this.classInfo.userId = val.userId
     },
     // 点击clearable清空小图标按钮以后，继续重新在输入框中输入数据，querySearch会触发，但是cb函数不会触发
     // 这样的话就会出现发请求了，也获取数据了，但是input框的输入建议下拉框不呈现在页面上的问题，所以解决方法就是
@@ -526,6 +505,10 @@ export default {
       }
       return JSON.stringify(this.changeInfoForm) !== JSON.stringify(this.originalData);
     },
+    isInfoChanged() {
+      return JSON.stringify(this.classInfo) !== JSON.stringify(this.originalInfo);
+    },
+    
   },
   mounted() {
     this.getSimpleList()
@@ -636,5 +619,8 @@ div /deep/ .el-dialog {
   top: 190px;
   left: 560px;
   z-index: 23;
+}
+.userInput {
+  width: 450.89px;
 }
 </style>

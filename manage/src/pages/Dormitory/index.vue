@@ -138,6 +138,10 @@ export default {
         classId: JSON.parse(sessionStorage.getItem('baseData')).classId,
         files: ''
       },
+      originalForm: {
+        classId: JSON.parse(sessionStorage.getItem('baseData')).classId,
+        files: ''
+      }, //用于判断表单是否修改
       dialogVisible: false,
       rules: {
         classId: [
@@ -234,7 +238,8 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$confirm('确认关闭？')
+      if (this.isInfoChanged) { // 如果修改过，就弹窗提示
+        this.$confirm('表单已更改，确认关闭？')
         .then(_ => {
           this.$refs.form.resetFields()
           //关闭后将文件相关显示的数据清空
@@ -243,6 +248,13 @@ export default {
           this.dialogVisible = false
         })
         .catch(_ => { });
+      } else {
+        this.$refs.form.resetFields()
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+        this.dialogVisible = false
+      }
     },
     //取消函数
     cancel() {
@@ -480,6 +492,9 @@ export default {
         return false; // 如果表单未初始化，代表新建操作，返回false
       }
       return JSON.stringify(this.changeInfoForm) !== JSON.stringify(this.originalData);
+    },
+    isInfoChanged() {
+      return JSON.stringify(this.form) !== JSON.stringify(this.originalForm);
     },
   },
   mounted() {
