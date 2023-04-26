@@ -2,7 +2,7 @@
   <div>
     <div class="btn">
       <!-- 添加信息按钮 -->
-      <el-button type="primary" size="small" @click="dialogVisible = true" v-show="role === 1">添加信息</el-button>
+      <el-button type="primary" @click="dialogVisible = true" v-show="role === 1">添加记录</el-button>
     </div>
     <!-- 添加信息弹窗 -->
     <el-dialog title="添加奖学金评定记录" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -188,7 +188,8 @@ export default {
         scholarshipTime: '',
         status: '已完成',
         files1: '',
-        files2: ''
+        files2: '',
+        selectTime:''
       },
       rules: {
         major: [
@@ -231,7 +232,8 @@ export default {
       fileList: [],//存储上传的文件
       fileName: [],//存储上传后的文件名
       fileList1: [],
-      fileName1: []
+      fileName1: [],
+      recordInfo: {}
     }
   },
   methods: {
@@ -288,20 +290,36 @@ export default {
       })
     },
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.dialogVisible = false
-          this.$refs.scholInfo.resetFields()
-          //关闭后将文件相关显示的数据清空
+      console.log(this.scholInfo);
+      const filled = Object.entries(this.scholInfo).filter(([key, value]) => key !== 'scholarshipTime' && key !== 'status'&&key!=='selectTime').some(([key, value]) => value !== '');
+      if (filled) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.dialogVisible = false
+            this.$refs.scholInfo.resetFields()
+            //关闭后将文件相关显示的数据清空
 
-          this.fileList = []
-          this.fileName = []
-          this.fileList1 = []
-          this.fileName1 = []
+            this.fileList = []
+            this.fileName = []
+            this.fileList1 = []
+            this.fileName1 = []
 
-          this.getList()
-        })
-        .catch(_ => { });
+            this.getList()
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.dialogVisible = false
+        this.$refs.scholInfo.resetFields()
+        //关闭后将文件相关显示的数据清空
+
+        this.fileList = []
+        this.fileName = []
+        this.fileList1 = []
+        this.fileName1 = []
+
+        this.getList()
+      }
     },
     cancel() {
       this.handleClose()
@@ -309,6 +327,7 @@ export default {
     edit(value) {
       this.changeInfoShow = true
       this.changeInfoForm = value
+      this.recordInfo = Object.assign({}, value);
       //这里判断如果修改信息原本有文件上传，将其转数组存储
       /*       if (this.changeInfoForm.files1 || this.changeInfoForm.files2) {
               if (this.changeInfoForm.files1) {
@@ -326,20 +345,34 @@ export default {
       }
     },
     handleCloseChangeInfo() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.changeInfoShow = false
-          this.$refs.changeInfoForm.resetFields()
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.changeInfoShow = false
+            this.$refs.changeInfoForm.resetFields()
 
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
-          this.fileList1 = []
-          this.fileName1 = []
+            //关闭后将文件相关显示的数据清空
+            this.fileList = []
+            this.fileName = []
+            this.fileList1 = []
+            this.fileName1 = []
 
-          this.getList()
-        })
-        .catch(_ => { });
+            this.getList()
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.changeInfoShow = false
+        this.$refs.changeInfoForm.resetFields()
+
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+        this.fileList1 = []
+        this.fileName1 = []
+
+        this.getList()
+      }
     },
     cancel1() {
       this.handleCloseChangeInfo()
@@ -613,7 +646,7 @@ export default {
 }
 
 .tabel {
-  margin-top: 52px;
+  margin-top: 12px;
 }
 
 /* 多文件显示样式 */

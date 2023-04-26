@@ -1,10 +1,13 @@
 <template>
-    <el-dialog title="选择导出参数" :visible.sync="isShow" width="30%" :before-close="handleClose">
+<!--     <el-dialog title="选择导出参数" :visible.sync="isShow" width="30%" :before-close="handleClose">
     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
     <div style="margin: 15px 0;"></div>
     <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
       <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
     </el-checkbox-group>
+    <el-button type="primary" @click="submitSelect('checkedCities')">提交</el-button>
+</el-dialog> -->
+<el-dialog title="导出信息" :visible.sync="isShow" width="30%" :before-close="handleClose">
     <el-button type="primary" @click="submitSelect('checkedCities')">提交</el-button>
 </el-dialog>
   </template>
@@ -43,7 +46,7 @@
           this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
         },
       submitSelect(){
-        console.log(this.checkedCities);
+        /* console.log(this.checkedCities);
         if (this.checkedCities.length!==0) {
             const values = this.checkedCities;
             this.$emit('submit',values)
@@ -53,7 +56,9 @@
               message: '请完善表单数据!',
             })
             return false;
-          }
+          } */
+          const values=['学号', '姓名', '班级', '年龄']
+          this.$emit('submit',values)
       }
       }
     };

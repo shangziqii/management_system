@@ -7,8 +7,8 @@
           <input type="file" ref="fileInput">
         </form>
 
-        <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-        <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+        <el-radio v-model="radio" label="1">备 份</el-radio>
+        <el-radio v-model="radio" label="2">不 备 份</el-radio>
         <el-button @click="openTip">确认导入</el-button>
       </el-dialog>
       <!-- 搜索框的显示 -->
@@ -26,7 +26,8 @@
       <div class="btn">
         <el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button>
         <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
-        <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+        <!-- <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button> -->
+        <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
       </div>
       <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
         :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changeLimit="changeLimit"
@@ -34,9 +35,9 @@
       <!-- @click_3="details" -->
       <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm" />
       <!-- <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" /> -->
-      <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" :originData="originData"/>
+      <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" />
 
-      <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
+      <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
     </div>
     <router-view></router-view>
   </div>
@@ -75,7 +76,6 @@ export default {
         studentClass: '',
         studentGrade: ''
       }, //根据字段进行搜索
-      originData:{}
     }
   },
   components: {
@@ -96,8 +96,10 @@ export default {
         console.log(res);
         const { status, data } = res.data;
         const { students, sum } = data;
+        console.log(sum);
         if (status === 0) {
           this.total = sum;
+          console.log(this.total);
           this.tableList = students;
         } else {
           this.$message({
@@ -169,8 +171,6 @@ export default {
     modify(values) {
       this.modifyFormShow = true;
       this.studentInfo = values;
-      //将原始数据进行记录
-      this.originData=values
     },
     submitForm(values) {
       const instance = addStudent(values);
@@ -244,17 +244,23 @@ export default {
       console.log(val);
       this.$router.push('/Main/Sim/Bsi/InfoDetails')
     },
-    submitSelect(value) {
-      exportStuInfo(value).then((res) => {
-        window.open(res.data.data)
-        this.showSelect = false
-        this.$message({
-          message: '下载成功',
-          type: 'success'
-        });
-      }).catch((error) => {
-        this.$message.error('未知错误');
-      })
+    submitSelect() {
+      this.$confirm('确认导出？')
+        .then(_ => {
+          const value = ['学号', '姓名', '班级', '年龄']
+          exportStuInfo(value).then((res) => {
+            window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+        })
+        .catch(_ => { });
+
     },
     //使用学生学号进行搜索
     searchMoreTo() {

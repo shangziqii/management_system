@@ -6,15 +6,15 @@
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" class="exportInfo" @click="showSelect = true">导出信息</el-button>
+      <el-button type="primary" size="small" class="exportInfo" @click="submitSelect">导出信息</el-button>
     </div>
     <!-- 上传文件 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
       <el-form>
         <input type="file" ref="fileInput">
       </el-form>
-      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      <el-radio v-model="radio" label="1">备 份</el-radio>
+      <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
     <!-- 搜索框的显示 -->
@@ -131,10 +131,10 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
+    <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
   </div>
 </template>
 
@@ -157,7 +157,15 @@ export default {
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
       form: {
-        files: ''
+        className: '',
+        files: '',
+        punishLevel: '',
+        punishName: '',
+        punishTime: '',
+        remarks: '',
+        studentClass: '',
+        studentName: '',
+        studentNum: ''
       },//新增的form表单
       tableData: [],//数据列表
       columns: [],//列表配置
@@ -227,7 +235,8 @@ export default {
 
       //关于文件上传的相关参数
       fileList: [],//存储上传的文件
-      fileName: []//存储上传后的文件名
+      fileName: [],//存储上传后的文件名
+      recordInfo: {}
 
     }
   },
@@ -314,6 +323,7 @@ export default {
       console.log(value);
       this.changeInfoShow = true
       this.changeInfoForm = value
+      this.recordInfo = Object.assign({}, value);
 
       //这里判断如果修改信息原本有文件上传，将其转数组存储
       if (this.changeInfoForm.files) {
@@ -521,44 +531,80 @@ export default {
 
     //修改信息窗口关闭时调用的函数
     handleClosechangeInfo() {
-      this.$refs.changeInfoForm.resetFields()
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.changeInfoForm.resetFields()
 
-      //关闭后将文件相关显示的数据清空
-      this.fileList = []
-      this.fileName = []
+            //关闭后将文件相关显示的数据清空
+            this.fileList = []
+            this.fileName = []
 
-      this.gepunishList()
-      this.changeInfoShow = false
+            this.gepunishList()
+            this.changeInfoShow = false
+          })
+          .catch(_ => { });
+      } else {
+        this.$refs.changeInfoForm.resetFields()
+
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+
+        this.gepunishList()
+        this.changeInfoShow = false
+      }
+
     },
 
     // 新增信息弹窗关闭时重置表单
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.form.resetFields()
+      console.log(this.form);
+      const filled = Object.values(this.form).some(value => value !== '')
+      if (filled) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.form.resetFields()
 
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
+            //关闭后将文件相关显示的数据清空
+            this.fileList = []
+            this.fileName = []
 
-          this.gepunishList()
-          this.dialogVisible = false
-        })
-        .catch(_ => { });
+            this.gepunishList()
+            this.dialogVisible = false
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.form.resetFields()
+
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+
+        this.gepunishList()
+        this.dialogVisible = false
+      }
     },
 
     //导出学生信息
-    submitSelect(value) {
-      exportStuInfo(value).then((res) => {
-        window.open(res.data.data)
-        this.showSelect = false
-        this.$message({
-          message: '下载成功',
-          type: 'success'
-        });
-      }).catch((error) => {
-        this.$message.error('未知错误');
-      })
+    submitSelect() {
+      this.$confirm('确认导出？')
+        .then(_ => {
+          const value = ['学生学号', '学生姓名', '学生班级', '处分等级', '处分名称', '处分时间', '备注', '相关文件']
+          exportStuInfo(value).then((res) => {
+            window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+        })
+        .catch(_ => { });
+
     },
     handleFileUpload() {
       const file = this.$refs.fileInput.files[0];

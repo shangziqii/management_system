@@ -13,11 +13,11 @@
     </div>
     <!-- 导入信息上传文件页面 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
-      <form>
+      <el-form>
         <input type="file" ref="fileInput">
-      </form>
-      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      </el-form>
+      <el-radio v-model="radio" label="1">备 份</el-radio>
+      <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
     <div class="btn">
@@ -25,7 +25,7 @@
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+      <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
     </div>
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -77,16 +77,13 @@
     <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleClosechangeInfo">
       <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
         <el-form-item label="学号" prop="studentNum">
-          <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum">{{ changeInfoForm.studentNum
-          }}</el-input>
+          <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="studentName">
-          <el-input placeholder="请输入姓名" :disabled="true" v-model="changeInfoForm.studentName">{{
-            changeInfoForm.studentName }}</el-input>
+          <el-input placeholder="请输入姓名" :disabled="true" v-model="changeInfoForm.studentName"></el-input>
         </el-form-item>
         <el-form-item label="班级" prop="studentClass">
-          <el-input placeholder="请输入班级" :disabled="true" v-model="changeInfoForm.studentClass">{{
-            changeInfoForm.studentClass }}</el-input>
+          <el-input placeholder="请输入班级" :disabled="true" v-model="changeInfoForm.studentClass"></el-input>
         </el-form-item>
         <el-form-item label="政治面貌" prop="politicalStatus">
           <!-- <el-input placeholder="请选择政治面貌" v-model="changeInfoForm.politicalStatus">{{ changeInfoForm.politicalStatus }}</el-input> -->
@@ -113,10 +110,10 @@
       </span>
     </el-dialog>
     <Tables :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
+    <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
   </div>
 </template>
   
@@ -138,7 +135,13 @@ export default {
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
-      form: {},//新增的form表单
+      form: {
+        fullMemberTime: '',
+        politicalStatus: '',
+        prepareMemberTime: '',
+        studentName: '',
+        studentNum: ''
+      },//新增的form表单
       tableData: [],//数据列表
       columns: [],//列表配置
       operaColums: [],//操作按钮配置
@@ -182,7 +185,8 @@ export default {
         ]
       },//修改信息的规则
       changeInfoShow: false,
-      changeInfoForm: {}
+      changeInfoForm: {},
+      recordInfo: {}
     }
   },
   methods: {
@@ -268,6 +272,7 @@ export default {
       console.log(value);
       this.changeInfoShow = true
       this.changeInfoForm = value
+      this.recordInfo = Object.assign({}, value);
     },
     //修改信息提交按钮
     submitchangeInfo() {
@@ -292,24 +297,38 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.form.resetFields()
-          this.dialogVisible = false
-        })
-        .catch(_ => { });
+      console.log(this.form);
+      const filled = Object.values(this.form).some(value => value !== '')
+      if (filled) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.form.resetFields()
+            this.dialogVisible = false
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.form.resetFields()
+        this.dialogVisible = false
+      }
     },
     //取消函数
     cancel() {
       this.handleClose()
     },
     handleClosechangeInfo() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.changeInfoForm.resetFields()
-          this.changeInfoShow = false
-        })
-        .catch(_ => { });
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.changeInfoForm.resetFields()
+            this.changeInfoShow = false
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.changeInfoForm.resetFields()
+        this.changeInfoShow = false
+      }
     },
     cancel2() {
       this.handleClosechangeInfo()
@@ -336,17 +355,23 @@ export default {
       this.showSelect = !this.showSelect;
     },
     //导出学生信息
-    submitSelect(value) {
-      exportStuInfo(value).then((res) => {
-        window.open(res.data.data)
-        this.showSelect = false
-        this.$message({
-          message: '下载成功',
-          type: 'success'
-        });
-      }).catch((error) => {
-        this.$message.error('未知错误');
-      })
+    submitSelect() {
+      this.$confirm('确认导出？')
+        .then(_ => {
+          const value = ['学生学号', '学生姓名', '学生班级', '政治面貌', '发展预备导员时间', '转正党员时间']
+          exportStuInfo(value).then((res) => {
+              window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+        })
+        .catch(_ => { });
+
     },
     changeLimit(val) {
       this.pageLimit = val;

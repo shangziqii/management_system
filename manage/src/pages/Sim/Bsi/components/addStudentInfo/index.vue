@@ -51,13 +51,14 @@ export default {
         studentNum: { required: true, message: '学号不能为空' },
         studentName: { required: true, message: '学生姓名不能为空' },
       },
-      originData: false
+      // recordInfo: {}
     };
   },
   methods: {
     handleClose(done) {
-      console.log(this.originData);
-      if (this.originData) {
+      // 判断表单数据是否为空
+      const filled = Object.values(this.ruleForm).some(value => value !== '')
+      if (filled) {
         this.$confirm('确认关闭？')
           .then(_ => {
             this.$emit('change')
@@ -89,12 +90,18 @@ export default {
     },
   },
   watch: {
-    ruleForm: {
+    /* ruleForm: {
       handler(newVal) {
         this.originData = !Object.is(this.ruleForm, JSON.parse(JSON.stringify(this.originData)));
       },
       deep: true
-    }
+    } */
+    /* ruleForm: {
+      handler(newVal) {
+        this.recordInfo={...this.ruleForm};
+      },
+      deep: true
+    } */
   }
 };
 </script>

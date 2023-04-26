@@ -11,14 +11,14 @@
       <form>
         <input type="file" ref="fileInput">
       </form>
-      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      <el-radio v-model="radio" label="1">备 份</el-radio>
+      <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
     <div class="btn">
       <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
-      <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+      <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
     </div>
     <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
       :currentPage="currentPage" @click_1="changeStudentInfo" @click_2="deletePoorStudent" @changeLimit="changeLimit"
@@ -26,7 +26,7 @@
     <AddPoorStudentInfo :isShow="isShow" @changeShow="changeShow" @submit="submit" />
     <ModifyStudentInfo :isChangeInfoShow="isChangeInfoShow" @changeInfoShow="changeInfoShow" @submit="submitChangeInfo"
       :studentInfo="studentInfo" />
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
+    <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
   </div>
 </template>
 
@@ -135,45 +135,45 @@ export default {
     //删除对应信息调用函数
     deletePoorStudent(val) {
       const { studentName } = val;
-      this.$confirm(`您确定要删除${studentName}信息吗?`, '提示', {
+      this.$confirm(`您确定要删除${studentName}的信息吗?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(_ => {
-          const difficultId = val.difficultId;
-          const params = {
-            difficultId
-          };
-          const instance = deleteStu(params);
-          instance.then((res) => {
-            const { status, msg } = res.data;
-            if (status === 0) {
-              this.$message({
-                type: 'success',
-                message: msg
-              })
-              this.currentPage = 1;
-              this.pageLimit = 5;
-              this.getTableList();
-            } else {
-              this.$message({
-                type: 'error',
-                message: msg,
-              })
-            }
-          })
-            .catch((err) => {
-              this.$message({
-                type: 'error',
-                message: '前方拥堵，请稍后再试！',
-              })
+        const difficultId = val.difficultId;
+        const params = {
+          difficultId
+        };
+        const instance = deleteStu(params);
+        instance.then((res) => {
+          const { status, msg } = res.data;
+          if (status === 0) {
+            this.$message({
+              type: 'success',
+              message: msg
             })
+            this.currentPage = 1;
+            this.pageLimit = 5;
+            this.getTableList();
+          } else {
+            this.$message({
+              type: 'error',
+              message: msg,
+            })
+          }
         })
-        .catch(()=>{
+          .catch((err) => {
+            this.$message({
+              type: 'error',
+              message: '前方拥堵，请稍后再试！',
+            })
+          })
+      })
+        .catch(() => {
           this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
+            type: 'info',
+            message: '已取消删除'
+          });
         });
     },
 
@@ -188,17 +188,23 @@ export default {
     },
 
     //导出信息方法
-    submitSelect(value) {
-      exportStuInfo(value).then((res) => {
-        window.open(res.data.data)
-        this.showSelect = false
-        this.$message({
-          message: '下载成功',
-          type: 'success'
-        });
-      }).catch((error) => {
-        this.$message.error('未知错误');
-      })
+    submitSelect() {
+      this.$confirm('确认导出？')
+        .then(_ => {
+          const value = ['学号', '困难等级', '个人情况', '备注']
+          exportStuInfo(value).then((res) => {
+            window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+        })
+        .catch(_ => { });
+
     },
     exportShow() {
       this.showSelect = !this.showSelect;

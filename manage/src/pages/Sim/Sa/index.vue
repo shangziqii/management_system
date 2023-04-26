@@ -13,8 +13,8 @@
       <el-form>
         <input type="file" ref="fileInput">
       </el-form>
-      <el-radio v-model="radio" label="1">将原信息进行导出</el-radio>
-      <el-radio v-model="radio" label="2">不导出原信息</el-radio>
+      <el-radio v-model="radio" label="1">备 份</el-radio>
+      <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
     <div class="btn">
@@ -22,7 +22,7 @@
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <!-- 导出excel表格 -->
-      <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button>
+      <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
     </div>
     <!-- 点击按钮弹出表单添加信息 -->
     <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -56,11 +56,33 @@
         <el-form-item label="奖状电子版" prop="files">
           <!-- <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input> -->
           <div>
+
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
               :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+
+            <!--             <el-upload name="uploadFile" action="/api/prizeStudent/uploadFile" list-type="picture-card" :auto-upload="false" :limit="1" :multiple="false">
+              <i slot="default" class="el-icon-plus"></i>
+              <div slot="file" slot-scope="{file}">
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="">
+                <span class="el-upload-list__item-actions">
+                  <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                    <i class="el-icon-zoom-in"></i>
+                  </span>
+                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
+                    <i class="el-icon-download"></i>
+                  </span>
+                  <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
+                    <i class="el-icon-delete"></i>
+                  </span>
+                </span>
+              </div>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible1">
+  <img width="100%" :src="dialogImageUrl" alt="">
+</el-dialog> -->
           </div>
 
           <!-- 覆盖默认的上传行为，可以自定义上传的实现 -->
@@ -112,8 +134,9 @@
           <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input> -->
           <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input> -->
           <div>
+            <!-- 原版 -->
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
-              :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload">
+              :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload" ref="myUpload">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -126,9 +149,9 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteStu" @click_2="modify" @changePage="changePage"
+      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage"
       @changeLimit="changeLimit" />
-    <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" />
+    <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
   </div>
 </template>
 
@@ -137,6 +160,7 @@ import ImgTabels from './../../../components/ImgTabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
 import { winnerList, addWinner, removeInfo, changeInfo, searchUseNum, submitPictureTo, exportStuInfo, importStuInfo } from './api'
+const _ = require('lodash');
 var token = localStorage.getItem('token')
 export default {
   name: 'Sa',
@@ -151,7 +175,16 @@ export default {
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       total: 0,//数据条数
-      form: {},//新增的form表单
+      form: {
+        className: '',
+        files: '',
+        prizeLevel: '',
+        prizeName: '',
+        prizeTime: '',
+        studentName: '',
+        studentNum: '',
+        teacher: ''
+      },//新增的form表单
       tableData: [],//数据列表
       columns: [],//列表配置
       operaColums: [],//操作按钮配置
@@ -224,7 +257,17 @@ export default {
         ],
       },//修改信息的规则
       changeInfoShow: false,
-      changeInfoForm: {}
+      changeInfoForm: {},
+      // originData: false,
+      // originChangeData: false,
+      recordInfo: {},
+      isFormChanged: false // 是否修改了表单数据
+
+
+      //试用
+      /*          dialogImageUrl: '',
+              dialogVisible1: false,
+              disabled: false */
     }
   },
   methods: {
@@ -308,6 +351,7 @@ export default {
     //修改用户
     modify(value) {
       console.log(value);
+      this.recordInfo = Object.assign({}, value);
       this.changeInfoShow = true
       this.changeInfoForm = value
     },
@@ -338,29 +382,48 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.form.resetFields()
-          this.imageUrl = ''
-          this.form.files = ''
-          this.dialogVisible = false
-          this.geWinnerList()
-        })
-        .catch(_ => { });
+      const filled = Object.values(this.form).some(value => value !== '')
+      if (filled) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.form.resetFields();
+            this.imageUrl = ''
+            this.dialogVisible = false
+            // this.$refs.fileInput.value = "";
+            this.geWinnerList()
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.form.resetFields()
+        this.imageUrl = ''
+        this.dialogVisible = false
+        this.geWinnerList()
+      }
     },
     //取消函数
     cancel() {
       this.handleClose()
     },
     handleCloseChangeInfo() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.changeInfoForm.resetFields()
-          this.imageUrl = ''
-          this.geWinnerList()
-          this.changeInfoShow = false
-        })
-        .catch(_ => { });
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.changeInfoForm.resetFields()
+            this.imageUrl = ''
+            this.geWinnerList()
+            this.changeInfoShow = false
+            this.isFormChanged = false
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.changeInfoForm.resetFields()
+        this.imageUrl = ''
+        this.geWinnerList()
+        this.changeInfoShow = false
+        this.isFormChanged = false
+      }
     },
     cancel2() {
       this.handleCloseChangeInfo()
@@ -425,9 +488,13 @@ export default {
 
     //提交获奖电子证书方法
     handleAvatarSuccess(res, file) {
-      if (res.data.state === 0) { // 判断上传是否成功
+      if (res.status === 0) { // 判断上传是否成功
         this.imageUrl = URL.createObjectURL(file.raw);
         this.form.files = res.data.url;
+        this.$message({
+          type: 'success',
+          message: '上传图片成功!'
+        });
       } else {
         this.$message.error(res.msg); // 显示上传失败的提示信息
       }
@@ -438,16 +505,12 @@ export default {
       this.changeInfoForm.files = res.data
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+      const validFormats = ['image/jpeg', 'image/png']; // 可接受的图像格式
+      const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+      if (!isFormatValid) {
+        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
+      return isFormatValid;
     },
 
 
@@ -461,17 +524,33 @@ export default {
        }) 
      } */
     //导出学生信息
-    submitSelect(value) {
-      exportStuInfo(value).then((res) => {
-        window.open(res.data.data)
-        this.showSelect = false
-        this.$message({
-          message: '下载成功',
-          type: 'success'
-        });
-      }).catch((error) => {
-        this.$message.error('未知错误');
-      })
+    submitSelect() {
+      this.$confirm('确认导出？')
+        .then(_ => {
+          const value = ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '奖状电子版']
+          exportStuInfo(value).then((res) => {
+            window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+          exportStuInfo(value).then((res) => {
+            window.open(res.data.data)
+            this.showSelect = false
+            this.$message({
+              message: '下载成功',
+              type: 'success'
+            });
+          }).catch((error) => {
+            this.$message.error('未知错误');
+          })
+        })
+        .catch(_ => { });
+
     },
     //导出信息页面的是否展示
     exportShow() {
@@ -540,6 +619,19 @@ export default {
           this.addFileShow = false
         })
         .catch(_ => { });
+    },
+
+
+    // 试用
+    handleRemove(file) {
+      file = {}
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible1 = true;
+    },
+    handleDownload(file) {
+      console.log(file);
     }
   },
 

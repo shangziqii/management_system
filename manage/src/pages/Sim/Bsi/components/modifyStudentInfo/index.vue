@@ -33,7 +33,6 @@ export default {
   props: {
     isShow: { type: Boolean, default: () => false },
     studentInfo: { type: Object, default: () => { } },
-    originData: { type: Object, default: () => { } }
   },
   data() {
     return {
@@ -50,20 +49,21 @@ export default {
         studentNum: { required: true, message: '学号不能为空' },
         studentName: { required: true, message: '学生姓名不能为空' },
       },
+      // originData: false
+      recordInfo:{}
     };
   },
   methods: {
     handleClose(done) {
-      if(this.originData!=this.ruleForm)
-      {
+      if (!(JSON.stringify(this.studentInfo) === JSON.stringify(this.recordInfo))) {
         this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$emit('change')
-          this.$refs.ruleForm.resetFields();
-        })
-        .catch(_ => { });
+          .then(_ => {
+            this.$refs.ruleForm.resetFields();
+            this.$emit('change')
+          })
+          .catch(_ => { });
       }
-      else{
+      else {
         this.$emit('change')
         this.$refs.ruleForm.resetFields();
       }
@@ -87,7 +87,13 @@ export default {
   },
   watch: {
     studentInfo() {
-      this.ruleForm = { ...this.studentInfo };
+      this.ruleForm = { ...this.studentInfo }
+    },
+    ruleForm: {
+      handler(newVal) {
+        this.recordInfo={...this.ruleForm};
+      },
+      deep: true
     }
   }
 };

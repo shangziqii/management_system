@@ -3,7 +3,8 @@
         <div class="top">
           <img width="398" height="94" src="http://www.xiyou.edu.cn/newWeb/images/xy_logo.png">
         </div>
-        <div class="LoginForm">
+        <div class="Loginbody">
+          <div class="LoginForm">
           <el-form :model="ruleForm" status-icon :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="账号" prop="account">
               <el-input  v-model="ruleForm.account"></el-input>
@@ -17,6 +18,7 @@
           </el-form-item>
           </el-form>
         </div>
+      </div>
         <div class="bottom"></div>
     </div>
     
@@ -128,6 +130,9 @@ import { Login } from './api';
     width: 40%;
     height: 30%;
     left: 30%;
-    top: 25%;
+    top: 80px;
+}
+.Loginbody{
+  position: relative;
 }
 </style>
