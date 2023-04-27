@@ -118,7 +118,7 @@
 
         <Tabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total"
           :limit="pageLimit" :currentPage="currentPage" @click_1="showDetails" @click_2="edit" @click_3="handleDelete"
-          @changePage="changePage" />
+          @changePage="changePage" @changeLimit="changeLimit"/>
       </div>
     </div>
     <router-view></router-view>
@@ -339,6 +339,14 @@ export default {
         }
       })
     },
+    changeLimit(val) {
+      this.pageLimit = val;
+      this.getClassList();
+    },
+    changePage(val) {
+      this.currentPage = val;
+      this.getClassList();
+    },
     // submit2() {
     //   this.$refs.searchInfo.validate((valid) => {
     //     if (valid) {
@@ -377,6 +385,7 @@ export default {
       }
       classList(params).then(res => {
         // console.log(res.data);
+        this.total=res.data.data.sum
         this.tableData = res.data.data.classes
       })
     },

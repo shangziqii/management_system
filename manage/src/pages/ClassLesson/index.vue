@@ -129,7 +129,7 @@
 
     <!-- 展示查寝信息的表格 -->
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteLesson" @click_2="modify" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="deleteLesson" @click_2="modify" @changePage="changePage" @changeLimit="changeLimit"/>
   </div>
 </template>
 
@@ -226,7 +226,7 @@ export default {
       getLessonList(params).then((res) => {
         //将获取到的查寝信息给到tableData
         this.tableData = res.data.data.listens
-        this.total = res.data.total
+        this.total = res.data.data.sum
         this.$message({
           message: '获取列表信息成功',
           type: 'success'
@@ -378,6 +378,10 @@ export default {
     changePage(val) {
       this.currentPage = val
       this.showLessonList()
+    },
+    changeLimit(val) {
+      this.pageLimit = val;
+      this.showLessonList();
     },
     //新增信息页面文件的上传
     uploadFile() {

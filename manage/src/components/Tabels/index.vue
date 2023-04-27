@@ -20,7 +20,7 @@
     <!-- 分页 -->
     <el-pagination style="margin: 40px 0 10px 30px;" background @size-change="pageSizeChange"
       @current-change="currentChange" :current-page="currentPage" :page-sizes="pageSize" :page-size="limit"
-      layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+      layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </el-card>
 </template>

@@ -58,7 +58,7 @@
           <div>
 
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
-              :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" ref="upImg">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -285,7 +285,8 @@ export default {
         console.log(res.data.data.prizeStudents);
         //这条注释是将获取到的学生获奖情况给到tableData
         this.tableData = res.data.data.prizeStudents
-        this.total = res.data.total
+        this.total = res.data.data.sum
+        console.log(this.total);
       }).catch((error) => {
         this.$message.error('拉取列表错误', error);
       })
@@ -390,6 +391,7 @@ export default {
             this.imageUrl = ''
             this.dialogVisible = false
             // this.$refs.fileInput.value = "";
+            this.$refs.upImg.clearFiles();
             this.geWinnerList()
           })
           .catch(_ => { });
@@ -411,6 +413,8 @@ export default {
           .then(_ => {
             this.$refs.changeInfoForm.resetFields()
             this.imageUrl = ''
+            this.$refs.myUpload.clearFiles();
+
             this.geWinnerList()
             this.changeInfoShow = false
             this.isFormChanged = false
@@ -420,6 +424,7 @@ export default {
       else {
         this.$refs.changeInfoForm.resetFields()
         this.imageUrl = ''
+        
         this.geWinnerList()
         this.changeInfoShow = false
         this.isFormChanged = false
@@ -501,8 +506,17 @@ export default {
     },
     //提交修改页面的电子证书方法
     handleAvatarSuccess2(res, file) {
+      if (res.status === 0) { // 判断上传是否成功
       this.imageUrl = URL.createObjectURL(file.raw);
       this.changeInfoForm.files = res.data
+      this.$message({
+          type: 'success',
+          message: '上传图片成功!'
+        });
+      }
+      else{
+        this.$message.error(res.msg); // 显示上传失败的提示信息
+      }
     },
     beforeAvatarUpload(file) {
       const validFormats = ['image/jpeg', 'image/png']; // 可接受的图像格式
@@ -583,10 +597,18 @@ export default {
         console.error(error);
       })
     },
+    fileTest(file) {
+      const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
+        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+        if (!isFormatValid) {
+          this.$message.error('上传的导入文件只能是 xlsx 格式!');
+        }
+        return isFormatValid;
+      }, 
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      console.log(file);
-      if (file) {
+      if(this.fileTest(file)){
+        if (file) {
         this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -608,6 +630,7 @@ export default {
           type: 'error',
           message: '请选择文件!'
         })
+      }
       }
     },
     handleCloseFile() {

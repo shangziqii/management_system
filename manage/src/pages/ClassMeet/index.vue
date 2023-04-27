@@ -122,7 +122,7 @@
 
     <!-- 展示查寝信息的表格 -->
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="deleteMeet" @click_2="modify" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="deleteMeet" @click_2="modify" @changePage="changePage" @changeLimit="changeLimit"/>
   </div>
 </template>
 
@@ -217,7 +217,7 @@ export default {
         console.log(res.data);
         //将获取到的谈话信息给到tableData
         this.tableData = res.data.data.classMeetings
-        this.total = res.data.total
+        this.total = res.data.data.sum
         this.$message({
           message: '获取列表信息成功',
           type: 'success'
@@ -369,6 +369,10 @@ export default {
     changePage(val) {
       this.currentPage = val
       this.showMeetList()
+    },
+    changeLimit(val) {
+      this.pageLimit = val;
+      this.showMeetList();
     },
     //新增信息页面文件的上传
     uploadFile() {

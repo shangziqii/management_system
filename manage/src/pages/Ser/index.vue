@@ -246,7 +246,7 @@ export default {
       console.log(params);
       scholarshipList(params).then((res) => {
         this.tableData = res.data.data.scholarships
-        this.total = res.data.total
+        this.total = res.data.data.sum
       }).catch((error) => {
         this.$message.error('拉取列表错误', error);
       })

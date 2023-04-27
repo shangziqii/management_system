@@ -193,6 +193,7 @@ export default {
         }
         console.log(users);
         this.tableData = users
+        this.total=data.data.sum
       })
     },
     changeLimit(val) {

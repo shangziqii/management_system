@@ -203,7 +203,7 @@ export default {
         console.log(res);
         //这条注释是将获取到的学生获奖情况给到tableData
         this.tableData = res.data.data.partyMembers
-        this.total = res.data.sum
+        this.total = res.data.data.sum
       }).catch((error) => {
         this.$message.error('拉取列表错误', error);
       })
@@ -448,10 +448,18 @@ export default {
         console.error(error);
       })
     },
+    fileTest(file) {
+      const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
+        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+        if (!isFormatValid) {
+          this.$message.error('上传的导入文件只能是 xlsx 格式!');
+        }
+        return isFormatValid;
+      }, 
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      console.log(file);
-      if (file) {
+      if(this.fileTest(file)){
+        if (file) {
         this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -474,6 +482,8 @@ export default {
           message: '请选择文件!'
         })
       }
+      }
+
     },
     handleCloseFile() {
       this.$confirm('确认关闭？')
