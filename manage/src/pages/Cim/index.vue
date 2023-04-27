@@ -480,14 +480,18 @@ export default {
     // 辅导员信息列表
     FilterUserName(queryString, cb) {
       if(queryString == '') {
+        var results = queryString
+        cb(results)
         return
+      } else {
+        var UserList2 = this.UserList;
+        var results = queryString
+          ? UserList2.filter(this.createFilter(queryString))
+          : UserList2;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
       }
-      var UserList2 = this.UserList;
-      var results = queryString
-        ? UserList2.filter(this.createFilter(queryString))
-        : UserList2;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
+
     },
     // 只要该输入内容的都匹配
     createFilter(queryString) {
