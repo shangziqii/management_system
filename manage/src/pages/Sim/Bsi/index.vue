@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <div class="page" v-show="$route.path == '/Main/Sim/Bsi'">
       <!-- 上传文件 -->
       <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleClose">
@@ -424,5 +424,15 @@ export default {
 .input {
   width: 200px;
   margin-right: 10px;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
 }
 </style>

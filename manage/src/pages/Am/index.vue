@@ -258,4 +258,11 @@ export default {
 .manage-header {
   margin-top: 52px;
 }
+.manage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <!-- 添加信息按钮 -->
     <div class="btn">
       <!-- 添加信息按钮 -->
@@ -754,5 +754,15 @@ export default {
 
 .el-dialog__body a:hover {
   color: #409EFF;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
 }
 </style>

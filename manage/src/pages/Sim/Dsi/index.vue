@@ -411,4 +411,14 @@ export default {
   width: 300px;
   margin-right: 10px;
 }
+.page /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+/* .el-dialog__wrapper {
+  line-height: 28px;
+} */
 </style>

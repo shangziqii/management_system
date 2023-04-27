@@ -201,4 +201,11 @@ export default {
   margin-left: 300px;
   margin-top: 100px;
 }
+.info /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
 </style>

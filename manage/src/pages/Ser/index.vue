@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <div class="btn">
       <!-- 添加信息按钮 -->
       <el-button type="primary" @click="dialogVisible = true" v-show="role === 1">添加记录</el-button>
@@ -686,5 +686,15 @@ export default {
 
 .el-dialog__body a:hover {
   color: #409EFF;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
 }
 </style>

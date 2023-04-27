@@ -637,4 +637,14 @@ div /deep/ .el-dialog {
   /* width: 450.89px; */
   width: 100%;
 }
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
+}
 </style>

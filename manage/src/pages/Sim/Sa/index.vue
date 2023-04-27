@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <!-- 搜索学生 -->
     <div class="searchInfo">
       <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input"
@@ -701,5 +701,15 @@ export default {
 .avatar {
   width: 100%;
   height: auto;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 28px;
 }
 </style>

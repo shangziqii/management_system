@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <!-- 搜索某班级所有谈话记录列表 -->
     <!-- <div>
       <el-input v-model="search2.classId" class="searchInput2" placeholder="请输入班级ID查询谈话记录列表">
@@ -590,5 +590,15 @@ export default {
 
 .el-dialog__body a:hover {
   color: #409EFF;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
+}
+.el-dialog__wrapper {
+  line-height: 100px;
 }
 </style>

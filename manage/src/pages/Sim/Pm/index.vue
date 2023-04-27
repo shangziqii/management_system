@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="classManage">
     <!-- 搜索学生 -->
     <div class="searchInfo">
       <!-- 搜索框的显示 -->
@@ -533,5 +533,12 @@ export default {
 .input {
   width: 210px;
   margin-right: 10px;
+}
+.classManage /deep/ .el-dialog__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+div /deep/ .el-dialog {
+  border-radius: 8px;
 }
 </style>
