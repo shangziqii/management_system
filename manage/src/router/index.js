@@ -190,6 +190,27 @@ let hasAlerted = false
         next()
     }
 }) */
+router.beforeEach((to, from, next) => {
+    // 先放行，使路由开始跳转
+    next()
+
+    // 异步验证 token 并重定向
+    if (to.path !== '/Login') {
+        tokenTest().then(res => {
+            if (res.data.data.userId !== -1) {
+                // token 验证通过，不需要做任何操作
+            } else {
+                // 如果已经弹窗，则不再重复弹窗
+                if (!hasAlerted) {
+                    alert('未登录，请先登录！')
+                    hasAlerted = true
+                }
+                location.href = '/Login'
+            }
+        })
+    }
+})
+
 
 /* const protectedRoutes = ['/Main', '/Pim', '/Am', '/Cim', '/Sim', '/Gar', '/Ser', '/Details', '/ClassLesson', '/ClassMeet', '/ClassTalk', '/Dormitory', '/Bsi', '/Dsi', '/Sa', '/Svrad', '/Pm', '/InfoDetails'];
 

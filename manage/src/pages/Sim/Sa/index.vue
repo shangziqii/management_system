@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import * as FileSaver from "file-saver";
 import ImgTabels from './../../../components/ImgTabels';
 import ExportStudentInfo from './../../../components/ExportStudentInfo'
 import { columns, operaColums } from './const'
@@ -424,7 +425,7 @@ export default {
       else {
         this.$refs.changeInfoForm.resetFields()
         this.imageUrl = ''
-        
+
         this.geWinnerList()
         this.changeInfoShow = false
         this.isFormChanged = false
@@ -507,14 +508,14 @@ export default {
     //提交修改页面的电子证书方法
     handleAvatarSuccess2(res, file) {
       if (res.status === 0) { // 判断上传是否成功
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.changeInfoForm.files = res.data
-      this.$message({
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.changeInfoForm.files = res.data
+        this.$message({
           type: 'success',
           message: '上传图片成功!'
         });
       }
-      else{
+      else {
         this.$message.error(res.msg); // 显示上传失败的提示信息
       }
     },
@@ -552,19 +553,8 @@ export default {
           }).catch((error) => {
             this.$message.error('未知错误');
           })
-          exportStuInfo(value).then((res) => {
-            window.open(res.data.data)
-            this.showSelect = false
-            this.$message({
-              message: '下载成功',
-              type: 'success'
-            });
-          }).catch((error) => {
-            this.$message.error('未知错误');
-          })
         })
         .catch(_ => { });
-
     },
     //导出信息页面的是否展示
     exportShow() {
@@ -599,38 +589,38 @@ export default {
     },
     fileTest(file) {
       const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
-        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
-        if (!isFormatValid) {
-          this.$message.error('上传的导入文件只能是 xlsx 格式!');
-        }
-        return isFormatValid;
-      }, 
+      const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+      if (!isFormatValid) {
+        this.$message.error('上传的导入文件只能是 xlsx 格式!');
+      }
+      return isFormatValid;
+    },
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      if(this.fileTest(file)){
+      if (this.fileTest(file)) {
         if (file) {
-        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.radio === '1') {
-            this.submitSelect()
-          }
-          this.handleFileUpload();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消导入'
+          this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (this.radio === '1') {
+              this.submitSelect()
+            }
+            this.handleFileUpload();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消导入'
+            })
           })
-        })
-      }
-      else {
-        this.$message({
-          type: 'error',
-          message: '请选择文件!'
-        })
-      }
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '请选择文件!'
+          })
+        }
       }
     },
     handleCloseFile() {
