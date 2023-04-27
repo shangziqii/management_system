@@ -634,6 +634,7 @@ div /deep/ .el-dialog {
   z-index: 23;
 }
 .userInput {
-  width: 450.89px;
+  /* width: 450.89px; */
+  width: 100%;
 }
 </style>
