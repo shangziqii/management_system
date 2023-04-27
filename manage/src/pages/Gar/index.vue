@@ -282,11 +282,16 @@ export default {
       fileName2: [],
       fileList3: [],
       fileName3: [],
+      recordInfo: {}
     }
   },
   methods: {
     handleClose() {
-      this.$confirm('确认关闭？')
+      console.log('hello');
+      console.log(this.subInfo);
+      const filled = Object.entries(this.subInfo).filter(([key, value]) => key !== 'subsidiesTime' && key !== 'status'&&key!=='selectTime').some(([key, value]) => value !== '');
+      if (filled) {
+        this.$confirm('确认关闭？')
         .then(_ => {
           this.$refs.subInfo.resetFields()
           //关闭后将文件相关显示的数据清空
@@ -295,10 +300,18 @@ export default {
           this.dialogVisible = false
         })
         .catch(_ => { });
+      }
+      else{
+        this.$refs.subInfo.resetFields()
+          //关闭后将文件相关显示的数据清空
+          this.fileList = []
+          this.fileName = []
+          this.dialogVisible = false
+      } 
     },
     // 修改表单关闭逻辑
     handleCloseChangeInfo() {
-      this.$confirm('确认关闭？')
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {      this.$confirm('确认关闭？')
         .then(_ => {
           this.$refs.changeInfoForm.resetFields()
           //关闭后将文件相关显示的数据清空
@@ -307,6 +320,15 @@ export default {
           this.changeInfoShow = false
         })
         .catch(_ => { });
+      }
+      else{
+        this.$refs.changeInfoForm.resetFields()
+          //关闭后将文件相关显示的数据清空
+          this.fileList = []
+          this.fileName = []
+          this.changeInfoShow = false
+      }
+
     },
     cancel() {
       this.handleClose()
@@ -367,6 +389,7 @@ export default {
     edit(value) {
       this.changeInfoShow = true
       this.changeInfoForm = value
+      this.recordInfo = Object.assign({}, value);
       //这里判断如果修改信息原本有文件上传，将其转数组存储
       if (this.changeInfoForm.files1) {
         this.fileList1 = this.changeInfoForm.files1.split(',')

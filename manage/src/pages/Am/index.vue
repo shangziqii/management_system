@@ -127,12 +127,19 @@ export default {
     },
     // 弹窗关闭时重置表单
     handleClose() {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.form.resetFields()
-          this.dialogVisible = false
-        })
-        .catch(_ => { });
+      const filled = Object.entries(this.form).filter(([key, value]) => key !== 'role').some(([key, value]) => value !== '');
+      if (filled) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.form.resetFields()
+            this.dialogVisible = false
+          })
+          .catch(_ => { });
+      }
+      else {
+        this.$refs.form.resetFields()
+        this.dialogVisible = false
+      }
     },
     cancel() {
       this.handleClose()
@@ -193,7 +200,7 @@ export default {
         }
         console.log(users);
         this.tableData = users
-        this.total=data.data.sum
+        this.total = data.data.sum
       })
     },
     changeLimit(val) {
@@ -258,10 +265,12 @@ export default {
 .manage-header {
   margin-top: 52px;
 }
+
 .manage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }

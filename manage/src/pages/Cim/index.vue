@@ -257,14 +257,17 @@ export default {
       this.$router.push('/Main/Cim/Details/Dormitory')
     },
     handleClose() {
-      if (this.isInfoChanged) { // 如果修改过，就弹窗提示
+      // if (this.isInfoChanged) { // 如果修改过，就弹窗提示
+        const filled = Object.values(this.classInfo).some(value => value !== '')
+      if (filled) {
         this.$confirm('表单已更改，确认关闭？')
         .then(_ => {
           this.$refs.classInfo.resetFields()
           this.dialogVisible = false
         })
         .catch(_ => { });
-      } else {
+      }
+      else{
         this.$refs.classInfo.resetFields()
         this.dialogVisible = false
       }
