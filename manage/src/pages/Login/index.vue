@@ -5,18 +5,19 @@
         </div>
         <div class="Loginbody">
           <div class="LoginForm">
-          <el-form :model="ruleForm" status-icon :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="账号" prop="account">
-              <el-input  v-model="ruleForm.account"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-              <el-input type="password" v-model="ruleForm.password"></el-input>
-          </el-form-item>
-          <el-form-item>
-              <el-button type="primary" @click="submitForm('LoginForm')">登录</el-button>
-              <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-          </el-form>
+             <div class="login-title">登录</div>
+              <el-form :model="ruleForm" status-icon :rules="rules" ref="LoginForm" label-width="70px">
+              <el-form-item label="账号" prop="account" class="account-item">
+                  <el-input  v-model="ruleForm.account" class="account"></el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="password">
+                  <el-input type="password" v-model="ruleForm.password"></el-input>
+              </el-form-item>
+              <el-form-item class="submit-button">
+                  <el-button type="primary" @click="submitForm('LoginForm')">登录</el-button>
+                  <el-button @click="resetForm('ruleForm')">重置</el-button>
+              </el-form-item>
+              </el-form>
         </div>
       </div>
         <div class="bottom"></div>
@@ -126,14 +127,34 @@ import { Login } from './api';
   background: url(	http://www.xiyou.edu.cn/newWeb/images/xy_topBG.png);
 }
 .LoginForm{
-    position: absolute;
-    width: 40%;
-    height: 30%;
-    left: 30%;
-    top: 80px;
-}
-.Loginbody{
-  position: relative;
+  box-shadow: 3px 3px 15px 15px #eef2f9;
+  border: 1px solid #e1e5eb;
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 700px;
 }
 
+.Loginbody{
+  display: flex;
+  width: 100%;
+  height: 50vh;
+  align-items: center;
+  justify-content: center;
+}
+.login-title{
+  font-size: 28px;
+  color: #555a62;
+}
+.account-item{
+  margin-top: 20px;
+}
+.account{
+  width: 400px;
+}
+.submit-button{
+  margin-left: -30px;
+}
 </style>
