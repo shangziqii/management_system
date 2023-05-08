@@ -3,7 +3,13 @@
     <el-table :data="tableData" style="margin:0;">
       <!--数据列表展示部分-->
       <el-table-column v-for="item in tableColumns" :key="item.prop" :prop="item.prop" :label="item.label"
-        :width="item.width">
+        :width="item.width" align="center">
+        <template slot-scope="scope">
+          <span v-if="Array.isArray(scope.row[item.prop])&&scope.row[item.prop].length>0">{{
+            scope.row[item.prop].join(', ') }}</span>
+          <span v-else-if="Array.isArray(scope.row[item.prop])&&scope.row[item.prop].length===0">{{ '-' }}</span>
+          <span v-else>{{ scope.row[item.prop] || '-' }}</span>
+        </template>
       </el-table-column>
 
       <!-- 操作按钮部分-->
@@ -62,4 +68,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

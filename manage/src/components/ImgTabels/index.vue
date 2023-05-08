@@ -12,24 +12,31 @@
       </span>
     </el-dialog>
     <el-card>
-      <el-table :data="tableData" style="margin:0;">
+      <el-table :data="tableData" style="margin:0;" >
         <!--数据列表展示部分-->
         <el-table-column v-for="item in tableColumns" :key="item.prop" :prop="item.prop" :label="item.label"
-          :width="item.width">
+          :width="item.width" align="center">
           <template slot-scope="scope">
             <!-- 自定义奖状电子版列 -->
             <template v-if="item.avatar">
               <img :src="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;"
-                @click="previewFile(scope.row[item.prop])">
+                @click="previewFile(scope.row[item.prop])" v-if="scope.row[item.prop]">
+              <span v-else>-</span>
             </template>
+
             <!-- 自定义显示文件 -->
             <template v-else-if="item.paper">
               <!-- <a :href="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;"></a> -->
               <!-- <button v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])">预览文件</button> -->
-              <button v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])">预览文件</button>
+              <el-button type="primary" plain size="small" v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])" v-if="scope.row[item.prop]">预览文件</el-button>
+              <span v-else>-</span>
             </template>
+
             <!-- 默认列 -->
-            <template v-else>{{ scope.row[item.prop] }}</template>
+            <template v-else>
+              {{ scope.row[item.prop]? scope.row[item.prop] : '-' }}
+              <!-- {{ scope.row[item.prop] }} -->
+            </template>
           </template>
         </el-table-column>
         <!-- 操作按钮部分-->
@@ -133,25 +140,25 @@ export default {
     //判断是否显示删除按钮的权限
     getShowDelet(item) {
 
-        if ((item.show === '0' || item.show === '2') && (this.$route.path === '/Main/Gar' || this.$route.path === '/Main/Ser')) {
-          return false
-        }
-        else {
-          return true
-        }
+      if ((item.show === '0' || item.show === '2') && (this.$route.path === '/Main/Gar' || this.$route.path === '/Main/Ser')) {
+        return false
+      }
+      else {
+        return true
+      }
     }
   },
-/*   watch: {
-    '$route.path': function () {
-      console.log('gaibianbauisia');
-      this.showDelet = this.getShowDelet();
-      this.$forceUpdate();//强制刷新页面
-    },
-    '$storage.role': function () {
-      this.showDelet = this.getShowDelet();
-      this.$forceUpdate();
-    }
-  }, */
+  /*   watch: {
+      '$route.path': function () {
+        console.log('gaibianbauisia');
+        this.showDelet = this.getShowDelet();
+        this.$forceUpdate();//强制刷新页面
+      },
+      '$storage.role': function () {
+        this.showDelet = this.getShowDelet();
+        this.$forceUpdate();
+      }
+    }, */
   computed: {
     showDelet() {
       return this.getShowDelet();

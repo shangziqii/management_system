@@ -418,7 +418,7 @@ export default {
           // console.log('修改信息提交了');
           editClass(this.changeInfoForm).then((res) => {
             console.log(res);
-            if (res.status === 200) {
+            if (res.data.status === 0) {
               this.$message({
                 message: '修改成功',
                 type: 'success'
