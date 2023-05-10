@@ -558,6 +558,8 @@ div /deep/ .el-dialog {
   position: absolute;
   right: 20px;
   top: 109px;
+  z-index: 999;
+  transform: translate(-35px, 115px);
 }
 
 .searchButton {
@@ -624,17 +626,18 @@ div /deep/ .el-dialog {
 
 .findInput {
   position: absolute;
-  top: 130px;
-  left: 250px;
+  top: 160px;
+  left: 320px;
   width: 300px;
   z-index: 11;
 }
 
 .findButton {
   position: absolute;
-  top: 190px;
-  left: 560px;
+  top: 220px;
+  left: 580px;
   z-index: 23;
+  border-radius: 4px;
 }
 .userInput {
   /* width: 450.89px; */

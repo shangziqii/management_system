@@ -630,14 +630,17 @@ export default {
 /* 搜索的按钮 */
 .searchMore {
   margin-left: 10px;
+  position: relative;
+  left: -60px;
+  border-radius: 4px;
 }
 
 /* 搜索框样式 */
 .searchInfo {
   position: absolute;
-  left: 250px;
+  left: 320px;
   z-index: 11;
-  top: 120px;
+  top: 190px;
 }
 
 .input {

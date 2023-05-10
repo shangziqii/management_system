@@ -1,7 +1,7 @@
 <template>
-  <div class="main">
+  <div class="main"> 
     <el-container style="width:100%; height:100%">
-      <el-aside width="200px">
+      <el-aside width="270px">
        <!--  <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
           background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router> -->
           <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
@@ -236,6 +236,7 @@ export default {
 }
 
 .r-content {
+  
   position: absolute;
   right: 10px;
   width: 50px;
@@ -286,6 +287,7 @@ export default {
 }
 
 .el-main {
+
   background-color: rgb(255, 255, 255);
   color: #333;
   text-align: center;
@@ -293,7 +295,7 @@ export default {
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
+  width: 270px;
   min-height: 400px;
 }
 
@@ -322,7 +324,7 @@ export default {
 }
 
 .mainContent {
-  margin-top: 30px;
+  margin-top: 60px;
 }
 
 .el-breadcrumb[data-v-c9c526c0] {
@@ -336,7 +338,7 @@ export default {
 
 .tabs[data-v-7a918e6e] {
   position: absolute;
-  left: 210px;
+  left: 293px;
   /* top: 67px; */
   top: 103px;
   margin: 10px 0;

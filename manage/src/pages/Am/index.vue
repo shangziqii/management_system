@@ -250,8 +250,10 @@ export default {
 .addButton {
   position: absolute;
   /* left: 210px; */
+  z-index: 999;
+  transform: translateY(80px);
   right: 40px;
-  top: 110px;
+  top: 140px;
 }
 
 .manage .el-dialog {
