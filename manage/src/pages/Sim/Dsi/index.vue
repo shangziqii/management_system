@@ -387,6 +387,9 @@ export default {
 }
 
 .btn {
+  position: relative;
+  z-index: 999;
+  transform: translate(-25px, 75px);
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -397,14 +400,17 @@ export default {
 /* 搜索的按钮 */
 .searchMore {
   margin-left: 10px;
+  position: relative;
+  left: -60px;
+  border-radius: 4px;
 }
 
 /* 搜索框样式 */
 .searchInfo {
   position: absolute;
-  left: 250px;
+  left: 320px;
   z-index: 11;
-  top: 120px;
+  top: 150px;
 }
 
 .input {

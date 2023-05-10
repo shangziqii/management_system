@@ -56,12 +56,12 @@ export default {
 <style scoped>
 .tabs {
     position: absolute;
-    left: 210px;
+    left: 293px;
     top: 40px;
     margin: 10px 0;
 }
 .tabs[data-v-7a918e6e][data-v-c9c526c0] {
-    top: 60px;
+    top: 90px;
 }
 .tabs .el-tag {
     margin-right: 10px;
