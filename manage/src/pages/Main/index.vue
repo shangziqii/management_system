@@ -54,7 +54,9 @@
             </el-breadcrumb> -->
           </div>
         </el-header>
+
         <CommonTag />
+
         <div class="mainContent">
           <el-main>
             <router-view>
@@ -354,6 +356,10 @@ export default {
         } */
 .el-menu-item {
   color:white;
+  text-align: left;
+}
+.el-submenu {
+  text-align: left;
 }
 
 </style>

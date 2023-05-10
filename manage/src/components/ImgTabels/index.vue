@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tabel">
     <el-dialog title="文件列表" :visible.sync="centerDialogVisible" width="30%" center>
       <div v-for="item in listFiles" :key="item">
         <a :href="item" download>
@@ -242,5 +242,17 @@ export default {
 .dialog-footer .el-button:last-child:hover {
   background-color: #66b1ff;
 }
+
+.tabel{
+  /* max-height: calc(100vh - 200px); */
+}
+.el-table__header-wrapper {
+  height: 20px!important;
+}
+
+.el-table__header tr th {
+  height: 20px!important;
+}
+
 </style>
   
