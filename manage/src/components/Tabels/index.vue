@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <el-table :data="tableData" style="margin:0;">
+    <el-table :data="tableData" style="margin:0;" class="tabel">
       <!--数据列表展示部分-->
       <el-table-column v-for="item in tableColumns" :key="item.prop" :prop="item.prop" :label="item.label"
         :width="item.width" align="center">
@@ -68,5 +68,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.tabel{
+  max-height: calc(100vh - 200px);
+  line-height: 70px;
+}
+
 </style>

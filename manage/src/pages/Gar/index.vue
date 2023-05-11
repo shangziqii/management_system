@@ -192,7 +192,7 @@
 
         <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total"
           :limit="pageLimit" :currentPage="currentPage" @click_1="edit" @click_2="handleDelete"
-          @changePage="changePage" />
+          @changePage="changePage" @changeLimit="changeLimit" class="tabel"/>
       </div>
     </div>
   </div>
@@ -692,6 +692,10 @@ export default {
       this.currentPage = val
       this.getSubsList()
     },
+    changeLimit(val) {
+      this.pageLimit = val;
+      this.getSubsList();
+    },
   },
   computed: {
     years() {
@@ -766,6 +770,7 @@ div /deep/ .el-dialog {
 .clearfix:after {
   clear: both
 }
+
 
 /* .box-card {
     width: 480px;

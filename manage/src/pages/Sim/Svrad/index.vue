@@ -131,7 +131,7 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage" />
+      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage" @changeLimit="changeLimit"/>
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
     <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
@@ -424,6 +424,10 @@ export default {
     },
     changePage(val) {
       this.currentPage = val
+      this.gepunishList();
+    },
+    changeLimit(val) {
+      this.pageLimit = val;
       this.gepunishList();
     },
     //导出信息页面的是否展示

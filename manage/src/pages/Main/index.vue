@@ -58,7 +58,7 @@
         <CommonTag />
 
         <div class="mainContent">
-          <el-main>
+          <el-main class="main_ta">
             <router-view>
             </router-view>
           </el-main>
@@ -286,14 +286,19 @@ export default {
   line-height: 200px;
 }
 
-.el-main {
+/* .el-main {
 
   background-color: rgb(255, 255, 255);
   color: #333;
   text-align: center;
   line-height: 160px;
+} */
+.main_ta{
+  background-color: rgb(255, 255, 255);
+  color: #333;
+  text-align: center;
+  line-height: 160px;
 }
-
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 270px;
   min-height: 400px;

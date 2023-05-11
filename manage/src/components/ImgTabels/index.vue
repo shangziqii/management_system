@@ -1,5 +1,5 @@
 <template>
-  <div class="tabel">
+  <div>
     <el-dialog title="文件列表" :visible.sync="centerDialogVisible" width="30%" center>
       <div v-for="item in listFiles" :key="item">
         <a :href="item" download>
@@ -12,7 +12,7 @@
       </span>
     </el-dialog>
     <el-card>
-      <el-table :data="tableData" style="margin:0;" >
+      <el-table :data="tableData" style="margin:0;" class="tabel">
         <!--数据列表展示部分-->
         <el-table-column v-for="item in tableColumns" :key="item.prop" :prop="item.prop" :label="item.label"
           :width="item.width" align="center">
@@ -244,14 +244,9 @@ export default {
 }
 
 .tabel{
-  /* max-height: calc(100vh - 200px); */
-}
-.el-table__header-wrapper {
-  height: 20px!important;
-}
-
-.el-table__header tr th {
-  height: 20px!important;
+  max-height: calc(100vh - 200px);
+  line-height: 70px;
+  /* overflow-y:scroll ; */
 }
 
 </style>

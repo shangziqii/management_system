@@ -37,7 +37,7 @@
     </el-button>
     <div class="manage-header">
       <Tabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"
-        :currentPage="currentPage" @click_1="handleDelete" @changeLimit="changeLimit" @changePage="changePage" />
+        :currentPage="currentPage" @click_1="handleDelete" @changeLimit="changeLimit" @changePage="changePage" class="tabel"/>
     </div>
   </div>
 </template>

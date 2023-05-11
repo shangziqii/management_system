@@ -161,7 +161,7 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" class="tabel" />
+      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" @changeLimit="changeLimit" class="tabel" />
   </div>
 </template>
 
@@ -449,6 +449,10 @@ export default {
       this.currentPage = val
       this.getList()
     },
+    changeLimit(val) {
+      this.pageLimit = val;
+      this.getList();
+    },
     //添加信息页面上传文件
     //上传相关文件
     uploadFile1() {
@@ -630,17 +634,14 @@ export default {
 /* 搜索的按钮 */
 .searchMore {
   margin-left: 10px;
-  position: relative;
-  left: -60px;
-  border-radius: 4px;
 }
 
 /* 搜索框样式 */
 .searchInfo {
   position: absolute;
-  left: 320px;
+  left: 250px;
   z-index: 11;
-  top: 190px;
+  top: 120px;
 }
 
 .input {
@@ -700,4 +701,5 @@ div /deep/ .el-dialog {
 .el-dialog__wrapper {
   line-height: 28px;
 }
+
 </style>
