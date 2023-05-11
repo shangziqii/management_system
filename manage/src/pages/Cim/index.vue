@@ -35,7 +35,7 @@
         </ul>
       </el-dialog> -->
       <!-- 添加班级信息弹窗 -->
-      <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
         <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px">
           <el-form-item label="班级名" prop="className">
             <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>

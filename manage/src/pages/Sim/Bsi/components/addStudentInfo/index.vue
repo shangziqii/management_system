@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增学生信息" :visible.sync="isShow" width="30%" :before-close="handleClose">
+  <el-dialog title="新增学生信息" :visible.sync="isShow" width="25%" :before-close="handleClose">
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="学生学号" prop="studentNum">
         <el-input type="text" v-model="ruleForm.studentNum" placeholder="请输入学生学号"></el-input>

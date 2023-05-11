@@ -24,7 +24,8 @@ export default {
 .base {
     display: flex;
     justify-content: space-between;
-    padding-right: 70px;
+    padding-right: 40px;
+    padding-left: 10px;
 }
 span {
     font-size: 20px;

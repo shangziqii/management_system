@@ -1,6 +1,6 @@
 <template>
   <div class="manage">
-    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="20%" :before-close="handleClose">
       <!-- 账户人员的表单信息（新增按钮展开） -->
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item label="姓名" prop="name">
