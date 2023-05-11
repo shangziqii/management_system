@@ -290,6 +290,7 @@ export default {
 
   background-color: rgb(255, 255, 255);
   color: #333;
+  height: 100%;
   text-align: center;
   line-height: 160px;
 } */
@@ -330,6 +331,7 @@ export default {
 
 .mainContent {
   margin-top: 60px;
+  height: 100%;
 }
 
 .el-breadcrumb[data-v-c9c526c0] {

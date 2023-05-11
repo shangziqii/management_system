@@ -70,7 +70,7 @@ export default {
 }
 .list-group {
     position: absolute;
-    top: 210px;
-    width:84%;
+    top: 250px;
+    width: 84%;
 }
 </style>

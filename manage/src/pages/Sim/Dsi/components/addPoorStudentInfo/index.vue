@@ -18,10 +18,6 @@
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="ruleForm.remarks" type="textarea" placeholder="最长可输入255个字" maxlength="255" resize="none">
-        </el-input>
-      </el-form-item>
-      <el-form-item>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
       </el-form-item>
