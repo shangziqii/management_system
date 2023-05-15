@@ -1,6 +1,6 @@
 <template>
   <div class="info">
-    <el-dialog title="修改密码" :visible.sync="dialogVisible" width="20%" :before-close="handleClose">
+    <el-dialog title="修改密码" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
       <el-form :model="ruleForm" ref="ruleForm" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="输入旧密码" prop="oldPass">
           <el-input v-model="ruleForm.oldPass" type="password"></el-input>
@@ -245,7 +245,7 @@ export default {
   clear: both;
 }
 .box-card {
-  transform: translate(200px, 100px);
+  /* transform: translate(200px, 100px); */
   width: 700px;
   height: 300px;
 }

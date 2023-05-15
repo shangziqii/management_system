@@ -61,7 +61,7 @@ export default {
     margin: 10px 0;
 }
 .tabs[data-v-7a918e6e][data-v-c9c526c0] {
-    top: 90px;
+    top: 70px;
 }
 .tabs .el-tag {
     margin-right: 10px;

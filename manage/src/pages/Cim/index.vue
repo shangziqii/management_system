@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="app">
     <div class="classManage" v-show="$route.path == '/Main/Cim'">
       <!-- 模糊搜索某班级 -->
-      <div>
-        <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput" clearable>
-        </el-input>
-        <el-button icon="el-icon-search" circle @click="WhichClass" class="findButton"></el-button>
+      <div class="tabelTop">
+        <div class="search">
+          <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput" clearable>
+          </el-input>
+          <el-button icon="el-icon-search" circle @click="WhichClass" class="findButton"></el-button>
+        </div>
+        <el-button @click="dialogVisible = true" type="primary" class="addButton">添加班级</el-button>
       </div>
       <!-- 查询班级信息弹窗 -->
       <!-- <el-dialog title="查询班级信息" :visible.sync="dialogVisible2" width="30%" :before-close="handleClose2">
@@ -36,7 +39,7 @@
       </el-dialog> -->
       <!-- 添加班级信息弹窗 -->
       <el-dialog title="添加班级信息" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
-        <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px">
+        <el-form ref="classInfo" :rules="rules" :model="classInfo" label-width="80px" class="addInfo">
           <el-form-item label="班级名" prop="className">
             <el-input v-model="classInfo.className" placeholder="请输入班级名"></el-input>
           </el-form-item>
@@ -72,8 +75,8 @@
         </span>
       </el-dialog>
       <!-- 表单修改信息 -->
-      <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
-        <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
+      <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="25%" :before-close="handleCloseChangeInfo">
+        <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px" class="addInfo">
           <el-form-item label="班级ID" prop="classId">
             <el-input placeholder="请输入班级ID" v-model="changeInfoForm.classId">{{ changeInfoForm.classId }}</el-input>
           </el-form-item>
@@ -112,13 +115,12 @@
           <el-button type="primary" @click="submitChangeInfo">提 交</el-button>
         </span>
       </el-dialog>
-      <el-button @click="dialogVisible = true" type="primary" class="addButton">添加班级</el-button>
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
 
         <Tabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total"
           :limit="pageLimit" :currentPage="currentPage" @click_1="showDetails" @click_2="edit" @click_3="handleDelete"
-          @changePage="changePage" @changeLimit="changeLimit"/>
+          @changePage="changePage" @changeLimit="changeLimit" />
       </div>
     </div>
     <router-view></router-view>
@@ -258,16 +260,16 @@ export default {
     },
     handleClose() {
       // if (this.isInfoChanged) { // 如果修改过，就弹窗提示
-        const filled = Object.values(this.classInfo).some(value => value !== '')
+      const filled = Object.values(this.classInfo).some(value => value !== '')
       if (filled) {
         this.$confirm('表单已更改，确认关闭？')
-        .then(_ => {
-          this.$refs.classInfo.resetFields()
-          this.dialogVisible = false
-        })
-        .catch(_ => { });
+          .then(_ => {
+            this.$refs.classInfo.resetFields()
+            this.dialogVisible = false
+          })
+          .catch(_ => { });
       }
-      else{
+      else {
         this.$refs.classInfo.resetFields()
         this.dialogVisible = false
       }
@@ -283,12 +285,12 @@ export default {
     handleCloseChangeInfo() {
       if (this.isDataChanged) { // 如果修改过，就弹窗提示
         this.$confirm('表单已更改，确认关闭？')
-        .then(_ => {
-          this.$refs.changeInfoForm.resetFields()
-          this.changeInfoForm.name = ''
-          this.changeInfoShow = false
-        })
-        .catch(_ => { });
+          .then(_ => {
+            this.$refs.changeInfoForm.resetFields()
+            this.changeInfoForm.name = ''
+            this.changeInfoShow = false
+          })
+          .catch(_ => { });
       } else {
         this.$refs.changeInfoForm.resetFields()
         this.changeInfoShow = false
@@ -388,7 +390,7 @@ export default {
       }
       classList(params).then(res => {
         // console.log(res.data);
-        this.total=res.data.data.sum
+        this.total = res.data.data.sum
         this.tableData = res.data.data.classes
       })
     },
@@ -482,7 +484,7 @@ export default {
     },
     // 辅导员信息列表
     FilterUserName(queryString, cb) {
-      if(queryString == '') {
+      if (queryString == '') {
         var results = queryString
         cb(results)
         return
@@ -504,7 +506,7 @@ export default {
     },
     // 最终选择的数据
     handleSelect(val) {
-      this.classInfo.userName = val.name 
+      this.classInfo.userName = val.name
       this.classInfo.userId = val.userId
     },
     // 点击clearable清空小图标按钮以后，继续重新在输入框中输入数据，querySearch会触发，但是cb函数不会触发
@@ -524,7 +526,7 @@ export default {
     isInfoChanged() {
       return JSON.stringify(this.classInfo) !== JSON.stringify(this.originalInfo);
     },
-    
+
   },
   mounted() {
     this.getSimpleList()
@@ -549,17 +551,12 @@ div /deep/ .el-dialog {
   border-radius: 8px;
 }
 
-/* .addButton {
-  position: absolute;
-  left: 210px;
-  top: 110px;
-} */
 .addButton {
-  position: absolute;
+  /* position: absolute;
   right: 20px;
   top: 109px;
   z-index: 999;
-  transform: translate(-35px, 115px);
+  transform: translate(-35px, 115px); */
 }
 
 .searchButton {
@@ -621,36 +618,73 @@ div /deep/ .el-dialog {
 }
 
 .manage-header {
-  margin-top: 52px;
+  /* margin-top: 52px; */
 }
 
 .findInput {
-  position: absolute;
+  /* position: absolute;
   top: 160px;
-  left: 320px;
+  left: 320px; */
+  display: inline-block;
   width: 300px;
   z-index: 11;
 }
 
 .findButton {
   position: absolute;
-  top: 220px;
-  left: 580px;
+  /* top: 220px; */
+  /* left: 580px; */
+  right: 0;
+  /* top: 0; */
+  /* left: 0; */
   z-index: 23;
   border-radius: 4px;
 }
+
 .userInput {
   /* width: 450.89px; */
   width: 100%;
 }
+
 .classManage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 .el-dialog__wrapper {
   line-height: 28px;
 }
+
+.addInfo {
+  height: 300px;
+  overflow-y: hidden;
+}
+
+.addInfo:hover {
+  overflow-y: scroll;
+}
+
+.search {
+  position: relative;
+  display: inline-block;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 33;
+  top: 10px;
+  justify-content: space-between;
+  padding:0 35px;
+}
+
+.app {
+  position: relative;
+}
+
 </style>

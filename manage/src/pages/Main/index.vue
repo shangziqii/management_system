@@ -4,9 +4,11 @@
       <el-aside width="270px">
        <!--  <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
           background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router> -->
-          <el-menu :default-active="active" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-          background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" router>
-          <h3>管理系统</h3>
+          <el-menu :default-active="active" class="el-menu-vertical-demo " @open="handleOpen" @close="handleClose"
+           backgroundColor="#646e8b" text-color="#fff" active-text-color="#ffd04b" router>
+           <!-- background-color="#22305a" -->
+           <!-- #545c64 -->
+          <h3>教学管理系统</h3>
           <el-menu-item v-for="item in noChildren" v-show="item.name !== 'Am' || (item.name === 'Am' && roleShow != 2)"
             :key="item.name" :index="item.name" @click="clickMenu(item)" :style="{ color: active === item.path ? activeColor : '' }">
             <i :class="`el-icon-${item.icon}`"></i>
@@ -19,7 +21,7 @@
               <span slot="title">{{ item.label }}</span>
             </template>
             <el-menu-item-group v-for="subItem in item.children" :key="subItem.label">
-              <el-menu-item :index="subItem.label" @click="clickMenu(subItem)" :style="{ color: active === subItem.path ? activeColor : '' }">{{ subItem.label }}</el-menu-item>
+              <el-menu-item class="children" :index="subItem.label" @click="clickMenu(subItem)" :style="{ color: active === subItem.path ? activeColor : '' }">{{ subItem.label }}</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -40,7 +42,7 @@
           <div class="r-content">
             <el-dropdown>
               <span class="el-dropdown-link">
-                <span class="el-icon-user-solid"></span><i class="el-icon-arrow-down el-icon--right"></i>
+                <span class="el-icon-user-solid person"></span><i class="el-icon-arrow-down el-icon--right person"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item @click.native="quitUser()">退出登录</el-dropdown-item>
@@ -59,8 +61,8 @@
 
         <div class="mainContent">
           <el-main class="main_ta">
-            <router-view>
-            </router-view>
+              <router-view>
+              </router-view>
           </el-main>
         </div>
 
@@ -275,7 +277,10 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
+
   background-color: #22305a;
+  /* background-color:#074887; */
+
   padding: 0;
   position: relative;
 }
@@ -298,7 +303,7 @@ export default {
   background-color: rgb(255, 255, 255);
   color: #333;
   text-align: center;
-  line-height: 160px;
+  /* line-height: 160px; */
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 270px;
@@ -333,7 +338,6 @@ export default {
   margin-top: 60px;
   height: 100%;
 }
-
 .el-breadcrumb[data-v-c9c526c0] {
   position: absolute;
   /* top: 59px; */
@@ -371,4 +375,11 @@ export default {
   text-align: left;
 }
 
+.person{
+  color:#e3e3e3;
+  font-size:18px;
+}
+.children{
+  margin-left: 28px;
+}
 </style>

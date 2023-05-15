@@ -1,6 +1,6 @@
 <template>
   <div class="manage">
-    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="20%" :before-close="handleClose">
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
       <!-- 账户人员的表单信息（新增按钮展开） -->
       <el-form ref="form" :rules="rules" :model="form" label-width="80px">
         <el-form-item label="姓名" prop="name">
@@ -16,7 +16,7 @@
           <el-input v-model="form.role" disabled></el-input>
         </el-form-item>
         <el-form-item label="身份" prop="role" v-show="roleShow === 0">
-          <el-select placeholder="请选择身份" v-model="form.role">
+          <el-select placeholder="请选择身份" v-model="form.role" class="commonWidth">
             <el-option label="管理员" value='0'></el-option>
             <el-option label="辅导员" value='1'></el-option>
             <!-- <el-option label="班主任" value='2'></el-option> -->
@@ -252,8 +252,8 @@ export default {
   /* left: 210px; */
   z-index: 999;
   transform: translateY(80px);
-  right: 40px;
-  top: 140px;
+  right: 50px;
+  top: 70px;
 }
 
 .manage .el-dialog {
@@ -265,7 +265,7 @@ export default {
 }
 
 .manage-header {
-  margin-top: 52px;
+  /* margin-top: 52px; */
 }
 
 .manage /deep/ .el-dialog__title {
@@ -275,5 +275,8 @@ export default {
 
 div /deep/ .el-dialog {
   border-radius: 8px;
+}
+.commonWidth{
+  width: 100%;
 }
 </style>

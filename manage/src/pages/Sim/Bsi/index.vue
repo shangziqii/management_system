@@ -11,8 +11,32 @@
         <el-radio v-model="radio" label="2">不 备 份</el-radio>
         <el-button @click="openTip">确认导入</el-button>
       </el-dialog>
+      <!-- 模糊搜索某学生 -->
+      <div class="tabelTop">
+        <div class="search">
+          <div class="findInput">
+            <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
+            </el-input>
+            <el-input v-model="search.studentName" class="input" placeholder="请输入学生姓名" clearable>
+            </el-input>
+            <el-input v-model="search.studentClass" class="input" placeholder="请输入班级" clearable>
+            </el-input>
+            <el-input v-model="search.studentGrade" class="input" placeholder="请输入年级" clearable>
+            </el-input>
+          </div>
+          <el-button icon="el-icon-search" circle class="findButton" @click="searchMoreTo"></el-button>
+          <!-- <el-button @click="dialogVisible = true" type="primary" class="findButton">添加班级</el-button> -->
+        </div>
+        <div class="addButton">
+          <el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button>
+          <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
+          <!-- <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button> -->
+          <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
+        </div>
+      </div>
+
       <!-- 搜索框的显示 -->
-      <div class="searchInfo">
+      <!-- <div class="searchInfo">
         <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
         </el-input>
         <el-input v-model="search.studentName" class="input" placeholder="请输入学生姓名" clearable>
@@ -22,18 +46,18 @@
         <el-input v-model="search.studentGrade" class="input" placeholder="请输入年级" clearable>
         </el-input>
         <el-button icon="el-icon-search" circle class="searchMore" @click="searchMoreTo"></el-button>
-      </div>
-      <div class="btn">
+      </div> -->
+      <!-- <div class="btn">
         <el-button type="primary" size="small" @click="addFormShow = true">新增学生信息</el-button>
-        <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
+        <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button> -->
         <!-- <el-button type="primary" size="small" @click="showSelect = true">导出信息</el-button> -->
-        <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
-      </div>
+        <!-- <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
+      </div> -->
       <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
         :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changeLimit="changeLimit"
         @changePage="changePage" />
       <!-- @click_3="details" -->
-      <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm" />
+      <AddStudentInfo :isShow="addFormShow" @change="changeShow" ref='addForm' @submit="submitForm"/>
       <!-- <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" /> -->
       <ModifyFormInfo :isShow="modifyFormShow" @change="modifyShow" :studentInfo="studentInfo" @save="modifyStudnet" />
 
@@ -343,43 +367,43 @@ export default {
     },
     fileTest(file) {
       const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
-        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
-        if (!isFormatValid) {
-          this.$message.error('上传的导入文件只能是 xlsx 格式!');
-        }
-        return isFormatValid;
-      }, 
+      const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+      if (!isFormatValid) {
+        this.$message.error('上传的导入文件只能是 xlsx 格式!');
+      }
+      return isFormatValid;
+    },
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      if(this.fileTest(file)){
+      if (this.fileTest(file)) {
         if (file) {
-        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.radio === '1') {
-            this.submitSelect()
-          }
-          this.handleFileUpload();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消导入'
+          this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (this.radio === '1') {
+              this.submitSelect()
+            }
+            this.handleFileUpload();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消导入'
+            })
           })
-        })
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '请选择文件!'
+          })
+        }
       }
       else {
-        this.$message({
-          type: 'error',
-          message: '请选择文件!'
-        })
-      }
-      }
-      else{
 
       }
-      
+
     }
   },
   mounted() {
@@ -425,18 +449,62 @@ export default {
   z-index: 11;
 }
 
-.input {
-  width: 200px;
+/* .input {
+  width: 150px;
   margin-right: 10px;
-}
+} */
+
 .classManage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 .el-dialog__wrapper {
   line-height: 28px;
 }
+.search {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  justify-content:space-between;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 33;
+  top: 10px;
+  justify-content: space-between;
+  padding:0 35px;
+}
+
+.classManage {
+  position: relative;
+}
+.findInput {
+  display: inline-block;
+  z-index: 11;
+  display: flex;
+  justify-content:space-between;
+}
+.findInput .input{
+  width: 150px;
+  margin-right: 10px;
+}
+.findButton {
+  position: absolute;
+  right: -45px;
+  z-index: 23;
+  border-radius: 4px;
+}
+.addButton{
+  line-height: 40px;
+}
+
+
 </style>

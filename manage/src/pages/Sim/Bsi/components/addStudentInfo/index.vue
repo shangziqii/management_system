@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="新增学生信息" :visible.sync="isShow" width="25%" :before-close="handleClose">
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm addInfo">
       <el-form-item label="学生学号" prop="studentNum">
         <el-input type="text" v-model="ruleForm.studentNum" placeholder="请输入学生学号"></el-input>
       </el-form-item>
@@ -22,11 +22,11 @@
       <el-form-item label="民族" prop="nation">
         <el-input type="text" v-model="ruleForm.nation" placeholder="汉族"></el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-      </el-form-item>
     </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+    </span>
   </el-dialog>
 </template>
 
@@ -105,3 +105,12 @@ export default {
   }
 };
 </script>
+<style scoped>
+.addInfo {
+  height: 300px;
+  overflow-y: hidden;
+}
+.addInfo:hover{
+  overflow-y: scroll;
+}
+</style>

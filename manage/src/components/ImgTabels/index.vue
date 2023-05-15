@@ -1,18 +1,20 @@
 <template>
-  <div>
+  <div class="tabel">
     <el-dialog title="文件列表" :visible.sync="centerDialogVisible" width="30%" center>
-      <div v-for="item in listFiles" :key="item">
-        <a :href="item" download>
-          <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;">{{ getFileName(item) }}
-        </a>
-      </div>
+      <span class="fileCard">
+        <div v-for="item in listFiles" :key="item" class="fileItem">
+          <a :href="item" download>
+            <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;">{{ getFileName(item) }}
+          </a>
+        </div>
+      </span>  
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
     <el-card>
-      <el-table :data="tableData" style="margin:0;" class="tabel">
+      <el-table :data="tableData" style="margin:0;">
         <!--数据列表展示部分-->
         <el-table-column v-for="item in tableColumns" :key="item.prop" :prop="item.prop" :label="item.label"
           :width="item.width" align="center">
@@ -28,13 +30,14 @@
             <template v-else-if="item.paper">
               <!-- <a :href="scope.row[item.prop]" style="max-width: 100px; max-height: 100px;"></a> -->
               <!-- <button v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])">预览文件</button> -->
-              <el-button type="primary" plain size="small" v-show="scope.row[item.prop]" @click="previewFile(scope.row[item.prop])" v-if="scope.row[item.prop]">预览文件</el-button>
+              <el-button type="primary" plain size="small" v-show="scope.row[item.prop]"
+                @click="previewFile(scope.row[item.prop])" v-if="scope.row[item.prop]">预览文件</el-button>
               <span v-else>-</span>
             </template>
 
             <!-- 默认列 -->
             <template v-else>
-              {{ scope.row[item.prop]? scope.row[item.prop] : '-' }}
+              {{ scope.row[item.prop] ? scope.row[item.prop] : '-' }}
               <!-- {{ scope.row[item.prop] }} -->
             </template>
           </template>
@@ -211,13 +214,15 @@ export default {
 .el-dialog__body>div {
   display: flex;
   align-items: center;
-  margin-bottom: -80px;
+  /* margin-bottom: -80px; */
+  margin-bottom: -40px;
 }
 
 /* 调整对话框底部按钮样式 */
 .dialog-footer {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: flex-end;
   padding-top: 20px;
 }
 
@@ -243,11 +248,34 @@ export default {
   background-color: #66b1ff;
 }
 
-.tabel{
+.tabel {
   max-height: calc(100vh - 200px);
-  line-height: 70px;
-  /* overflow-y:scroll ; */
+  /* max-height: 100vh; */
+  /* line-height: 70px; */
+  line-height: 110px;
+  overflow-y: scroll;
 }
 
+.fileList {
+  margin-bottom: 10px;
+  line-height: 50px;
+}
+.fileCard{
+  height: 100px;
+  line-height:70px;
+}
+/* .fileCard .el-dialog--center .el-dialog__body{
+  height: 150px;
+  overflow-y:scroll;
+} */
+.fileItem{
+}
+.el-dialog__wrapper {
+  line-height: 28px;
+}
+.el-dialog__body{
+  height: 100px;
+  overflow-y:scroll;
+}
 </style>
   

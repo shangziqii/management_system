@@ -1,6 +1,12 @@
 <template>
   <div>
     <div class="classManage">
+      <!-- 只能由辅导员(role = 1)增删 -->
+      <div class="tabelTop">
+        <div class="addButton">
+          <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role === '1'">添加记录</el-button>
+        </div>
+      </div>
       <!-- 模糊搜索某记录 -->
       <!-- <div>
         <el-input v-model="findClass.className" placeholder="请输入班级名称以查询班级" class="findInput">
@@ -8,9 +14,9 @@
         <el-button icon="el-icon-search" circle  @click="WhichClass" class="findButton"></el-button>
       </div> -->
       <!-- 添加助学金信息弹窗 -->
-      <el-dialog title="添加助学金信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose"
+      <el-dialog title="添加助学金信息" :visible.sync="dialogVisible" width="25%" :before-close="handleClose"
         v-show="role === 1">
-        <el-form ref="subInfo" :rules="rules" :model="subInfo" label-width="80px">
+        <el-form ref="subInfo" :rules="rules" :model="subInfo" label-width="80px" class="addInfo">
           <el-form-item label="专业" prop="major">
             <el-input v-model="subInfo.major" placeholder="请输入专业名称"></el-input>
           </el-form-item>
@@ -18,28 +24,29 @@
             <el-input v-model="subInfo.grade" placeholder="请输入所属年级"></el-input>
           </el-form-item>
           <el-form-item label="时间范围" prop="selectTime">
-            <!-- 开始年份的下拉框 -->
-            <el-select v-model="startYear" placeholder="请选择开始年份">
-              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
-            </el-select>
+            <div class="commonWidth2">
+              <!-- 开始年份的下拉框 -->
+              <el-select v-model="startYear" placeholder="请选择开始年份" class="commonWidth">
+                <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+              </el-select>
 
-            <!-- 结束年份的下拉框 -->
-            <el-select v-model="endYear" placeholder="请选择结束年份">
-              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
-            </el-select>
-
+              <!-- 结束年份的下拉框 -->
+              <el-select v-model="endYear" placeholder="请选择结束年份" class="commonWidth">
+                <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+              </el-select>
+            </div>
           </el-form-item>
           <el-form-item label="评定阶段" prop="status">
-            <el-select v-model="subInfo.status">
+            <el-select v-model="subInfo.status" class="commonWidth2">
               <el-option label="已完成" value="已完成"></el-option>
               <el-option label="进行中" value="进行中"></el-option>
               <el-option label="未完成" value="未完成"></el-option>
             </el-select>
           </el-form-item>
           <!-- 添加信息文件上传部分 -->
-          <el-form-item label="文件一" prop="files1">
-            <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="subInfo.files1" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="申请列表" prop="files1">
+            <!-- <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="subInfo.files1" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput1" @change="uploadFile1">
             </div>
             <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
@@ -55,38 +62,38 @@
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="文件二" prop="files2">
-            <el-input placeholder="困难生评议记录以及评议结果" v-model="subInfo.files2" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="评议记录" prop="files2">
+            <!-- <el-input placeholder="困难生评议记录以及评议结果" v-model="subInfo.files2" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput2" @change="uploadFile2">
-            </div>
-            <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
-              <div class="item">
-                <a :href="item" download>
-                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName2(item) }}
-                </a>
-                <!-- 取消上传按钮 -->
-                <div @click="cancelUp2(item)" class="cancelDiv">
-                  <i class="el-icon-error"></i>
+              <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
+                <div class="item">
+                  <a :href="item" download>
+                    <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                    {{ getFileName2(item) }}
+                  </a>
+                  <!-- 取消上传按钮 -->
+                  <div @click="cancelUp2(item)" class="cancelDiv">
+                    <i class="el-icon-error"></i>
+                  </div>
                 </div>
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="文件三" prop="files3">
-            <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="subInfo.files3" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="评定名单" prop="files3">
+            <!-- <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="subInfo.files3" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput3" @change="uploadFile3">
-            </div>
-            <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
-              <div class="item">
-                <a :href="item" download>
-                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName3(item) }}
-                </a>
-                <!-- 取消上传按钮 -->
-                <div @click="cancelUp3(item)" class="cancelDiv">
-                  <i class="el-icon-error"></i>
+              <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
+                <div class="item">
+                  <a :href="item" download>
+                    <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                    {{ getFileName3(item) }}
+                  </a>
+                  <!-- 取消上传按钮 -->
+                  <div @click="cancelUp3(item)" class="cancelDiv">
+                    <i class="el-icon-error"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,8 +105,9 @@
         </span>
       </el-dialog>
       <!-- 表单修改信息 -->
-      <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
-        <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
+      <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="25%" :before-close="handleCloseChangeInfo"
+        class="changeInfo">
+        <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px" class="addInfo">
           <el-form-item label="专业" prop="major">
             <el-input placeholder="请输入专业名称" v-model="changeInfoForm.major">{{ changeInfoForm.major }}</el-input>
           </el-form-item>
@@ -107,74 +115,76 @@
             <el-input placeholder="请输入所属年级" v-model="changeInfoForm.grade">{{ changeInfoForm.grade }}</el-input>
           </el-form-item>
           <el-form-item label="时间范围" prop="subsidiesTime">
-            <!-- 开始年份的下拉框 -->
-            <el-select v-model="startYear" placeholder="请选择开始年份">
-              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
-            </el-select>
+            <div class="commonWidth2">
+              <!-- 开始年份的下拉框 -->
+              <el-select v-model="startYear" placeholder="请选择开始年份" class="selectTime commonWidth">
+                <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+              </el-select>
 
-            <!-- 结束年份的下拉框 -->
-            <el-select v-model="endYear" placeholder="请选择结束年份">
-              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
-            </el-select>
+              <!-- 结束年份的下拉框 -->
+              <el-select v-model="endYear" placeholder="请选择结束年份" class="selectTime commonWidth">
+                <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+              </el-select>
+            </div>
           </el-form-item>
           <el-form-item label="评定阶段" prop="status">
-            <el-select v-model="changeInfoForm.status">
+            <el-select v-model="changeInfoForm.status" class="commonWidth2">
               <el-option label="已完成" value="已完成"></el-option>
               <el-option label="进行中" value="进行中"></el-option>
               <el-option label="未完成" value="未完成"></el-option>
             </el-select>
           </el-form-item>
           <!-- 修改信息页面文件上传 -->
-          <el-form-item label="文件一" prop="files1">
-            <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="changeInfoForm.files1" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="申请列表" prop="files1">
+            <!-- <el-input placeholder="申请助学金的学生列表，及证明材料" v-model="changeInfoForm.files1" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput1" @change="uploadChangeFile1">
-            </div>
-            <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
-              <div class="item">
-                <a :href="item" download>
-                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName1(item) }}
-                </a>
-                <!-- 取消上传按钮 -->
-                <div @click="cancelUp1(item)" class="cancelDiv">
-                  <i class="el-icon-error"></i>
+              <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
+                <div class="item">
+                  <a :href="item" download>
+                    <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                    {{ getFileName1(item) }}
+                  </a>
+                  <!-- 取消上传按钮 -->
+                  <div @click="cancelUp1(item)" class="cancelDiv">
+                    <i class="el-icon-error"></i>
+                  </div>
                 </div>
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="文件二" prop="files2">
-            <el-input placeholder="困难生评议记录以及评议结果" v-model="changeInfoForm.files2" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="评议记录" prop="files2">
+            <!-- <el-input placeholder="困难生评议记录以及评议结果" v-model="changeInfoForm.files2" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput2" @change="uploadChangeFile2">
-            </div>
-            <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
-              <div class="item">
-                <a :href="item" download>
-                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName2(item) }}
-                </a>
-                <!-- 取消上传按钮 -->
-                <div @click="cancelUp2(item)" class="cancelDiv">
-                  <i class="el-icon-error"></i>
+              <div v-for="item in fileList2" :key="item" class="fileListShow" v-show="item">
+                <div class="item">
+                  <a :href="item" download>
+                    <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                    {{ getFileName2(item) }}
+                  </a>
+                  <!-- 取消上传按钮 -->
+                  <div @click="cancelUp2(item)" class="cancelDiv">
+                    <i class="el-icon-error"></i>
+                  </div>
                 </div>
               </div>
             </div>
           </el-form-item>
-          <el-form-item label="文件三" prop="files3">
-            <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="changeInfoForm.files3" :disabled="true"></el-input>
-            <div>
+          <el-form-item label="评定名单" prop="files3">
+            <!-- <el-input placeholder="最终发放助学金的学生名单、助学金金额" v-model="changeInfoForm.files3" :disabled="true"></el-input> -->
+            <div class="commonWidth2">
               <input type="file" ref="fileInput3" @change="uploadChangeFile3">
-            </div>
-            <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
-              <div class="item">
-                <a :href="item" download>
-                  <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
-                  {{ getFileName3(item) }}
-                </a>
-                <!-- 取消上传按钮 -->
-                <div @click="cancelUp3(item)" class="cancelDiv">
-                  <i class="el-icon-error"></i>
+              <div v-for="item in fileList3" :key="item" class="fileListShow" v-show="item">
+                <div class="item">
+                  <a :href="item" download>
+                    <img :src="getFileIcon(item)" alt="file icon" style="width:50px;height:50px;" class="item">
+                    {{ getFileName3(item) }}
+                  </a>
+                  <!-- 取消上传按钮 -->
+                  <div @click="cancelUp3(item)" class="cancelDiv">
+                    <i class="el-icon-error"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,14 +195,12 @@
           <el-button type="primary" @click="submitChangeInfo">保 存</el-button>
         </span>
       </el-dialog>
-      <!-- 只能由辅导员(role = 1)增删 -->
-      <el-button @click="dialogVisible = true" type="primary" class="addButton" v-show="role === '1'">添加记录</el-button>
       <!-- <el-button @click="dialogVisible2 = true" type="primary" class="searchButton">查询班级</el-button> -->
       <div class="manage-header">
 
         <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total"
-          :limit="pageLimit" :currentPage="currentPage" @click_1="edit" @click_2="handleDelete"
-          @changePage="changePage" @changeLimit="changeLimit" class="tabel"/>
+          :limit="pageLimit" :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage"
+          @changeLimit="changeLimit" class="tabel" />
       </div>
     </div>
   </div>
@@ -289,44 +297,53 @@ export default {
     handleClose() {
       console.log('hello');
       console.log(this.subInfo);
-      const filled = Object.entries(this.subInfo).filter(([key, value]) => key !== 'subsidiesTime' && key !== 'status'&&key!=='selectTime').some(([key, value]) => value !== '');
+      const filled = Object.entries(this.subInfo).filter(([key, value]) => key !== 'subsidiesTime' && key !== 'status' && key !== 'selectTime').some(([key, value]) => value !== '');
       if (filled) {
         this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.subInfo.resetFields()
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
-          this.dialogVisible = false
-        })
-        .catch(_ => { });
+          .then(_ => {
+            this.$refs.subInfo.resetFields()
+            //关闭后将文件相关显示的数据清空
+            this.fileList = []
+            this.fileName = []
+            this.dialogVisible = false
+          })
+          .catch(_ => { });
       }
-      else{
+      else {
         this.$refs.subInfo.resetFields()
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
-          this.dialogVisible = false
-      } 
+        //关闭后将文件相关显示的数据清空
+        this.fileList = []
+        this.fileName = []
+        this.dialogVisible = false
+      }
     },
     // 修改表单关闭逻辑
     handleCloseChangeInfo() {
-      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {      this.$confirm('确认关闭？')
-        .then(_ => {
-          this.$refs.changeInfoForm.resetFields()
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
-          this.changeInfoShow = false
-        })
-        .catch(_ => { });
+      if (!(JSON.stringify(this.changeInfoForm) === JSON.stringify(this.recordInfo))) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            this.$refs.changeInfoForm.resetFields()
+            //关闭后将文件相关显示的数据清空
+            this.fileList1 = []
+            this.fileName1 = []
+            this.fileList2 = []
+            this.fileName2 = []
+            this.fileList3 = []
+            this.fileName3 = []
+            this.changeInfoShow = false
+          })
+          .catch(_ => { });
       }
-      else{
+      else {
         this.$refs.changeInfoForm.resetFields()
-          //关闭后将文件相关显示的数据清空
-          this.fileList = []
-          this.fileName = []
-          this.changeInfoShow = false
+        //关闭后将文件相关显示的数据清空
+        this.fileList1 = []
+        this.fileName1 = []
+        this.fileList2 = []
+        this.fileName2 = []
+        this.fileList3 = []
+        this.fileName3 = []
+        this.changeInfoShow = false
       }
 
     },
@@ -734,13 +751,6 @@ div /deep/ .el-dialog {
     left: 210px;
     top: 110px;
   } */
-.addButton {
-  position: absolute;
-  right: 20px;
-  top: 109px;
-  z-index: 999;
-  transform: translate(-35px, 115px);
-}
 
 .searchButton {
   position: absolute;
@@ -797,12 +807,16 @@ div /deep/ .el-dialog {
   font-weight: bold;
 }
 
+.classManage {
+  position: relative;
+}
+
 .el-dialog__wrapper {
   line-height: 28px;
 }
 
 .manage-header {
-  margin-top: 52px;
+  /* margin-top: 52px; */
 }
 
 .findInput {
@@ -837,8 +851,8 @@ div /deep/ .el-dialog {
 
 .cancelDiv {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  left: 35px;
   color: white;
   width: 20px;
   height: 20px;
@@ -862,5 +876,45 @@ div /deep/ .el-dialog {
 
 .el-dialog__body a:hover {
   color: #409EFF;
+}
+
+.addInfo {
+  height: 300px;
+  overflow: hidden;
+}
+
+.addInfo:hover {
+  overflow-y: scroll;
+}
+
+.selectTime {
+  width: 259.8px;
+}
+
+/* .changeInfo {
+  height: 300px;
+  overflow-y: hidden;
+}
+
+.changeInfo:hover {
+  overflow-y: scroll;
+} */
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 999;
+  top: 10px;
+  justify-content: flex-end;
+  padding: 0 35px;
+}
+
+.commonWidth {
+  width: 40%;
+  margin-right: 10px;
+}
+
+.commonWidth2 {
+  width: 100%;
 }
 </style>

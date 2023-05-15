@@ -1,11 +1,28 @@
 <template>
   <div class="page">
+
+    <!-- 模糊搜索某学生 -->
+    <div class="tabelTop">
+      <div class="search">
+        <div class="findInput">
+          <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
+          </el-input>
+          <el-button icon="el-icon-search" circle class="findButton" @click="searchStudentNum"></el-button>
+        </div>
+      </div>
+      <div class="addButton">
+        <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
+        <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
+        <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
+      </div>
+    </div>
+
     <!-- 搜索框的显示 -->
-    <div class="searchInfo">
+    <!-- <div class="searchInfo">
       <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
       </el-input>
       <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
-    </div>
+    </div> -->
     <!-- 导入信息上传文件页面 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleClose">
       <form>
@@ -15,11 +32,11 @@
       <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
-    <div class="btn">
+    <!-- <div class="btn">
       <el-button type="primary" size="small" @click="isShow = true">新增贫困生信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
       <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
-    </div>
+    </div> -->
     <Tables :tableColumns="Columns" :tableData="tableList" :operaColums="OperaColums" :total="total" :limit="pageLimit"
       :currentPage="currentPage" @click_1="changeStudentInfo" @click_2="deletePoorStudent" @changeLimit="changeLimit"
       @changePage="changePage" />
@@ -294,40 +311,40 @@ export default {
     },
     fileTest(file) {
       const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
-        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
-        if (!isFormatValid) {
-          this.$message.error('上传的导入文件只能是 xlsx 格式!');
-        }
-        return isFormatValid;
-      }, 
+      const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+      if (!isFormatValid) {
+        this.$message.error('上传的导入文件只能是 xlsx 格式!');
+      }
+      return isFormatValid;
+    },
     //导入文件之前调用
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      if(this.fileTest(file)){
+      if (this.fileTest(file)) {
         if (file) {
-        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.radio === '1') {
-            this.submitSelect()
-          }
-          this.handleFileUpload();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消导入'
+          this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (this.radio === '1') {
+              this.submitSelect()
+            }
+            this.handleFileUpload();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消导入'
+            })
           })
-        })
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '请选择文件!'
+          })
+        }
       }
-      else {
-        this.$message({
-          type: 'error',
-          message: '请选择文件!'
-        })
-      }
-      }      
     },
 
 
@@ -417,14 +434,63 @@ export default {
   width: 300px;
   margin-right: 10px;
 }
+
 .page /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 /* .el-dialog__wrapper {
   line-height: 28px;
 } */
+
+.search {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  justify-content:space-between;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 33;
+  top: 10px;
+  justify-content: space-between;
+  padding:0 35px;
+}
+
+.classManage {
+  position: relative;
+}
+.findInput {
+  display: inline-block;
+  z-index: 11;
+  display: flex;
+  justify-content:space-between;
+}
+.findInput .input{
+  width: 300px;
+  margin-right: 10px;
+}
+.findButton {
+  position: absolute;
+  right: 0;
+  z-index: 23;
+  border-radius: 4px;
+}
+.addButton{
+  line-height: 40px;
+}
+.page{
+  position:relative;
+}
+.commonWidth{
+  width: 355.75px;
+}
 </style>

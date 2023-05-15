@@ -1,12 +1,14 @@
 <template>
   <div class="classManage">
-    <div class="btn">
-      <!-- 添加信息按钮 -->
-      <el-button type="primary" @click="dialogVisible = true" v-show="role === 1">添加记录</el-button>
+    <!-- <div class="btn"> -->
+    <div class="tabelTop">
+      <el-button type="primary" @click="dialogVisible = true" v-show="role === '1'">添加记录</el-button>
     </div>
+    <!-- 添加信息按钮 -->
+    <!-- </div> -->
     <!-- 添加信息弹窗 -->
-    <el-dialog title="添加奖学金评定记录" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <el-form ref="scholInfo" :rules="rules" :model="scholInfo" label-width="80px">
+    <el-dialog title="添加奖学金评定记录" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
+      <el-form ref="scholInfo" :rules="rules" :model="scholInfo" label-width="80px" class="addInfo">
         <el-form-item label="专业" prop="major">
           <el-input v-model="scholInfo.major" placeholder="请输入专业名称"></el-input>
         </el-form-item>
@@ -16,20 +18,21 @@
         <!-- <el-form-item label="时间范围" prop="scholarshipTime"> -->
         <!-- <el-input v-model="scholInfo.scholarshipTime" placeholder="请输入评定的时间范围"></el-input> -->
         <el-form-item label="时间范围" prop="selectTime">
-          <!-- 开始年份的下拉框 -->
-          <el-select v-model="startYear" placeholder="请选择开始年份">
-            <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
-          </el-select>
+          <div class="commonWidth2">
+            <!-- 开始年份的下拉框 -->
+            <el-select v-model="startYear" placeholder="请选择开始年份" class="commonWidth">
+              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
 
-          <!-- 结束年份的下拉框 -->
-          <el-select v-model="endYear" placeholder="请选择结束年份">
-            <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
-          </el-select>
-
+            <!-- 结束年份的下拉框 -->
+            <el-select v-model="endYear" placeholder="请选择结束年份" class="commonWidth">
+              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
+          </div>
         </el-form-item>
         <el-form-item label="评定阶段" prop="status">
           <!-- <el-input v-model="scholInfo.status" placeholder="请输入当前评定阶段"></el-input> -->
-          <el-select v-model="scholInfo.status">
+          <el-select v-model="scholInfo.status" class="commonWidth2">
             <el-option label="已完成" value="已完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
             <el-option label="未完成" value="未完成"></el-option>
@@ -39,9 +42,8 @@
         <!-- 上传综测成绩记录文件 -->
         <!-- 上传相关文件1 -->
         <el-form-item label="综测成绩" prop="files1">
-          <div>
+          <div class="commonWidth2">
             <input type="file" ref="fileInput1" @change="uploadFile1">
-          </div>
           <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
             <div class="item">
               <a :href="item" download>
@@ -54,14 +56,14 @@
               </div>
             </div>
           </div>
+        </div>
         </el-form-item>
 
         <!-- 上传奖学金发放记录文件 -->
-        <el-form-item label="奖学金发放" prop="files2">
+        <el-form-item label="发放记录" prop="files2">
           <!-- <el-input placeholder="请选择相关文件" v-model="scholInfo.files2" :disabled="true"></el-input> -->
-          <div>
+          <div class="commonWidth2">
             <input type="file" ref="fileInput2" @change="uploadFile2">
-          </div>
           <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
             <div class="item">
               <a :href="item" download>
@@ -74,6 +76,7 @@
               </div>
             </div>
           </div>
+        </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -84,30 +87,32 @@
 
 
     <!-- 修改评定记录 -->
-    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo"
+    <el-dialog title="修改评定记录" :visible.sync="changeInfoShow" width="25%" :before-close="handleCloseChangeInfo"
       class="my-dialog">
-      <el-form ref="changeInfoForm" :rules="changeInfoRules" :model="changeInfoForm" label-width="80px">
+      <el-form ref="changeInfoForm" :rules="changeInfoRules" :model="changeInfoForm" label-width="80px" class="addInfo">
         <el-form-item label="专业" prop="major">
           <el-input placeholder="请输入专业名称" v-model="changeInfoForm.major"></el-input>
         </el-form-item>
         <el-form-item label="年级" prop="grade">
           <el-input placeholder="请输入专业年级" v-model="changeInfoForm.grade"></el-input>
         </el-form-item>
-        <el-form-item label="评定时间范围" prop="scholarshipTime">
+        <el-form-item label="时间范围" prop="scholarshipTime">
           <!-- <el-input placeholder="请选择评定时间范围" v-model="changeInfoForm.scholarshipTime"></el-input> -->
-          <!-- 开始年份的下拉框 -->
-          <el-select v-model="startYear" placeholder="请选择开始年份">
-            <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
-          </el-select>
+          <div class="commonWidth2">
+            <!-- 开始年份的下拉框 -->
+            <el-select v-model="startYear" placeholder="请选择开始年份" class="commonWidth">
+              <el-option v-for="year in years" :key="'start-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
 
-          <!-- 结束年份的下拉框 -->
-          <el-select v-model="endYear" placeholder="请选择结束年份">
-            <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
-          </el-select>
+            <!-- 结束年份的下拉框 -->
+            <el-select v-model="endYear" placeholder="请选择结束年份" class="commonWidth">
+              <el-option v-for="year in years" :key="'end-' + year" :label="year + '年'" :value="year"></el-option>
+            </el-select>
+          </div>
         </el-form-item>
-        <el-form-item label="当前评定阶段" prop="status">
+        <el-form-item label="评定阶段" prop="status">
           <!-- <el-input placeholder="请选择当前评定阶段" v-model="changeInfoForm.status"></el-input> -->
-          <el-select v-model="changeInfoForm.status">
+          <el-select v-model="changeInfoForm.status" class="commonWidth2">
             <el-option label="已完成" value="已完成"></el-option>
             <el-option label="进行中" value="进行中"></el-option>
             <el-option label="未完成" value="未完成"></el-option>
@@ -117,9 +122,8 @@
         <!-- 综测成绩记录 -->
         <!-- 修改信息，上传相关文件1 -->
         <el-form-item label="综测成绩" prop="files1">
-          <div>
+          <div class="commonWidth2">
             <input type="file" ref="fileInput1" @change="uploadChangeFile1">
-          </div>
           <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
             <div class="item">
               <a :href="item" download>
@@ -132,13 +136,14 @@
               </div>
             </div>
           </div>
+          </div>
         </el-form-item>
 
         <!-- 奖学金发放记录 -->
         <!-- 修改信息，上传相关文件2 -->
-        <el-form-item label="奖学金发放" prop="files2">
+        <el-form-item label="发放记录" prop="files2">
 
-          <div>
+          <div class="commonWidth2">
             <input type="file" ref="fileInput2" @change="uploadChangeFile2">
           </div>
           <div v-for="item in fileList1" :key="item" class="fileListShow" v-show="item">
@@ -161,7 +166,8 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :tableData="tableData" :operaColums="operaColums" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage" @changeLimit="changeLimit" class="tabel" />
+      :currentPage="currentPage" @click_1="edit" @click_2="handleDelete" @changePage="changePage"
+      @changeLimit="changeLimit" class="tabel" />
   </div>
 </template>
 
@@ -175,6 +181,7 @@ export default {
   },
   data() {
     return {
+      role: localStorage.getItem('role'), //登录用户的身份
       currentPage: 1, // 当前页
       pageLimit: 5, // 当前页面分页数
       tableData: [], // 数据列表
@@ -189,7 +196,7 @@ export default {
         status: '已完成',
         files1: '',
         files2: '',
-        selectTime:''
+        selectTime: ''
       },
       rules: {
         major: [
@@ -291,7 +298,7 @@ export default {
     },
     handleClose() {
       console.log(this.scholInfo);
-      const filled = Object.entries(this.scholInfo).filter(([key, value]) => key !== 'scholarshipTime' && key !== 'status'&&key!=='selectTime').some(([key, value]) => value !== '');
+      const filled = Object.entries(this.scholInfo).filter(([key, value]) => key !== 'scholarshipTime' && key !== 'status' && key !== 'selectTime').some(([key, value]) => value !== '');
       if (filled) {
         this.$confirm('确认关闭？')
           .then(_ => {
@@ -607,9 +614,9 @@ export default {
     this.operaColums = operaColums
   },
   computed: {
-    role() {
-      return this.$store.state.showNav.permission
-    },
+    /*     role() {
+          return this.$store.state.showNav.permission
+        }, */
     years() {
       const years = [];
       for (let year = this.maxYear; year >= this.minYear; year--) {
@@ -624,6 +631,9 @@ export default {
 <style scoped>
 /* 添加信息按钮和导出信息按钮样式 */
 .btn {
+  position: relative;
+  z-index: 999;
+  transform: translate(-25px, 75px);
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -650,7 +660,7 @@ export default {
 }
 
 .tabel {
-  margin-top: 12px;
+  /* margin-top: 12px; */
 }
 
 /* 多文件显示样式 */
@@ -665,8 +675,8 @@ export default {
 
 .cancelDiv {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  left: 35px;
   color: white;
   width: 20px;
   height: 20px;
@@ -691,15 +701,49 @@ export default {
 .el-dialog__body a:hover {
   color: #409EFF;
 }
+
 .classManage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
+.classManage {
+  position: relative;
+}
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 .el-dialog__wrapper {
   line-height: 28px;
 }
 
+.addInfo {
+  height: 300px;
+  overflow: hidden;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 999;
+  top: 10px;
+  justify-content: flex-end;
+  padding: 0 35px;
+}
+
+.addInfo:hover {
+  overflow-y: scroll;
+}
+
+.commonWidth {
+  width: 40%;
+  margin-right:10px;
+}
+
+.commonWidth2 {
+  width: 100%;
+}
 </style>

@@ -1,13 +1,29 @@
 <template>
   <div class="classManage">
+
+    <!-- 模糊搜索某学生 -->
+    <div class="tabelTop">
+      <div class="search">
+        <div class="findInput">
+          <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable></el-input>
+        </div>
+        <el-button icon="el-icon-search" circle class="findButton" @click="searchStudentNum"></el-button>
+      </div>
+      <div class="addButton">
+        <!-- 添加信息按钮 -->
+        <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+        <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
+        <!-- 导出excel表格 -->
+        <el-button type="primary" size="small" class="exportInfo" @click="submitSelect">导出信息</el-button>
+      </div>
+    </div>
+
     <!-- 添加信息按钮 -->
-    <div class="btn">
-      <!-- 添加信息按钮 -->
+    <!-- <div class="btn">
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
-      <!-- 导出excel表格 -->
       <el-button type="primary" size="small" class="exportInfo" @click="submitSelect">导出信息</el-button>
-    </div>
+    </div> -->
     <!-- 上传文件 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
       <el-form>
@@ -18,14 +34,14 @@
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
     <!-- 搜索框的显示 -->
-    <div class="searchInfo">
+    <!-- <div class="searchInfo">
       <el-input v-model="search.studentNum" class="input" placeholder="请输入学生学号" clearable>
       </el-input>
       <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
-    </div>
+    </div> -->
     <!-- 点击按钮弹出表单添加信息 -->
-    <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+    <el-dialog title="添加信息" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px" class="addInfo">
         <el-form-item label="学号" prop="studentNum">
           <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
         </el-form-item>
@@ -42,7 +58,7 @@
           <el-input placeholder="请输入处分名称" v-model="form.punishName"></el-input>
         </el-form-item>
         <el-form-item label="处分时间" prop="punishTime">
-          <el-date-picker v-model="form.punishTime" type="date" placeholder="请选择处分时间" format="yyyy 年 MM 月 dd 日"
+          <el-date-picker class="commonWidth" v-model="form.punishTime" type="date" placeholder="请选择处分时间" format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
@@ -52,9 +68,8 @@
 
         <!-- 添加信息文件上传部分 -->
         <el-form-item label="相关文件" prop="files">
-          <div>
+          <div class="commonWidth">
             <input type="file" ref="fileInput" @change="uploadFile">
-          </div>
           <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
             <div class="item">
               <a :href="item" download>
@@ -67,6 +82,7 @@
               </div>
             </div>
           </div>
+        </div>
         </el-form-item>
 
       </el-form>
@@ -78,8 +94,8 @@
 
     <!-- 修改信息按钮 -->
     <!-- 点击按钮弹出表单修改信息 -->
-    <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleClosechangeInfo">
-      <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
+    <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="25%" :before-close="handleClosechangeInfo">
+      <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px" class="addInfo">
         <el-form-item label="学号" prop="studentNum">
           <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum"></el-input>
         </el-form-item>
@@ -97,7 +113,7 @@
         </el-form-item>
         <el-form-item label="处分时间" prop="punishTime">
           <!-- <el-input placeholder="请输入获奖时间" v-model="form.punishTime"></el-input> -->
-          <el-date-picker v-model="changeInfoForm.punishTime" type="date" placeholder="请选择处分时间" format="yyyy 年 MM 月 dd 日"
+          <el-date-picker class="commonWidth" v-model="changeInfoForm.punishTime" type="date" placeholder="请选择处分时间" format="yyyy 年 MM 月 dd 日"
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
@@ -107,9 +123,8 @@
 
         <!-- 修改信息页面文件上传 -->
         <el-form-item label="相关文件" prop="files">
-          <div>
+          <div class="commonWidth">
             <input type="file" ref="fileInput" @change="uploadFile2">
-          </div>
           <div v-for="item in fileList" :key="item" class="fileListShow" v-show="item">
             <div class="item">
               <a :href="item" download>
@@ -122,6 +137,7 @@
               </div>
             </div>
           </div>
+          </div>
         </el-form-item>
 
       </el-form>
@@ -131,7 +147,8 @@
       </span>
     </el-dialog>
     <ImgTabels :tableColumns="columns" :operaColums="operaColums" :tableData="tableData" :total="total" :limit="pageLimit"
-      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage" @changeLimit="changeLimit"/>
+      :currentPage="currentPage" @click_1="modify" @click_2="deleteStu" @changePage="changePage"
+      @changeLimit="changeLimit" />
     <!-- changeLimit改变页面拉取数据数量现在是固定的不需要去改变 -->
     <!-- @changeLimit="changeLimit" -->
     <!-- <ExportStudentInfo :isShow="showSelect" :cityOptions="cityOptions" @change="exportShow" @submit="submitSelect" /> -->
@@ -638,38 +655,38 @@ export default {
     },
     fileTest(file) {
       const validFormats = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']; // .xlsx文件的MIME类型
-        const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
-        if (!isFormatValid) {
-          this.$message.error('上传的导入文件只能是 xlsx 格式!');
-        }
-        return isFormatValid;
-      }, 
+      const isFormatValid = validFormats.includes(file.type); // 判断文件类型是否在可接受的格式列表中
+      if (!isFormatValid) {
+        this.$message.error('上传的导入文件只能是 xlsx 格式!');
+      }
+      return isFormatValid;
+    },
     openTip() {
       const file = this.$refs.fileInput.files[0];
-      if(this.fileTest(file)){
+      if (this.fileTest(file)) {
         if (file) {
-        this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.radio === '1') {
-            this.submitSelect()
-          }
-          this.handleFileUpload();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消导入'
+          this.$confirm('此操作将会覆盖掉原来的学生信息, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if (this.radio === '1') {
+              this.submitSelect()
+            }
+            this.handleFileUpload();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消导入'
+            })
           })
-        })
-      }
-      else {
-        this.$message({
-          type: 'error',
-          message: '请选择文件!'
-        })
-      }
+        }
+        else {
+          this.$message({
+            type: 'error',
+            message: '请选择文件!'
+          })
+        }
       }
     },
     handleCloseFile() {
@@ -739,8 +756,8 @@ export default {
 
 .cancelDiv {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  left: 35px;
   color: white;
   width: 20px;
   height: 20px;
@@ -765,14 +782,70 @@ export default {
 .el-dialog__body a:hover {
   color: #409EFF;
 }
+
 .classManage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 .el-dialog__wrapper {
   line-height: 28px;
+}
+.search {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  justify-content:space-between;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 33;
+  top: 10px;
+  justify-content: space-between;
+  padding:0 35px;
+}
+
+.classManage {
+  position: relative;
+}
+.findInput {
+  display: inline-block;
+  z-index: 11;
+  display: flex;
+  justify-content:space-between;
+}
+.findInput .input{
+  width: 300px;
+  margin-right: 10px;
+}
+.findButton {
+  position: absolute;
+  right: 0;
+  z-index: 23;
+  border-radius: 4px;
+}
+.addButton{
+  line-height: 40px;
+}
+.classManage{
+  position:relative;
+}
+
+.addInfo {
+  height: 300px;
+  overflow: hidden;
+}
+.addInfo:hover{
+  overflow-y:scroll;
+}
+.commonWidth{
+  width: 100%;
 }
 </style>

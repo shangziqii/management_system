@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增贫困生信息" :visible.sync="isShow" width="30%" :before-close="handleClose">
+  <el-dialog title="新增贫困生信息" :visible.sync="isShow" width="25%" :before-close="handleClose">
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="学生学号" prop="studentNum">
         <el-input type="text" v-model="ruleForm.studentNum" autocomplete="off"></el-input>
@@ -8,7 +8,7 @@
         <el-input type="text" v-model="ruleForm.studentName" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="贫困等级" prop="difficultLevel" @change="changeSelectValue($event)">
-        <el-select v-model="ruleForm.difficultLevel">
+        <el-select v-model="ruleForm.difficultLevel" class="commonWidth">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -17,10 +17,17 @@
         <el-input v-model="ruleForm.situation" type="textarea" placeholder="最长可输入255个字" maxlength="255" resize="none">
         </el-input>
       </el-form-item>
+      <el-form-item label="备注" prop="remarks">
+        <el-input v-model="ruleForm.remarks" type="textarea" placeholder="最长可输入255个字" maxlength="255" resize="none">
+        </el-input>
+      </el-form-item>
       <el-form-item>
+        <div class="left">
         <el-button @click="resetForm('ruleForm')">重置</el-button>
         <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+        </div>
       </el-form-item>
+
     </el-form>
   </el-dialog>
 </template>
@@ -107,3 +114,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.left {
+  width: 100%;
+  margin-left: 44px;
+}
+.commonWidth{
+  width: 100%;
+}
+</style>

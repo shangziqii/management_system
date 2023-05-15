@@ -1,13 +1,31 @@
 <template>
   <div class="classManage">
+    <!-- 模糊搜索某学生 -->
+    <div class="tabelTop">
+      <div class="search">
+        <div class="findInput">
+          <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input"
+            placeholder="请输入学生学号" clearable>
+            <!-- @change="onChange" -->
+          </el-input>
+          <el-button icon="el-icon-search" circle class="findButton" @click="searchStudentNum"></el-button>
+        </div>
+      </div>
+      <div class="addButton">
+        <!-- 添加信息按钮 -->
+        <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
+        <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
+        <!-- 导出excel表格 -->
+        <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
+      </div>
+    </div>
     <!-- 搜索学生 -->
-    <div class="searchInfo">
+    <!-- <div class="searchInfo">
       <el-input onkeyup="this.value=this.value.replace(/\s+/g,'')" v-model="search.studentNum" class="input"
         placeholder="请输入学生学号" clearable>
-        <!-- @change="onChange" -->
       </el-input>
       <el-button icon="el-icon-search" circle class="searchMore" @click="searchStudentNum"></el-button>
-    </div>
+    </div> -->
     <!-- 导入信息上传文件页面 -->
     <el-dialog title="选择文件进行导入" :visible.sync="addFileShow" width="30%" :before-close="handleCloseFile">
       <el-form>
@@ -17,16 +35,14 @@
       <el-radio v-model="radio" label="2">不 备 份</el-radio>
       <el-button @click="openTip">确认导入</el-button>
     </el-dialog>
-    <div class="btn">
-      <!-- 添加信息按钮 -->
+    <!-- <div class="btn">
       <el-button type="primary" size="small" @click="dialogVisible = true">添加信息</el-button>
       <el-button type="primary" size="small" @click="addFileShow = true">导入信息</el-button>
-      <!-- 导出excel表格 -->
       <el-button type="primary" size="small" @click="submitSelect">导出信息</el-button>
-    </div>
+    </div> -->
     <!-- 点击按钮弹出表单添加信息 -->
-    <el-dialog title="添加信息" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-      <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+    <el-dialog title="添加信息" :visible.sync="dialogVisible" width="25%" :before-close="handleClose">
+      <el-form ref="form" :rules="rules" :model="form" label-width="80px" class="addInfo">
         <el-form-item label="学号" prop="studentNum">
           <el-input placeholder="请输入学号" v-model="form.studentNum"></el-input>
         </el-form-item>
@@ -44,8 +60,8 @@
         </el-form-item>
         <el-form-item label="获奖时间" prop="prizeTime">
           <!-- <el-input placeholder="请输入获奖时间" v-model="form.prizeTime"></el-input> -->
-          <el-date-picker v-model="form.prizeTime" type="date" placeholder="请选择获奖时间" format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+          <el-date-picker class="commonWidth" v-model="form.prizeTime" type="date" placeholder="请选择获奖时间"
+            format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="指导老师" prop="teacher">
@@ -53,12 +69,12 @@
         </el-form-item>
 
         <!-- 上传电子版奖状（文件） -->
-        <el-form-item label="奖状电子版" prop="files">
-          <!-- <el-input placeholder="请选择奖状电子版" v-model="form.files" :disabled="true"></el-input> -->
-          <div>
+        <el-form-item label="电子奖状" prop="files" >
+          <!-- <el-input placeholder="请选择电子奖状版" v-model="form.files" :disabled="true"></el-input> -->
+          <div class="commonWidth upImg">
 
-            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
-              :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" ref="upImg">
+            <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile"
+              :headers="headers" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" ref="upImg">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -104,8 +120,8 @@
 
     <!-- 修改信息按钮 -->
     <!-- 点击按钮弹出表单修改信息 -->
-    <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="30%" :before-close="handleCloseChangeInfo">
-      <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px">
+    <el-dialog title="修改信息" :visible.sync="changeInfoShow" width="25%" :before-close="handleCloseChangeInfo">
+      <el-form ref="changeInfoForm" :rules="changRules" :model="changeInfoForm" label-width="80px" class="addInfo">
         <el-form-item label="学号" prop="studentNum">
           <el-input placeholder="请输入学号" :disabled="true" v-model="changeInfoForm.studentNum"></el-input>
         </el-form-item>
@@ -123,17 +139,17 @@
         </el-form-item>
         <el-form-item label="获奖时间" prop="prizeTime">
           <!-- <el-input placeholder="请输入获奖时间" v-model="form.prizeTime"></el-input> -->
-          <el-date-picker v-model="changeInfoForm.prizeTime" type="date" placeholder="请选择获奖时间" format="yyyy 年 MM 月 dd 日"
-            value-format="yyyy-MM-dd">
+          <el-date-picker class="commonWidth" v-model="changeInfoForm.prizeTime" type="date" placeholder="请选择获奖时间"
+            format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="指导老师" prop="teacher">
           <el-input placeholder="请输入指导老师" v-model="changeInfoForm.teacher"></el-input>
         </el-form-item>
-        <el-form-item label="奖状电子版" prop="files">
-          <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files"></el-input> -->
-          <!-- <el-input placeholder="请输入奖状电子版" v-model="changeInfoForm.files" :disabled="true"></el-input> -->
-          <div>
+        <el-form-item label="电子奖状" prop="files">
+          <!-- <el-input placeholder="请输入电子奖状版" v-model="changeInfoForm.files"></el-input> -->
+          <!-- <el-input placeholder="请输入电子奖状版" v-model="changeInfoForm.files" :disabled="true"></el-input> -->
+          <div class="commonWidth upImg">
             <!-- 原版 -->
             <el-upload name="uploadFile" class="avatar-uploader" action="/api/prizeStudent/uploadFile" :headers="headers"
               :on-success="handleAvatarSuccess2" :before-upload="beforeAvatarUpload" ref="myUpload">
@@ -198,7 +214,7 @@ export default {
         token: token
       },
       showSelect: false,
-      cityOptions: ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '奖状电子版'],
+      cityOptions: ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '电子奖状版'],
       rules: {
         studentNum: [
           { required: true, message: '请输入学生学号' }
@@ -542,7 +558,7 @@ export default {
     submitSelect() {
       this.$confirm('确认导出？')
         .then(_ => {
-          const value = ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '奖状电子版']
+          const value = ['学号', '学生姓名', '学生班级', '奖项名称', '奖项等级', '获奖时间', '指导老师', '电子奖状版']
           exportStuInfo(value).then((res) => {
             window.open(res.data.data)
             this.showSelect = false
@@ -708,14 +724,86 @@ export default {
   width: 100%;
   height: auto;
 }
+
 .classManage /deep/ .el-dialog__title {
   font-size: 24px;
   font-weight: bold;
 }
+
 div /deep/ .el-dialog {
   border-radius: 8px;
 }
+
 .el-dialog__wrapper {
   line-height: 28px;
+}
+
+.classManage {
+  position: relative;
+}
+
+.search {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabelTop {
+  display: flex;
+  width: 95%;
+  position: absolute;
+  z-index: 33;
+  top: 10px;
+  justify-content: space-between;
+  padding: 0 35px;
+}
+
+.classManage {
+  position: relative;
+}
+
+.findInput {
+  display: inline-block;
+  z-index: 11;
+  display: flex;
+  justify-content: space-between;
+}
+
+.findInput .input {
+  width: 300px;
+  margin-right: 10px;
+}
+
+.findButton {
+  position: absolute;
+  right: 0;
+  z-index: 23;
+  border-radius: 4px;
+}
+
+.addButton {
+  line-height: 40px;
+}
+
+.addInfo {
+  height: 300px;
+  overflow: hidden;
+}
+
+.addInfo:hover {
+  overflow-y: scroll;
+}
+
+.commonWidth {
+  width: 355.75px;
+}
+
+.upImg {
+  width: 100%;
+  margin-top:32px;
+  margin-right:60px;
+  display: flex;
+  justify-content: center;
 }
 </style>

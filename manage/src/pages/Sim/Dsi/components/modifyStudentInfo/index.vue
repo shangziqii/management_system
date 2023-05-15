@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="修改贫困生信息" :visible.sync="isChangeInfoShow" width="30%" :before-close="handleClose">
+  <el-dialog title="修改贫困生信息" :visible.sync="isChangeInfoShow" width="25%" :before-close="handleClose">
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="学生学号" prop="studentNum">
         <el-input type="text" v-model="ruleForm.studentNum" autocomplete="off" disabled></el-input>
@@ -8,7 +8,7 @@
         <el-input type="text" v-model="ruleForm.studentName" autocomplete="off" disabled></el-input>
       </el-form-item>
       <el-form-item label="贫困等级" prop="difficultLevel" @change="changeSelectValue($event)">
-        <el-select v-model="ruleForm.difficultLevel">
+        <el-select v-model="ruleForm.difficultLevel" class="commonWidth">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -17,15 +17,16 @@
         <el-input v-model="ruleForm.situation" type="textarea" placeholder="最长可输入255个字" maxlength="255" resize="none">
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="备注" prop="remarks">
         <el-input v-model="ruleForm.remarks" type="textarea" placeholder="最长可输入255个字" maxlength="255" resize="none">
         </el-input>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitChangeInfo('ruleForm')">保 存</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
     </el-form>
+    <span slot="footer" class="dialog-footer">
+          <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
+          <el-button @click="handleClose">取消</el-button>
+          <el-button type="primary" @click="submitChangeInfo('ruleForm')">保 存</el-button>
+    </span>
   </el-dialog>
 </template>
 
@@ -53,7 +54,7 @@ export default {
       },
       options: [], // 困难等级选择
       originData: false,
-      recordInfo:{}
+      recordInfo: {}
     };
   },
   methods: {
@@ -110,11 +111,16 @@ export default {
     },
     ruleForm: {
       handler(newVal) {
-        this.recordInfo={...this.ruleForm}
-        this.originData =!( JSON.stringify(this.studentInfo) == JSON.stringify(this.recordInfo))
+        this.recordInfo = { ...this.ruleForm }
+        this.originData = !(JSON.stringify(this.studentInfo) == JSON.stringify(this.recordInfo))
       },
       deep: true
     }
   }
 }
 </script>
+<style scoped>
+.commonWidth{
+  width: 100%;
+}
+</style>
